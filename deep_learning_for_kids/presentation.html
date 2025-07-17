@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Learning for Kids: Teaching Computers to Think!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --accent-color: #3b82f6;
+            --background-color: #0f172a;
+            --text-color: #f8fafc;
+            --slide-background: rgba(255, 255, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--background-color), #1e293b);
+            color: var(--text-color);
+            overflow: hidden;
+            min-height: 100vh;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            position: absolute;
+            width: 90%;
+            max-width: 1200px;
+            height: 85%;
+            background: var(--slide-background);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transform: translateX(100px) scale(0.9);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+        }
+
+        .slide.prev {
+            transform: translateX(-100px) scale(0.9);
+        }
+
+        .slide h1, .slide h2, .slide h3 {
+            margin-bottom: 30px;
+            line-height: 1.2;
+        }
+
+        .slide h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .slide h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .slide h3 {
+            font-size: 2rem;
+            font-weight: 500;
+            color: var(--accent-color);
+        }
+
+        .slide p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            max-width: 800px;
+        }
+
+        .slide ul, .slide ol {
+            text-align: left;
+            max-width: 600px;
+            margin: 20px 0;
+        }
+
+        .slide li {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 10px;
+            padding-left: 10px;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .slide-title {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 300px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+                width: 95%;
+                height: 80%;
+            }
+
+            .slide h1 {
+                font-size: 2.5rem;
+            }
+
+            .slide h2 {
+                font-size: 2rem;
+            }
+
+            .slide h3 {
+                font-size: 1.5rem;
+            }
+
+            .slide p {
+                font-size: 1.1rem;
+            }
+
+            .nav-btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="slide-title" id="slideTitle">Deep Learning for Kids: Teaching Computers to Think!</div>
+        <div class="slide-counter">
+            <span id="currentSlide">1</span> / <span id="totalSlides">8</span>
+        </div>
+
+
+        <div class="slide active" data-slide="0" data-title="Slide title_slide">
+            <div class="slide-header">
+                <h1 class="slide-title">Welcome to Deep Learning!</h1>
+                <p class="slide-summary">Introduction to deep learning in a fun, kid-friendly way.</p>
+        </div>
+
+        <div class="slide " data-slide="1" data-title="Slide what_is_deep_learning">
+            <div class="slide-header">
+                <h1 class="slide-title">What is Deep Learning?</h1>
+                <p class="slide-summary">Explaining deep learning with simple, relatable examples for kids.</p>
+        </div>
+
+        <div class="slide " data-slide="2" data-title="Slide how_computers_learn">
+            <div class="slide-header">
+                <h1 class="slide-title">How Computers Learn</h1>
+                <p class="slide-summary">Introducing the concept of data and patterns in computer learning.</p>
+        </div>
+
+        <div class="slide " data-slide="3" data-title="Slide neural_network">
+            <div class="slide-header">
+                <h1 class="slide-title">Neural Networks: Computer Brains!</h1>
+                <p class="slide-summary">Simplifying neural networks with a brain cell analogy.</p>
+        </div>
+
+        <div class="slide " data-slide="4" data-title="Slide what_can_dl_do">
+            <div class="slide-header">
+                <h1 class="slide-title">What Can Deep Learning Do?</h1>
+                <p class="slide-summary">Showing practical applications like image recognition and games.</p>
+        </div>
+
+        <div class="slide " data-slide="5" data-title="Slide dl_in_our_lives">
+            <div class="slide-header">
+                <h1 class="slide-title">Deep Learning All Around Us!</h1>
+                <p class="slide-summary">Examples of deep learning in everyday objects and activities.</p>
+        </div>
+
+        <div class="slide " data-slide="6" data-title="Slide future_of_dl">
+            <div class="slide-header">
+                <h1 class="slide-title">The Future of Deep Learning</h1>
+                <p class="slide-summary">Briefly touching on future possibilities of deep learning.</p>
+        </div>
+
+        <div class="slide " data-slide="7" data-title="Slide conclusion">
+            <div class="slide-header">
+                <h1 class="slide-title">You're a Deep Learning Whiz!</h1>
+                <p class="slide-summary">Concluding remarks, encouraging curiosity about deep learning.</p>
+        </div>
+
+        <div class="navigation">
+            <button class="nav-btn" id="prevBtn" onclick="previousSlide()">← Previous</button>
+            <button class="nav-btn" id="nextBtn" onclick="nextSlide()">Next →</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function updateSlideDisplay() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'prev');
+                if (index === currentSlideIndex) {
+                    slide.classList.add('active');
+                } else if (index < currentSlideIndex) {
+                    slide.classList.add('prev');
+                }
+            });
+
+            // Update counter
+            document.getElementById('currentSlide').textContent = currentSlideIndex + 1;
+
+            // Update title
+            const currentSlide = slides[currentSlideIndex];
+            const slideTitle = currentSlide.getAttribute('data-title');
+            document.getElementById('slideTitle').textContent = slideTitle;
+
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentSlideIndex === 0;
+            document.getElementById('nextBtn').disabled = currentSlideIndex === totalSlides - 1;
+        }
+
+        function nextSlide() {
+            if (currentSlideIndex < totalSlides - 1) {
+                currentSlideIndex++;
+                updateSlideDisplay();
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlideIndex > 0) {
+                currentSlideIndex--;
+                updateSlideDisplay();
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                previousSlide();
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                currentSlideIndex = 0;
+                updateSlideDisplay();
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                currentSlideIndex = totalSlides - 1;
+                updateSlideDisplay();
+            }
+        });
+
+        // Touch navigation for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    nextSlide(); // Swipe left - next slide
+                } else {
+                    previousSlide(); // Swipe right - previous slide
+                }
+            }
+        }
+
+        // Initialize
+        updateSlideDisplay();
+    </script>
+</body>
+</html>

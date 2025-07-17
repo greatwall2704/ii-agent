@@ -1,0 +1,64 @@
+{
+  "main_title": "Deep Learning for Kids: Teaching Computers to Think!",
+  "project_dir": "deep_learning_for_kids",
+  "outline": [
+    {
+      "page_title": "Welcome to Deep Learning!",
+      "id": "title_slide",
+      "summary": "Introduction to deep learning in a fun, kid-friendly way."
+    },
+    {
+      "summary": "Explaining deep learning with simple, relatable examples for kids.",
+      "page_title": "What is Deep Learning?",
+      "id": "what_is_deep_learning"
+    },
+    {
+      "page_title": "How Computers Learn",
+      "summary": "Introducing the concept of data and patterns in computer learning.",
+      "id": "how_computers_learn"
+    },
+    {
+      "id": "neural_network",
+      "page_title": "Neural Networks: Computer Brains!",
+      "summary": "Simplifying neural networks with a brain cell analogy."
+    },
+    {
+      "page_title": "What Can Deep Learning Do?",
+      "id": "what_can_dl_do",
+      "summary": "Showing practical applications like image recognition and games."
+    },
+    {
+      "page_title": "Deep Learning All Around Us!",
+      "id": "dl_in_our_lives",
+      "summary": "Examples of deep learning in everyday objects and activities."
+    },
+    {
+      "id": "future_of_dl",
+      "page_title": "The Future of Deep Learning",
+      "summary": "Briefly touching on future possibilities of deep learning."
+    },
+    {
+      "id": "conclusion",
+      "page_title": "You're a Deep Learning Whiz!",
+      "summary": "Concluding remarks, encouraging curiosity about deep learning."
+    }
+  ],
+  "style_instruction": {
+    "typography": "sans-serif, playful fonts",
+    "color_palette": "blue, green, yellow, red",
+    "content_style_description": "youthful and vibrant",
+    "layout": "clean and simple"
+  },
+  "slide_ids": [
+    "title_slide",
+    "what_is_deep_learning",
+    "how_computers_learn",
+    "neural_network",
+    "what_can_dl_do",
+    "dl_in_our_lives",
+    "future_of_dl",
+    "conclusion"
+  ],
+  "created_at": "2025-07-16",
+  "version": "1.0"
+}

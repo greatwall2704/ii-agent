@@ -27,7 +27,7 @@ class IIAgentConfig(BaseSettings):
         env_file=".env", env_file_encoding="utf-8", extra="ignore"
     )
     file_store: str = Field(default="local")
-    file_store_path: str = Field(default="/.ii_agent")
+    file_store_path: str = Field(default="~/.ii_agent")
     host_workspace_path: str = Field(default="~/.ii_agent/workspace")
     use_container_workspace: WorkSpaceMode = Field(default=WorkSpaceMode.DOCKER)
     minimize_stdout_logs: bool = False
