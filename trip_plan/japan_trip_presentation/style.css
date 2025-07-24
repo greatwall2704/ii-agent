@@ -1,0 +1,16 @@
+/* Add your custom styles here */
+body {
+    font-family: 'Lato', sans-serif;
+}
+
+#presentation-container {
+    width: 100vw;
+    height: 56.25vw; /* 16:9 aspect ratio */
+    max-height: 100vh;
+    max-width: 177.78vh; /* 16:9 aspect ratio */
+    background-color: #FFFFFF;
+}
+
+h1, h2 {
+    font-family: 'Montserrat', sans-serif;
+}

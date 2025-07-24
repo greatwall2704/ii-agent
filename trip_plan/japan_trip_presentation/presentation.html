@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Romantic Getaway to Japan</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div id="presentation-container" class="relative mx-auto border overflow-hidden">
+        <iframe id="slide-frame" src="slides/title.html" class="w-full h-full"></iframe>
+        <div class="absolute bottom-4 right-4 flex space-x-2">
+            <button id="prev-btn" class="bg-gray-800 text-white px-4 py-2 rounded-lg">Prev</button>
+            <button id="next-btn" class="bg-gray-800 text-white px-4 py-2 rounded-lg">Next</button>
+        </div>
+    </div>
+
+    <script>
+        const slides = [
+            "title.html",
+            "overview.html",
+            "day1.html",
+            "day2.html",
+            "day3.html",
+            "day4.html",
+            "day5.html",
+            "day6.html",
+            "day7.html",
+            "budget.html",
+            "notes.html",
+            "conclusion.html"
+        ];
+
+        let currentSlide = 0;
+        const slideFrame = document.getElementById("slide-frame");
+        const prevBtn = document.getElementById("prev-btn");
+        const nextBtn = document.getElementById("next-btn");
+
+        function showSlide(index) {
+            slideFrame.src = "slides/" + slides[index];
+            currentSlide = index;
+            updateButtons();
+        }
+
+        function updateButtons() {
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+        }
+
+        prevBtn.addEventListener("click", () => {
+            if (currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            }
+        });
+
+        nextBtn.addEventListener("click", () => {
+            if (currentSlide < slides.length - 1) {
+                showSlide(currentSlide + 1);
+            }
+        });
+
+        showSlide(0);
+    </script>
+</body>
+</html>

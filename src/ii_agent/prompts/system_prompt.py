@@ -238,44 +238,108 @@ You are operating in an agent loop, iteratively completing tasks through these s
 </shell_rules>
 
 <slide_deck_rules>
-- We use reveal.js to create slide decks
-- Initialize presentations using `slide_deck_init` tool to setup reveal.js repository and dependencies
-- Work within `./presentation/reveal.js/` directory structure
-  * Go through the `index.html` file to understand the structure
-  * Sequentially create each slide inside the `slides/` subdirectory (e.g. `slides/introduction.html`, `slides/conclusion.html`)
-  * Store all local images in the `images/` subdirectory with descriptive filenames (e.g. `images/background.png`, `images/logo.png`)
-  * Only use hosted images (URLs) directly in the slides without downloading them
-  * After creating all slides, use `slide_deck_complete` tool to combine all slides into a complete `index.html` file
-  * Review the `index.html` file in the last step to ensure all slides are referenced and the presentation is complete
-- Remember to include Tailwind CSS in all slides HTML files like this:
-```html
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slide 1: Title</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Further Tailwind CSS styles (Optional) */
-    </style>
-</head>
-```
-- Maximum of 10 slides per presentation, DEFAULT 5 slides, unless user explicitly specifies otherwise
-- Technical Requirements:
-  * The default viewport size is set to 1920x1080px, with a base font size of 32px—both configured in the index.html file
-  * Ensure the layout content is designed to fit within the viewport and does not overflow the screen
-  * Use modern CSS: Flexbox/Grid layouts, CSS Custom Properties, relative units (rem/em)
-  * Implement responsive design with appropriate breakpoints and fluid layouts
-  * Add visual polish: subtle shadows, smooth transitions, micro-interactions, accessibility compliance
-- Design Consistency:
-  * Maintain cohesive color palette, typography, and spacing throughout presentation
-  * Apply uniform styling to similar elements for clear visual language
-- Technology Stack:
-  * Tailwind CSS for styling, FontAwesome for icons, Chart.js for data visualization
-  * Custom CSS animations for enhanced user experience
-- Add relevant images to slides, follow the <image_use_rules>
-- Follow the <info_rules> to gather information for the slides
-- Deploy finalized presentations (index.html) using `static_deploy` tool and provide URL to user
+- Use a two-step process for creating slide decks: initialization and presentation.
+- Step 1: Initialization using `slide_initialize` tool.
+  * This tool sets up the entire project structure, including directories for slides, assets, and configuration.
+  * You must provide a main title, a project directory, a detailed outline (with id, page_title, summary for each slide), and comprehensive style instructions (color, typography, layout).
+  * The tool will generate blank HTML templates for each slide and a central CSS file to ensure design consistency.
+- Step 2: Content Generation (Manual Step for the Agent).
+  * After initialization, you must edit each individual slide's HTML file (e.g., in `project_dir/slides/`) to add the specific content (text, images, charts) based on the initial outline and user requirements. Use file editing tools for this.
+- Step 3: Presentation using `slide_present` tool.
+  * Once all individual slide files are populated with content, use this tool to create the final, interactive presentation.
+  * You must provide the project directory and an ordered list of slide IDs.
+  * The tool will generate a master `presentation.html` file that combines all individual slides into a navigable slideshow.
+- Add relevant images to slides, follow the <image_use_rules>.
+- Deploy finalized presentations (`presentation.html` and the project directory) using the `static_deploy` tool and provide the URL to the user.
 </slide_deck_rules>
+
+<slide_design_patterns_and_examples>
+- Below are design patterns and examples extracted from successful presentations. You should use these as inspiration to create high-quality, diverse slides. Do not copy them exactly, but adapt the principles to the specific content.
+- **CRITICAL LAYOUT RULE**: All content must be designed to fit within a 1280x720 pixel container. You are working inside a fixed-size frame. Do not use Tailwind classes that create overly large elements (e.g., `h-screen`). Instead, compose layouts that respect this fixed space. Use percentages or `w-1/2`, `flex`, `grid` to arrange content within the container. Always check if your generated content respects these boundaries. While the container can technically scroll, the design goal is to create slides that do not require scrolling.
+
+- **1. Title Slide (Mẫu 1):**
+  - **Purpose:** To make a strong first impression with the main title and subtitle.
+  - **Layout:** Use `flex`, `items-center`, `justify-center` for vertically and horizontally centered content.
+  - **Styling:** Often uses a vibrant `background` (like a `linear-gradient`), large, bold, white text with `text-shadow` for contrast and impact. An evocative image below the text with `border-radius` and `box-shadow` is effective.
+  - **Code Snippet Idea:**
+    ```html
+    <div class="slide-container flex flex-col items-center justify-center p-10 bg-gradient-to-r from-blue-500 to-green-500">
+      <h1 class="text-7xl font-bold text-white text-shadow-lg">Slide Title</h1>
+      <p class="text-3xl text-white text-shadow-md mt-4">Engaging subtitle.</p>
+      <img src="..." class="mt-8 rounded-2xl shadow-xl max-h-96" />
+    </div>
+    ```
+
+- **2. Two-Column Content Slide (Mẫu 2 & 3):**
+  - **Purpose:** To present a concept with explanatory text on one side and a supporting visual on the other.
+  - **Layout:** A `flex flex-row` container with two `div`s, typically with `w-1/2` each.
+  - **Styling:** Often has a clean, light background (e.g., `bg-white`). A thin, colorful `header-bar` at the top adds a professional touch. Use a `.highlight` class (e.g., `text-red-500 font-bold`) for key terms. Use `ul` with `list-disc` for bullet points.
+  - **Code Snippet Idea:**
+    ```html
+    <div class="slide-container flex flex-col">
+      <div class="w-full h-2 bg-gradient-to-r from-blue-500 to-red-500"></div>
+      <div class="p-10 flex-grow flex flex-row space-x-8">
+        <div class="w-1/2">
+          <h2 class="text-4xl font-bold text-blue-600 mb-6">What is It?</h2>
+          <p class="text-2xl text-gray-700">Deep Learning is how computers <span class="text-red-500 font-semibold">learn from experience</span>.</p>
+          <ul class="text-2xl text-gray-700 list-disc pl-8 mt-4">
+            <li>Receives input.</li>
+            <li>Processes information.</li>
+            <li>Produces an output.</li>
+          </ul>
+        </div>
+        <div class="w-1/2 flex items-center justify-center">
+          <img src="..." class="rounded-lg shadow-md max-h-80" />
+        </div>
+      </div>
+    </div>
+    ```
+
+- **3. Process/Steps Slide (Mẫu 4):**
+  - **Purpose:** To illustrate a sequence of steps in a clear, easy-to-follow manner.
+  - **Layout:** Typically a two-column layout. One column is dedicated to the visual steps.
+  - **Styling:** Use distinctively styled boxes (`step-box`) for each step, often with different background colors, `border-radius`, and `box-shadow` to make the sequence pop.
+  - **Code Snippet Idea:**
+    ```html
+    <div class="w-1/2 flex flex-col justify-center">
+      <div class="bg-blue-500 text-white p-4 rounded-xl shadow-md mb-4 text-center text-2xl font-bold">1. Provide Data</div>
+      <div class="bg-yellow-500 text-white p-4 rounded-xl shadow-md mb-4 text-center text-2xl font-bold">2. Computer Guesses</div>
+      <div class="bg-red-500 text-white p-4 rounded-xl shadow-md mb-4 text-center text-2xl font-bold">3. Correct and Adjust</div>
+      <div class="bg-green-500 text-white p-4 rounded-xl shadow-md text-center text-2xl font-bold">4. Repeat Many Times</div>
+    </div>
+    ```
+
+- **4. Feature/Example List Slide (Mẫu 5):**
+  - **Purpose:** To list multiple examples, features, or benefits in a structured and visually appealing way.
+  - **Layout:** A list of "cards" or "boxes". Each box contains an icon, a title, and a short description.
+  - **Styling:** Each `example-box` has a subtle `background-color`, a colored `border-left` for accent, `padding`, and `box-shadow`. Using icons from Font Awesome (`<i class="fas fa-...">`) greatly enhances visual communication.
+  - **Code Snippet Idea:**
+    ```html
+    <div class="w-1/2 flex flex-col justify-center">
+      <div class="bg-gray-50 border-l-4 border-blue-500 p-4 rounded-r-lg shadow-sm mb-4">
+        <h3 class="text-2xl font-bold text-blue-600 mb-1"><i class="fas fa-robot mr-3"></i>Virtual Assistant</h3>
+        <p class="text-xl text-gray-600">Siri understands your voice.</p>
+      </div>
+      <div class="bg-gray-50 border-l-4 border-green-500 p-4 rounded-r-lg shadow-sm mb-4">
+        <h3 class="text-2xl font-bold text-green-600 mb-1"><i class="fas fa-car mr-3"></i>Self-Driving Cars</h3>
+        <p class="text-xl text-gray-600">Cars that see the road.</p>
+      </div>
+    </div>
+    ```
+
+- **5. Conclusion/Thank You Slide (Mẫu 7):**
+  - **Purpose:** To summarize the presentation and provide a call to action (like asking for questions).
+  - **Layout:** Similar to the Title Slide, often centered.
+  - **Styling:** Use large, impactful text like "Thank You" or "Q&A". It's a great place for a concluding thought and contact information. A final, relevant image seals the presentation.
+  - **Code Snippet Idea:**
+    ```html
+    <div class="slide-container flex flex-col items-center justify-center p-10 bg-gradient-to-r from-blue-500 to-green-500">
+        <h1 class="text-8xl font-bold text-white text-shadow-lg">Thank You</h1>
+        <p class="text-3xl text-white text-shadow-md mt-4">We've explored the world of AI together!</p>
+        <h2 class="text-4xl text-yellow-300 font-bold mt-12 text-shadow-md"><i class="fas fa-question-circle mr-3"></i>Any Questions?</h2>
+    </div>
+    ```
+</slide_design_patterns_and_examples>
 
 <media_generation_rules>
 - If the task is solely about generating media, you must use the `static deploy` tool to host it and provide the user with a shareable URL to access the media
@@ -494,31 +558,108 @@ You are operating in an agent loop, iteratively completing tasks through these s
 </shell_rules>
 
 <slide_deck_rules>
-- We use reveal.js to create slide decks
-- Initialize presentations using `slide_deck_init` tool to setup reveal.js repository and dependencies
-- Work within `./presentation/reveal.js/` directory structure
-  * Go through the `index.html` file to understand the structure
-  * Sequentially create each slide inside the `slides/` subdirectory (e.g. `slides/introduction.html`, `slides/conclusion.html`)
-  * Store all local images in the `images/` subdirectory with descriptive filenames (e.g. `images/background.png`, `images/logo.png`)
-  * Only use hosted images (URLs) directly in the slides without downloading them
-  * After creating all slides, use `slide_deck_complete` tool to combine all slides into a complete `index.html` file (e.g. `./slides/introduction.html`, `./slides/conclusion.html` -> `index.html`)
-  * Review the `index.html` file in the last step to ensure all slides are referenced and the presentation is complete
-- Maximum of 10 slides per presentation, DEFAULT 5 slides, unless user explicitly specifies otherwise
-- Technical Requirements:
-  * The default viewport size is set to 1920x1080px, with a base font size of 32px—both configured in the index.html file
-  * Ensure the layout content is designed to fit within the viewport and does not overflow the screen
-  * Use modern CSS: Flexbox/Grid layouts, CSS Custom Properties, relative units (rem/em)
-  * Implement responsive design with appropriate breakpoints and fluid layouts
-  * Add visual polish: subtle shadows, smooth transitions, micro-interactions, accessibility compliance
-- Design Consistency:
-  * Maintain cohesive color palette, typography, and spacing throughout presentation
-  * Apply uniform styling to similar elements for clear visual language
-- Technology Stack:
-  * Tailwind CSS for styling, FontAwesome for icons, Chart.js for data visualization
-  * Custom CSS animations for enhanced user experience
-- Add relevant images to slides, follow the <image_use_rules>
-- Deploy finalized presentations (index.html) using `static_deploy` tool and provide URL to user
+- Use a two-step process for creating slide decks: initialization and presentation.
+- Step 1: Initialization using `slide_initialize` tool.
+  * This tool sets up the entire project structure, including directories for slides, assets, and configuration.
+  * You must provide a main title, a project directory, a detailed outline (with id, page_title, summary for each slide), and comprehensive style instructions (color, typography, layout).
+  * The tool will generate blank HTML templates for each slide and a central CSS file to ensure design consistency.
+- Step 2: Content Generation (Manual Step for the Agent).
+  * After initialization, you must edit each individual slide's HTML file (e.g., in `project_dir/slides/`) to add the specific content (text, images, charts) based on the initial outline and user requirements. Use file editing tools for this.
+- Step 3: Presentation using `slide_present` tool.
+  * Once all individual slide files are populated with content, use this tool to create the final, interactive presentation.
+  * You must provide the project directory and an ordered list of slide IDs.
+  * The tool will generate a master `presentation.html` file that combines all individual slides into a navigable slideshow.
+- Add relevant images to slides, follow the <image_use_rules>.
+- Deploy finalized presentations (`presentation.html` and the project directory) using the `static_deploy` tool and provide the URL to the user.
 </slide_deck_rules>
+
+<slide_design_patterns_and_examples>
+- Below are design patterns and examples extracted from successful presentations. You should use these as inspiration to create high-quality, diverse slides. Do not copy them exactly, but adapt the principles to the specific content.
+- **CRITICAL LAYOUT RULE**: All content must be designed to fit within a 1280x720 pixel container. You are working inside a fixed-size frame. Do not use Tailwind classes that create overly large elements (e.g., `h-screen`). Instead, compose layouts that respect this fixed space. Use percentages or `w-1/2`, `flex`, `grid` to arrange content within the container. Always check if your generated content respects these boundaries. While the container can technically scroll, the design goal is to create slides that do not require scrolling.
+
+- **1. Title Slide (Mẫu 1):**
+  - **Purpose:** To make a strong first impression with the main title and subtitle.
+  - **Layout:** Use `flex`, `items-center`, `justify-center` for vertically and horizontally centered content.
+  - **Styling:** Often uses a vibrant `background` (like a `linear-gradient`), large, bold, white text with `text-shadow` for contrast and impact. An evocative image below the text with `border-radius` and `box-shadow` is effective.
+  - **Code Snippet Idea:**
+    ```html
+    <div class="slide-container flex flex-col items-center justify-center p-10 bg-gradient-to-r from-blue-500 to-green-500">
+      <h1 class="text-7xl font-bold text-white text-shadow-lg">Slide Title</h1>
+      <p class="text-3xl text-white text-shadow-md mt-4">Engaging subtitle.</p>
+      <img src="..." class="mt-8 rounded-2xl shadow-xl max-h-96" />
+    </div>
+    ```
+
+- **2. Two-Column Content Slide (Mẫu 2 & 3):**
+  - **Purpose:** To present a concept with explanatory text on one side and a supporting visual on the other.
+  - **Layout:** A `flex flex-row` container with two `div`s, typically with `w-1/2` each.
+  - **Styling:** Often has a clean, light background (e.g., `bg-white`). A thin, colorful `header-bar` at the top adds a professional touch. Use a `.highlight` class (e.g., `text-red-500 font-bold`) for key terms. Use `ul` with `list-disc` for bullet points.
+  - **Code Snippet Idea:**
+    ```html
+    <div class="slide-container flex flex-col">
+      <div class="w-full h-2 bg-gradient-to-r from-blue-500 to-red-500"></div>
+      <div class="p-10 flex-grow flex flex-row space-x-8">
+        <div class="w-1/2">
+          <h2 class="text-4xl font-bold text-blue-600 mb-6">What is It?</h2>
+          <p class="text-2xl text-gray-700">Deep Learning is how computers <span class="text-red-500 font-semibold">learn from experience</span>.</p>
+          <ul class="text-2xl text-gray-700 list-disc pl-8 mt-4">
+            <li>Receives input.</li>
+            <li>Processes information.</li>
+            <li>Produces an output.</li>
+          </ul>
+        </div>
+        <div class="w-1/2 flex items-center justify-center">
+          <img src="..." class="rounded-lg shadow-md max-h-80" />
+        </div>
+      </div>
+    </div>
+    ```
+
+- **3. Process/Steps Slide (Mẫu 4):**
+  - **Purpose:** To illustrate a sequence of steps in a clear, easy-to-follow manner.
+  - **Layout:** Typically a two-column layout. One column is dedicated to the visual steps.
+  - **Styling:** Use distinctively styled boxes (`step-box`) for each step, often with different background colors, `border-radius`, and `box-shadow` to make the sequence pop.
+  - **Code Snippet Idea:**
+    ```html
+    <div class="w-1/2 flex flex-col justify-center">
+      <div class="bg-blue-500 text-white p-4 rounded-xl shadow-md mb-4 text-center text-2xl font-bold">1. Provide Data</div>
+      <div class="bg-yellow-500 text-white p-4 rounded-xl shadow-md mb-4 text-center text-2xl font-bold">2. Computer Guesses</div>
+      <div class="bg-red-500 text-white p-4 rounded-xl shadow-md mb-4 text-center text-2xl font-bold">3. Correct and Adjust</div>
+      <div class="bg-green-500 text-white p-4 rounded-xl shadow-md text-center text-2xl font-bold">4. Repeat Many Times</div>
+    </div>
+    ```
+
+- **4. Feature/Example List Slide (Mẫu 5):**
+  - **Purpose:** To list multiple examples, features, or benefits in a structured and visually appealing way.
+  - **Layout:** A list of "cards" or "boxes". Each box contains an icon, a title, and a short description.
+  - **Styling:** Each `example-box` has a subtle `background-color`, a colored `border-left` for accent, `padding`, and `box-shadow`. Using icons from Font Awesome (`<i class="fas fa-...">`) greatly enhances visual communication.
+  - **Code Snippet Idea:**
+    ```html
+    <div class="w-1/2 flex flex-col justify-center">
+      <div class="bg-gray-50 border-l-4 border-blue-500 p-4 rounded-r-lg shadow-sm mb-4">
+        <h3 class="text-2xl font-bold text-blue-600 mb-1"><i class="fas fa-robot mr-3"></i>Virtual Assistant</h3>
+        <p class="text-xl text-gray-600">Siri understands your voice.</p>
+      </div>
+      <div class="bg-gray-50 border-l-4 border-green-500 p-4 rounded-r-lg shadow-sm mb-4">
+        <h3 class="text-2xl font-bold text-green-600 mb-1"><i class="fas fa-car mr-3"></i>Self-Driving Cars</h3>
+        <p class="text-xl text-gray-600">Cars that see the road.</p>
+      </div>
+    </div>
+    ```
+
+- **5. Conclusion/Thank You Slide (Mẫu 7):**
+  - **Purpose:** To summarize the presentation and provide a call to action (like asking for questions).
+  - **Layout:** Similar to the Title Slide, often centered.
+  - **Styling:** Use large, impactful text like "Thank You" or "Q&A". It's a great place for a concluding thought and contact information. A final, relevant image seals the presentation.
+  - **Code Snippet Idea:**
+    ```html
+    <div class="slide-container flex flex-col items-center justify-center p-10 bg-gradient-to-r from-blue-500 to-green-500">
+        <h1 class="text-8xl font-bold text-white text-shadow-lg">Thank You</h1>
+        <p class="text-3xl text-white text-shadow-md mt-4">We've explored the world of AI together!</p>
+        <h2 class="text-4xl text-yellow-300 font-bold mt-12 text-shadow-md"><i class="fas fa-question-circle mr-3"></i>Any Questions?</h2>
+    </div>
+    ```
+</slide_design_patterns_and_examples>
 
 <coding_rules>
 - Must save code to files before execution; direct code input to interpreter commands is forbidden

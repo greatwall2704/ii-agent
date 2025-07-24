@@ -164,11 +164,9 @@ def get_system_tools(
             VisitWebpageTool(settings=settings),
             SlideInitializeTool(
                 workspace_manager=workspace_manager,
-                str_replace_client=str_replace_client,
             ),
             SlidePresentTool(
                 workspace_manager=workspace_manager,
-                str_replace_client=str_replace_client,
             ),
             DisplayImageTool(workspace_manager=workspace_manager),
         ]
