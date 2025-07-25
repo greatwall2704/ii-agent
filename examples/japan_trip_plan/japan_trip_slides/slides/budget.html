@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Budget Breakdown</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+    <style>
+        body { font-family: 'Arial', sans-serif; }
+        .slide {
+            width: 1280px;
+            height: 720px;
+            background: #FFFFFF;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+        .slide-title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #4B72B0;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .content-container {
+            display: flex;
+            gap: 30px;
+            flex: 1;
+        }
+        .column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .info-box {
+            background-color: rgba(75, 114, 176, 0.1);
+            border-left: 4px solid #4B72B0;
+            padding: 15px;
+            border-radius: 5px;
+            flex: 1;
+        }
+        .info-box h3 {
+            font-size: 22px;
+            font-weight: bold;
+            color: #4B72B0;
+            margin-bottom: 10px;
+        }
+        .chart-container {
+            width: 100%;
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide">
+        <h1 class="slide-title">Budget Breakdown (Sample)</h1>
+        <div class="content-container">
+            <div class="column">
+                <div class="info-box">
+                    <h3>Budget Allocation</h3>
+                    <div class="chart-container">
+                        <canvas id="budgetChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="info-box">
+                    <h3>Daily Expenses</h3>
+                    <div class="chart-container">
+                        <canvas id="dailyExpensesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const btx = document.getElementById('budgetChart').getContext('2d');
+        new Chart(btx, {
+            type: 'pie',
+            data: {
+                labels: ['Flights', 'Accommodation', 'Transportation', 'Food', 'Activities'],
+                datasets: [{
+                    data: [1200, 1000, 500, 800, 500],
+                    backgroundColor: ['#4B72B0', '#FF6B6B', '#FFD166', '#06D6A0', '#7E57C2']
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+        const dtx = document.getElementById('dailyExpensesChart').getContext('2d');
+        new Chart(dtx, {
+            type: 'bar',
+            data: {
+                labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'],
+                datasets: [{
+                    label: 'USD',
+                    data: [150, 200, 250, 220, 280, 230, 100],
+                    backgroundColor: '#4B72B0'
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+    </script>
+</body>
+</html>

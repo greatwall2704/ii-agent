@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Japan Itinerary</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f3f4f6;
+        }
+        #slide-container {
+            width: 1280px;
+            height: 720px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        #controls {
+            margin-top: 20px;
+        }
+        button {
+            background-color: #4B72B0;
+            color: white;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+        button:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div id="slide-container">
+        <iframe id="slide-frame" src="" width="100%" height="100%" frameborder="0"></iframe>
+    </div>
+    <div id="controls">
+        <button id="prev-btn" onclick="changeSlide(-1)">Previous</button>
+        <span id="slide-counter"></span>
+        <button id="next-btn" onclick="changeSlide(1)">Next</button>
+    </div>
+
+    <script>
+        const slides = [
+            "title.html",
+            "overview.html",
+            "day1-2.html",
+            "day3-4.html",
+            "day5.html",
+            "day6.html",
+            "day7.html",
+            "budget.html",
+            "proposal.html",
+            "conclusion.html"
+        ];
+        let currentSlide = 0;
+        const slideFrame = document.getElementById('slide-frame');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const slideCounter = document.getElementById('slide-counter');
+
+        function showSlide(index) {
+            slideFrame.src = `slides/${slides[index]}`;
+            currentSlide = index;
+            updateControls();
+        }
+
+        function changeSlide(direction) {
+            const newSlideIndex = currentSlide + direction;
+            if (newSlideIndex >= 0 && newSlideIndex < slides.length) {
+                showSlide(newSlideIndex);
+            }
+        }
+
+        function updateControls() {
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+            slideCounter.textContent = `${currentSlide + 1} / ${slides.length}`;
+        }
+
+        showSlide(0);
+    </script>
+</body>
+</html>

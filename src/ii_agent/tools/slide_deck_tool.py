@@ -135,7 +135,7 @@ class SlideInitializeTool(LLMTool):
     <title>{title}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="../assets/css/main_styles.css">
+    <link rel="stylesheet" href="../style.css">
 </head>
 <body>
     <div class="slide-container">
@@ -238,33 +238,27 @@ h1, h2, h3 {{
             # 1. Create directory structure
             slides_dir = project_dir / "slides"
             assets_dir = project_dir / "assets"
-            images_dir = assets_dir / "images"
-            css_dir = assets_dir / "css"
-            config_dir = project_dir / "config"
 
             for d in [
                 project_dir,
                 slides_dir,
                 assets_dir,
-                images_dir,
-                css_dir,
-                config_dir,
             ]:
                 d.mkdir(parents=True, exist_ok=True)
 
-            # 2. Store project configuration
+            # 2. Store project configuration in the root
             config_data = {
                 "main_title": tool_input["main_title"],
                 "outline": outline,
                 "style_instruction": style_instruction,
             }
-            config_file_path = config_dir / "project_config.json"
+            config_file_path = project_dir / "config.json"
             with open(config_file_path, "w") as f:
                 json.dump(config_data, f, indent=4)
 
-            # 3. Create main CSS file
+            # 3. Create main CSS file in the root
             css_content = self._get_main_css_template(style_instruction)
-            css_file_path = css_dir / "main_styles.css"
+            css_file_path = project_dir / "style.css"
             with open(css_file_path, "w") as f:
                 f.write(css_content)
 
@@ -432,10 +426,10 @@ class SlidePresentTool(LLMTool):
             slide_ids = tool_input["slide_ids"]
             slides_dir = project_dir / "slides"
             
-            # 1. Read project config
-            config_file_path = project_dir / "config" / "project_config.json"
+            # 1. Read project config from the root
+            config_file_path = project_dir / "config.json"
             if not config_file_path.exists():
-                return ToolImplOutput(f"Configuration file not found at '{config_file_path}'. Please run slide_initialize first.", "Configuration not found.", auxiliary_data={"success": False})
+                return ToolImplOutput(f"Configuration file 'config.json' not found at '{config_file_path}'. Please run slide_initialize first.", "Configuration not found.", auxiliary_data={"success": False})
 
             with open(config_file_path, 'r') as f:
                 config_data = json.load(f)
