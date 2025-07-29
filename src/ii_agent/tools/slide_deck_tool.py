@@ -172,7 +172,6 @@ class SlideInitializeTool(LLMTool):
     --body-font: '{body_font}';
 }}
 
-/* Set a background for the page holding the iframe, and center the slide */
 body, html {{
     margin: 0;
     padding: 0;
@@ -181,13 +180,13 @@ body, html {{
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f0f0f0; /* Light grey background outside the slide */
+    background-color: #f0f0f0;
 }}
 
 .slide-container {{
-    width: 1280px;
-    min-height: 720px;
-    height: auto; /* Allow container to grow if content is larger than min-height */
+    max-width: 1280px;
+    max-height: 720px;
+    height: auto;
     background-color: var(--background-color);
     border-radius: 12px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
@@ -196,7 +195,6 @@ body, html {{
     flex-direction: column;
     text-align: left;
     box-sizing: border-box;
-    overflow: hidden; /* Hide anything that accidentally overflows the fixed width */
 }}
 
 h1, h2, h3 {{
@@ -215,7 +213,8 @@ h1, h2, h3 {{
 
 .slide-container img {{
     max-width: 100%;
-    max-height: 400px; /* Default max-height for images */
+    max-height: 100%;
+    object-fit: cover;
     border-radius: 15px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }}
@@ -317,54 +316,70 @@ class SlidePresentTool(LLMTool):
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{title}</title>
     <style>
-        body, html {{ margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: sans-serif; background-color: #282c34; }}
-        #presentation-container {{ display: flex; flex-direction: column; height: 100%; }}
-        #slide-viewer {{
-            flex-grow: 1;
+        body, html {{
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: sans-serif;
+            background-color: #f0f0f0;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 16px;
         }}
         #slide-wrapper {{
-            /* Define max size relative to viewport, making it smaller */
-            max-width: 85vw; /* 85% of viewport width */
-            max-height: 85vh; /* 85% of viewport height */
-
-            /* Ensure it scales down on smaller viewports */
-            width: 100%;
-
-            /* Maintain a 16:9 aspect ratio */
-            aspect-ratio: 16 / 9;
-
-            background: white;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            position: relative; /* For iframe positioning */
+            width: 1280px;
+            height: 720px;
+            background: #000;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
         }}
-        .slide-iframe {{ display: none; width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; }}
-        .slide-iframe.active {{ display: block; }}
+        .slide-iframe {{
+            display: none;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }}
+        .slide-iframe.active {{
+            display: block;
+        }}
         #navigation-controls {{
-            flex-shrink: 0; padding: 10px; background-color: #1a1d21;
-            color: white;
-            display: flex; justify-content: center; align-items: center; border-top: 1px solid #444;
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }}
         #navigation-controls button {{
-            font-size: 16px; padding: 8px 16px; margin: 0 10px; cursor: pointer;
-            border: 1px solid #555; background-color: #333; color: white; border-radius: 5px;
+            font-size: 18px;
+            padding: 5px 10px;
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.4);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }}
+        #navigation-controls button:hover:not(:disabled) {{
+            background-color: rgba(0, 0, 0, 0.7);
         }}
         #navigation-controls button:disabled {{
-            cursor: not-allowed; opacity: 0.5;
+            cursor: not-allowed;
+            opacity: 0.3;
         }}
-        #slide-counter {{ font-size: 16px; }}
+        #slide-counter {{
+            font-size: 16px;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+        }}
     </style>
 </head>
 <body>
-    <div id="presentation-container">
-        <div id="slide-viewer">
-            <div id="slide-wrapper">
-                {slide_iframes_html}
-            </div>
-        </div>
+    <div id="slide-wrapper">
+        {slide_iframes_html}
         <div id="navigation-controls">
             <button id="prev-btn">Previous</button>
             <span id="slide-counter">1 / {slide_count}</span>
@@ -384,7 +399,7 @@ class SlidePresentTool(LLMTool):
                 slide.classList.toggle('active', i === index);
             }});
             currentSlide = index;
-            slideCounter.textContent = `{{currentSlide + 1}} / {{slides.length}}`;
+            slideCounter.textContent = (currentSlide + 1) + ' / ' + slides.length;
             prevBtn.disabled = currentSlide === 0;
             nextBtn.disabled = currentSlide === slides.length - 1;
         }}
@@ -449,7 +464,7 @@ class SlidePresentTool(LLMTool):
             iframe_html_parts = []
             for i, slide_id in enumerate(slide_ids):
                 active_class = "active" if i == 0 else ""
-                iframe_html_parts.append(f'<iframe id="slide-{slide_id}" class="slide-iframe {active_class}" src="slides/{slide_id}.html"></iframe>')
+                iframe_html_parts.append(f'<iframe id="slide-{slide_id}" class="slide-iframe {active_class}" src="slides/{slide_id}.html" scrolling="no"></iframe>')
             
             presentation_content = self._get_presentation_html_template(
                 title=main_title,
