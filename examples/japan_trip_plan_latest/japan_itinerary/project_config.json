@@ -1,0 +1,19 @@
+{
+  "main_title": "7-Day Japan Itinerary: April 15-23 from Seattle",
+  "project_dir": "japan_itinerary",
+  "style_instruction": {
+    "theme": "professional_corporate",
+    "color_palette": {
+      "primary": "#4B72B0",
+      "secondary": "#FFD166", 
+      "background": "#FFFFFF",
+      "text_color": "#333333",
+      "header_color": "#4B72B0"
+    },
+    "typography": {
+      "header_font": "Arial",
+      "body_font": "Arial"
+    },
+    "layout_description": "Clean, professional design with Japanese aesthetic elements. Use two-column layouts for content with images. Include subtle cultural accents like colored bars and clean typography. Focus on readability and visual hierarchy."
+  }
+}

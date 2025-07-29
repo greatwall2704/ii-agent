@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Proposal Location Recommendations</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <style>
+    .slide-container { width: 1280px; min-height: 720px; height: auto; margin: 0 auto; background: #FFFFFF; font-family: 'Arial', sans-serif; padding: 40px; overflow: hidden; }
+    .slide-title { font-size: 36px; font-weight: bold; color: #4B72B0; margin-bottom: 30px; text-align: center; }
+    .proposal-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 25px; margin-bottom: 30px; }
+    .proposal-card { background-color: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); border-left: 4px solid #FF6B6B; }
+    .proposal-card.recommended { border-left-color: #06D6A0; background: linear-gradient(135deg, rgba(6, 214, 160, 0.05) 0%, rgba(255, 255, 255, 1) 100%); }
+    .proposal-card h3 { font-size: 20px; font-weight: bold; color: #4B72B0; margin-bottom: 10px; }
+    .proposal-card .location { font-size: 16px; color: #666; margin-bottom: 15px; }
+    .proposal-card .pros { background-color: rgba(6, 214, 160, 0.1); padding: 10px; border-radius: 5px; margin-bottom: 10px; }
+    .proposal-card .cons { background-color: rgba(255, 107, 107, 0.1); padding: 10px; border-radius: 5px; }
+    .recommendation-banner { background: linear-gradient(135deg, #FF6B6B 0%, #FFD166 100%); color: white; padding: 20px; border-radius: 8px; text-align: center; }
+    .tips-section { background-color: rgba(75, 114, 176, 0.1); padding: 20px; border-radius: 8px; margin-top: 20px; }
+    .tip-item { display: flex; align-items: flex-start; margin-bottom: 10px; }
+    .tip-icon { min-width: 25px; color: #FFD166; font-size: 18px; margin-right: 10px; margin-top: 2px; }
+  </style>
+</head>
+<body>
+  <div class="slide-container">
+    <h1 class="slide-title"><i class="fas fa-ring" style="color: #FF6B6B; margin-right: 15px;"></i>Proposal Location Recommendations</h1>
+    
+    <div class="proposal-grid">
+      <div class="proposal-card recommended">
+        <h3><i class="fas fa-star" style="color: #FFD166; margin-right: 8px;"></i>Kamo River Banks</h3>
+        <p class="location"><i class="fas fa-map-marker-alt" style="color: #4B72B0; margin-right: 5px;"></i>Kyoto</p>
+        <div class="pros">
+          <strong style="color: #06D6A0;">Pros:</strong>
+          <ul style="margin: 5px 0 0 15px; font-size: 14px;">
+            <li>Romantic riverside setting</li>
+            <li>Beautiful evening lighting</li>
+            <li>Free and accessible</li>
+            <li>Quintessentially Kyoto</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <strong style="color: #FF6B6B;">Cons:</strong>
+          <ul style="margin: 5px 0 0 15px; font-size: 14px;">
+            <li>Weather dependent</li>
+            <li>Some foot traffic</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="proposal-card">
+        <h3>Arashiyama Bamboo Grove</h3>
+        <p class="location"><i class="fas fa-map-marker-alt" style="color: #4B72B0; margin-right: 5px;"></i>Kyoto</p>
+        <div class="pros">
+          <strong style="color: #06D6A0;">Pros:</strong>
+          <ul style="margin: 5px 0 0 15px; font-size: 14px;">
+            <li>Mystical atmosphere</li>
+            <li>Natural cathedral effect</li>
+            <li>Unique photo opportunity</li>
+            <li>Quiet in early evening</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <strong style="color: #FF6B6B;">Cons:</strong>
+          <ul style="margin: 5px 0 0 15px; font-size: 14px;">
+            <li>Can be crowded</li>
+            <li>Limited seating</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="proposal-card">
+        <h3>Tokyo Skytree</h3>
+        <p class="location"><i class="fas fa-map-marker-alt" style="color: #4B72B0; margin-right: 5px;"></i>Tokyo</p>
+        <div class="pros">
+          <strong style="color: #06D6A0;">Pros:</strong>
+          <ul style="margin: 5px 0 0 15px; font-size: 14px;">
+            <li>Panoramic city views</li>
+            <li>Weather protected</li>
+            <li>Memorable backdrop</li>
+            <li>Professional photos available</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <strong style="color: #FF6B6B;">Cons:</strong>
+          <ul style="margin: 5px 0 0 15px; font-size: 14px;">
+            <li>Expensive (~$25 entry)</li>
+            <li>Very public</li>
+            <li>Tourist crowds</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="recommendation-banner">
+      <h3 style="margin-bottom: 10px;"><i class="fas fa-heart" style="margin-right: 10px;"></i>Our Top Recommendation: Kamo River at Sunset</h3>
+      <p>The perfect blend of romance, authenticity, and Japanese beauty. Arrive 30 minutes before sunset for the best lighting and atmosphere.</p>
+    </div>
+    
+    <div class="tips-section">
+      <h3 style="color: #4B72B0; font-weight: bold; margin-bottom: 15px;">Proposal Success Tips</h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div>
+          <div class="tip-item">
+            <div class="tip-icon"><i class="fas fa-clock"></i></div>
+            <p><strong>Timing:</strong> Golden hour (1 hour before sunset) for best lighting</p>
+          </div>
+          <div class="tip-item">
+            <div class="tip-icon"><i class="fas fa-umbrella"></i></div>
+            <p><strong>Backup Plan:</strong> Have an indoor location ready for rainy weather</p>
+          </div>
+          <div class="tip-item">
+            <div class="tip-icon"><i class="fas fa-camera"></i></div>
+            <p><strong>Photography:</strong> Consider hiring a local photographer for the moment</p>
+          </div>
+        </div>
+        <div>
+          <div class="tip-item">
+            <div class="tip-icon"><i class="fas fa-gift"></i></div>
+            <p><strong>Ring Security:</strong> Keep ring in hotel safe until the day</p>
+          </div>
+          <div class="tip-item">
+            <div class="tip-icon"><i class="fas fa-language"></i></div>
+            <p><strong>Language:</strong> Learn "Kekkon shite kudasai" (Will you marry me?)</p>
+          </div>
+          <div class="tip-item">
+            <div class="tip-icon"><i class="fas fa-heart"></i></div>
+            <p><strong>Celebration:</strong> Book a special dinner reservation for after!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
