@@ -1,0 +1,229 @@
+/* Professional VC Presentation Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #FFFFFF;
+    color: #1F2937;
+    line-height: 1.6;
+}
+
+.slide-container {
+    width: 1280px;
+    min-height: 720px;
+    height: auto;
+    max-height: 720px;
+    background: #FFFFFF;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 60px;
+}
+
+.header-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: linear-gradient(90deg, #2563EB 0%, #7C3AED 50%, #2563EB 100%);
+}
+
+h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+}
+
+h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2563EB;
+    margin-bottom: 1.5rem;
+}
+
+h3 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 1rem;
+}
+
+.subtitle {
+    font-size: 1.5rem;
+    color: #6B7280;
+    margin-bottom: 2rem;
+    font-weight: 400;
+}
+
+.content-text {
+    font-size: 1.25rem;
+    color: #1F2937;
+    margin-bottom: 1rem;
+}
+
+.highlight {
+    color: #2563EB;
+    font-weight: 600;
+}
+
+.secondary-highlight {
+    color: #7C3AED;
+    font-weight: 600;
+}
+
+.two-column {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    height: 100%;
+    align-items: start;
+}
+
+.fund-card {
+    background: #F8FAFC;
+    border: 2px solid #E2E8F0;
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.fund-card:hover {
+    border-color: #2563EB;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.fund-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 0.5rem;
+}
+
+.fund-aum {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2563EB;
+    margin-bottom: 1rem;
+}
+
+.fund-details {
+    font-size: 1rem;
+    color: #4B5563;
+    line-height: 1.5;
+}
+
+.fund-details strong {
+    color: #111827;
+}
+
+.contact-info {
+    background: #EFF6FF;
+    border-left: 4px solid #2563EB;
+    padding: 1rem;
+    margin-top: 1rem;
+    border-radius: 0 8px 8px 0;
+}
+
+.tier-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, #EFF6FF 0%, #F3E8FF 100%);
+    border-radius: 12px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.stat-card {
+    text-align: center;
+    padding: 1.5rem;
+    background: #F8FAFC;
+    border-radius: 12px;
+    border: 1px solid #E2E8F0;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #2563EB;
+    display: block;
+}
+
+.stat-label {
+    font-size: 1rem;
+    color: #6B7280;
+    margin-top: 0.5rem;
+}
+
+.key-points {
+    list-style: none;
+    padding: 0;
+}
+
+.key-points li {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #E5E7EB;
+    font-size: 1.1rem;
+}
+
+.key-points li:before {
+    content: "→";
+    color: #2563EB;
+    font-weight: bold;
+    margin-right: 0.75rem;
+}
+
+.center-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100%;
+}
+
+.logo-placeholder {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #2563EB, #7C3AED);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0 auto 2rem;
+}
+
+@media (max-width: 1280px) {
+    .slide-container {
+        width: 100%;
+        max-width: 1280px;
+        padding: 40px;
+    }
+    
+    h1 {
+        font-size: 2.5rem;
+    }
+    
+    h2 {
+        font-size: 2rem;
+    }
+}

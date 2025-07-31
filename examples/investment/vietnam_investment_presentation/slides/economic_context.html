@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vietnam's Economic Fundamentals</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+    <div class="slide-container">
+        <h1 class="slide-header">Vietnam's Economic Fundamentals</h1>
+        <div class="vietnam-flag-accent"></div>
+        
+        <div class="two-column">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">GDP Growth Trajectory</h2>
+                <div style="height: 300px;">
+                    <canvas id="gdpChart"></canvas>
+                </div>
+                
+                <div class="mt-6">
+                    <h3 class="text-xl font-bold text-green-700 mb-3">Key Economic Indicators</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center bg-gray-50 p-3 rounded">
+                            <span class="font-semibold">GDP Growth 2024</span>
+                            <span class="text-green-600 font-bold text-xl">7.09%</span>
+                        </div>
+                        <div class="flex justify-between items-center bg-gray-50 p-3 rounded">
+                            <span class="font-semibold">Export/GDP Ratio</span>
+                            <span class="text-blue-600 font-bold text-xl">86.47%</span>
+                        </div>
+                        <div class="flex justify-between items-center bg-gray-50 p-3 rounded">
+                            <span class="font-semibold">Population Under 35</span>
+                            <span class="text-purple-600 font-bold text-xl">70%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Economic Strengths</h2>
+                
+                <div class="investment-card">
+                    <h3 class="text-lg font-bold text-green-800 mb-2">🏭 Manufacturing Hub</h3>
+                    <p class="content-text">Strong industrial base with competitive labor costs and improving productivity</p>
+                </div>
+                
+                <div class="investment-card">
+                    <h3 class="text-lg font-bold text-green-800 mb-2">🌏 Strategic Location</h3>
+                    <p class="content-text">Gateway to ASEAN markets with excellent port infrastructure and logistics</p>
+                </div>
+                
+                <div class="investment-card">
+                    <h3 class="text-lg font-bold text-green-800 mb-2">👥 Demographic Dividend</h3>
+                    <p class="content-text">Young, educated workforce driving consumption and economic growth</p>
+                </div>
+                
+                <div class="investment-card">
+                    <h3 class="text-lg font-bold text-green-800 mb-2">📋 Policy Support</h3>
+                    <p class="content-text">Government reforms supporting FDI, infrastructure development, and market access</p>
+                </div>
+                
+                <div class="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded">
+                    <p class="text-sm font-semibold text-yellow-800">
+                        💡 <span class="highlight">Investment Insight:</span> Vietnam's economic fundamentals provide a solid foundation for long-term investment growth
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('gdpChart').getContext('2d');
+        const gdpChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['2020', '2021', '2022', '2023', '2024'],
+                datasets: [{
+                    label: 'GDP Growth (%)',
+                    data: [2.87, 2.55, 8.54, 5.07, 7.09],
+                    borderColor: '#2E7D32',
+                    backgroundColor: 'rgba(46, 125, 50, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#2E7D32',
+                    pointBorderColor: '#FFFFFF',
+                    pointBorderWidth: 2,
+                    pointRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 10,
+                        grid: {
+                            color: 'rgba(0,0,0,0.1)'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

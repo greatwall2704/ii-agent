@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Segment Analysis</title>
+    <link rel="stylesheet" href="../main.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="header-bar"></div>
+        
+        <h1 class="slide-title">Business Segment Analysis</h1>
+        
+        <div class="two-column">
+            <div class="column">
+                <h2 class="text-2xl font-bold mb-4" style="color: #76B900;">Revenue by Segment</h2>
+                <div class="chart-container" style="height: 300px;">
+                    <canvas id="segmentChart"></canvas>
+                </div>
+                
+                <div class="mt-4 text-center">
+                    <p class="content-text"><strong>Total Q1 FY25 Revenue: $26.0B</strong></p>
+                </div>
+            </div>
+            
+            <div class="column">
+                <h2 class="text-2xl font-bold mb-4" style="color: #76B900;">Segment Performance</h2>
+                
+                <div class="segment-card mb-4">
+                    <div class="segment-title">Data Center</div>
+                    <div class="segment-revenue">$22.6B</div>
+                    <div class="segment-growth">+427% YoY | +23% QoQ</div>
+                    <div class="text-sm mt-2 text-gray-600">86.8% of total revenue</div>
+                </div>
+                
+                <div class="segment-card mb-4">
+                    <div class="segment-title">Gaming</div>
+                    <div class="segment-revenue">$2.6B</div>
+                    <div class="segment-growth">+18% YoY | -8% QoQ</div>
+                    <div class="text-sm mt-2 text-gray-600">10.0% of total revenue</div>
+                </div>
+                
+                <div class="segment-card mb-4">
+                    <div class="segment-title">Professional Visualization</div>
+                    <div class="segment-revenue">$427M</div>
+                    <div class="segment-growth">+45% YoY | -8% QoQ</div>
+                    <div class="text-sm mt-2 text-gray-600">1.6% of total revenue</div>
+                </div>
+                
+                <div class="segment-card">
+                    <div class="segment-title">Automotive</div>
+                    <div class="segment-revenue">$329M</div>
+                    <div class="segment-growth">+11% YoY | +17% QoQ</div>
+                    <div class="text-sm mt-2 text-gray-600">1.3% of total revenue</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            NVIDIA Q1 2025 Financial Analysis | Slide 4
+        </div>
+    </div>
+
+    <script>
+        // Segment Revenue Pie Chart
+        const segmentCtx = document.getElementById('segmentChart').getContext('2d');
+        new Chart(segmentCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Data Center', 'Gaming', 'Professional Visualization', 'Automotive'],
+                datasets: [{
+                    data: [22.6, 2.6, 0.427, 0.329],
+                    backgroundColor: [
+                        '#76B900',
+                        '#5A8A00',
+                        '#A8D5A8',
+                        '#D4E8D4'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#FFFFFF'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((value / total) * 100).toFixed(1);
+                                return `${label}: $${value}B (${percentage}%)`;
+                            }
+                        }
+                    }
+                },
+                cutout: '50%'
+            }
+        });
+    </script>
+</body>
+</html>

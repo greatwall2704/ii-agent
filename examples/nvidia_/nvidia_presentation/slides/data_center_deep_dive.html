@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Center: The Growth Engine</title>
+    <link rel="stylesheet" href="../main.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="header-bar"></div>
+        
+        <h1 class="slide-title">Data Center: The Growth Engine</h1>
+        
+        <div class="two-column">
+            <div class="column">
+                <h2 class="text-2xl font-bold mb-4" style="color: #76B900;">Data Center Revenue Growth</h2>
+                <div class="chart-container" style="height: 280px;">
+                    <canvas id="dataCenterChart"></canvas>
+                </div>
+                
+                <div class="bg-green-50 p-4 rounded-lg mt-4">
+                    <h3 class="text-lg font-semibold mb-2" style="color: #76B900;">Key Metrics</h3>
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <div class="font-semibold">Q1 FY25 Revenue</div>
+                            <div class="text-xl font-bold">$22.6B</div>
+                        </div>
+                        <div>
+                            <div class="font-semibold">YoY Growth</div>
+                            <div class="text-xl font-bold">+427%</div>
+                        </div>
+                        <div>
+                            <div class="font-semibold">QoQ Growth</div>
+                            <div class="text-xl font-bold">+23%</div>
+                        </div>
+                        <div>
+                            <div class="font-semibold">% of Total Revenue</div>
+                            <div class="text-xl font-bold">86.8%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="column">
+                <h2 class="text-2xl font-bold mb-4" style="color: #76B900;">Growth Drivers</h2>
+                
+                <div class="bullet-point">
+                    <div class="bullet-icon"></div>
+                    <div class="content-text">
+                        <strong>Generative AI Training:</strong> Strong demand for Hopper architecture GPUs for large language model training across cloud providers and enterprises.
+                    </div>
+                </div>
+                
+                <div class="bullet-point">
+                    <div class="bullet-icon"></div>
+                    <div class="content-text">
+                        <strong>AI Inference Acceleration:</strong> Growing adoption of NVIDIA GPUs for AI inference workloads as models move to production.
+                    </div>
+                </div>
+                
+                <div class="bullet-point">
+                    <div class="bullet-icon"></div>
+                    <div class="content-text">
+                        <strong>Enterprise AI Expansion:</strong> Beyond cloud service providers to direct enterprise customers implementing AI solutions.
+                    </div>
+                </div>
+                
+                <div class="bullet-point">
+                    <div class="bullet-icon"></div>
+                    <div class="content-text">
+                        <strong>Sovereign AI Initiatives:</strong> Government and national AI programs driving significant infrastructure investments.
+                    </div>
+                </div>
+                
+                <div class="bullet-point">
+                    <div class="bullet-icon"></div>
+                    <div class="content-text">
+                        <strong>AI Factory Transformation:</strong> Traditional data centers being rebuilt as AI-optimized facilities for artificial intelligence production.
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 p-4 rounded-lg mt-4">
+                    <h3 class="text-lg font-semibold mb-2">Market Position</h3>
+                    <p class="text-sm">NVIDIA maintains dominant market share (~80-90%) in AI accelerators, with the CUDA ecosystem creating significant competitive advantages and switching costs for customers.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            NVIDIA Q1 2025 Financial Analysis | Slide 5
+        </div>
+    </div>
+
+    <script>
+        // Data Center Revenue Growth Chart
+        const dataCenterCtx = document.getElementById('dataCenterChart').getContext('2d');
+        new Chart(dataCenterCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Q1 FY24', 'Q2 FY24', 'Q3 FY24', 'Q4 FY24', 'Q1 FY25'],
+                datasets: [{
+                    label: 'Data Center Revenue ($B)',
+                    data: [4.3, 10.3, 14.5, 18.4, 22.6],
+                    backgroundColor: [
+                        '#E5E5E5',
+                        '#C8E6C9',
+                        '#A5D6A7',
+                        '#81C784',
+                        '#76B900'
+                    ],
+                    borderColor: '#5A8A00',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `Revenue: $${context.parsed.y}B`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 25,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value + 'B';
+                            }
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            maxRotation: 45
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

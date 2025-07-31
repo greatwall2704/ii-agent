@@ -1,0 +1,80 @@
+/* Main CSS for Vietnam Investment Presentation */
+
+.slide-container {
+    width: 1280px;
+    min-height: 720px;
+    height: auto;
+    background: #FFFFFF;
+    font-family: 'Open Sans', sans-serif;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 40px;
+}
+
+.slide-header {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1B5E20;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.content-text {
+    font-size: 1.2rem;
+    color: #333333;
+    line-height: 1.6;
+}
+
+.highlight {
+    color: #2E7D32;
+    font-weight: 600;
+}
+
+.accent-color {
+    color: #FFC107;
+    font-weight: 700;
+}
+
+.vietnam-flag-accent {
+    background: linear-gradient(to right, #DA020E 50%, #FFFF00 50%);
+    height: 4px;
+    width: 100%;
+    margin: 20px 0;
+}
+
+.chart-container {
+    max-height: 400px;
+    margin: 20px 0;
+}
+
+.two-column {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+}
+
+.investment-card {
+    background: #F8F9FA;
+    border-left: 4px solid #2E7D32;
+    padding: 20px;
+    margin: 15px 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.risk-indicator {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 5px;
+}
+
+.risk-low { background: #C8E6C9; color: #2E7D32; }
+.risk-medium { background: #FFF3C4; color: #F57F17; }
+.risk-high { background: #FFCDD2; color: #C62828; }

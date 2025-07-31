@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Performance Overview</title>
+    <link rel="stylesheet" href="../main.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="header-bar"></div>
+        
+        <h1 class="slide-title">Financial Performance Overview</h1>
+        
+        <div class="two-column">
+            <div class="column">
+                <h2 class="text-2xl font-bold mb-4" style="color: #76B900;">Revenue Growth Trajectory</h2>
+                <div class="chart-container" style="height: 300px;">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+                
+                <div class="key-metrics mt-6">
+                    <div class="metric-box">
+                        <div class="metric-value">262%</div>
+                        <div class="metric-label">YoY Revenue Growth</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value">18%</div>
+                        <div class="metric-label">QoQ Revenue Growth</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="column">
+                <h2 class="text-2xl font-bold mb-4" style="color: #76B900;">Profitability Metrics</h2>
+                <div class="chart-container" style="height: 300px;">
+                    <canvas id="profitabilityChart"></canvas>
+                </div>
+                
+                <div class="bg-gray-50 p-4 rounded-lg mt-4">
+                    <h3 class="text-lg font-semibold mb-3">Key Financial Metrics</h3>
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <div class="font-semibold">Gross Margin</div>
+                            <div class="text-2xl font-bold" style="color: #76B900;">78.4%</div>
+                            <div class="text-gray-600">+13.8 pts YoY</div>
+                        </div>
+                        <div>
+                            <div class="font-semibold">Operating Margin</div>
+                            <div class="text-2xl font-bold" style="color: #76B900;">64.9%</div>
+                            <div class="text-gray-600">GAAP</div>
+                        </div>
+                        <div>
+                            <div class="font-semibold">Net Income</div>
+                            <div class="text-2xl font-bold" style="color: #76B900;">$14.9B</div>
+                            <div class="text-gray-600">+628% YoY</div>
+                        </div>
+                        <div>
+                            <div class="font-semibold">EPS</div>
+                            <div class="text-2xl font-bold" style="color: #76B900;">$5.98</div>
+                            <div class="text-gray-600">+629% YoY</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            NVIDIA Q1 2025 Financial Analysis | Slide 3
+        </div>
+    </div>
+
+    <script>
+        // Revenue Growth Chart
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(revenueCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Q1 FY24', 'Q4 FY24', 'Q1 FY25'],
+                datasets: [{
+                    label: 'Revenue ($B)',
+                    data: [7.2, 22.1, 26.0],
+                    backgroundColor: ['#E5E5E5', '#A8D5A8', '#76B900'],
+                    borderColor: ['#CCCCCC', '#76B900', '#5A8A00'],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 30,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value + 'B';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Profitability Chart
+        const profitCtx = document.getElementById('profitabilityChart').getContext('2d');
+        new Chart(profitCtx, {
+            type: 'line',
+            data: {
+                labels: ['Q1 FY24', 'Q4 FY24', 'Q1 FY25'],
+                datasets: [
+                    {
+                        label: 'Gross Margin (%)',
+                        data: [64.6, 76.0, 78.4],
+                        borderColor: '#76B900',
+                        backgroundColor: 'rgba(118, 185, 0, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Operating Margin (%)',
+                        data: [29.8, 61.6, 64.9],
+                        borderColor: '#5A8A00',
+                        backgroundColor: 'rgba(90, 138, 0, 0.1)',
+                        tension: 0.4,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 80,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flow Matching for Image Generation</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .slide { 
+            width: 1280px; 
+            height: 720px; 
+            display: none; 
+            padding: 60px;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .slide.active { display: flex; flex-direction: column; }
+        .slide h1 { font-size: 3rem; font-weight: 700; color: #111827; margin-bottom: 2rem; }
+        .slide h2 { font-size: 2.5rem; font-weight: 600; color: #2563EB; margin-bottom: 1.5rem; }
+        .slide h3 { font-size: 2rem; font-weight: 500; color: #1F2937; margin-bottom: 1rem; }
+        .slide p, .slide li { font-size: 1.5rem; color: #1F2937; line-height: 1.6; }
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .nav-btn {
+            background: #2563EB;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .nav-btn:hover { background: #1D4ED8; }
+        .nav-btn:disabled { background: #9CA3AF; cursor: not-allowed; }
+        .slide-counter {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .header-accent {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, #2563EB, #7C3AED);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Slide 1: Title -->
+    <div class="slide active">
+        <div class="header-accent"></div>
+        <div class="flex-1 flex flex-col justify-center items-center text-center">
+            <h1 class="text-6xl font-bold mb-8 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Flow Matching for Image Generation
+            </h1>
+            <div class="text-2xl text-gray-600 mb-12">
+                A Modern Approach to Generative Modeling
+            </div>
+            <div class="text-xl text-gray-500 space-y-2">
+                <p>University Course: Advanced Machine Learning</p>
+                <p>Topic: Generative Models and Neural ODEs</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 2: Motivation -->
+    <div class="slide">
+        <div class="header-accent"></div>
+        <h2>Why Flow Matching?</h2>
+        <div class="grid grid-cols-2 gap-12 flex-1">
+            <div>
+                <h3 class="text-blue-600 mb-6">Modern Applications</h3>
+                <ul class="space-y-4 text-xl">
+                    <li class="flex items-center">
+                        <span class="w-3 h-3 bg-blue-500 rounded-full mr-4"></span>
+                        <strong>Stable Diffusion 3</strong> - Latest text-to-image model
+                    </li>
+                    <li class="flex items-center">
+                        <span class="w-3 h-3 bg-purple-500 rounded-full mr-4"></span>
+                        <strong>Flux</strong> - Black Forest Labs' generative model
+                    </li>
+                    <li class="flex items-center">
+                        <span class="w-3 h-3 bg-green-500 rounded-full mr-4"></span>
+                        <strong>AuroFlow</strong> - High-quality image synthesis
+                    </li>
+                </ul>
+                
+                <h3 class="text-blue-600 mb-6 mt-8">Key Advantages</h3>
+                <ul class="space-y-3 text-lg">
+                    <li>✓ Faster sampling than diffusion models</li>
+                    <li>✓ Better training stability</li>
+                    <li>✓ Unified theoretical framework</li>
+                    <li>✓ Simulation-free training</li>
+                </ul>
+            </div>
+            <div class="flex items-center justify-center">
+                <div class="bg-gradient-to-br from-blue-50 to-purple-50 p-8 rounded-2xl border-2 border-blue-200">
+                    <div class="text-center">
+                        <div class="text-4xl mb-4">🎨</div>
+                        <h3 class="text-2xl font-semibold mb-4">State-of-the-Art</h3>
+                        <p class="text-lg text-gray-600">
+                            Flow Matching powers the latest generation of AI image generators, 
+                            offering superior quality and efficiency.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 3: Background -->
+    <div class="slide">
+        <div class="header-accent"></div>
+        <h2>Background: Generative Models Landscape</h2>
+        <div class="flex-1 flex flex-col justify-center">
+            <div class="grid grid-cols-2 gap-8 mb-8">
+                <div class="bg-red-50 p-6 rounded-xl border-l-4 border-red-400">
+                    <h3 class="text-red-700 font-semibold mb-3">GANs (2014)</h3>
+                    <p class="text-sm">Adversarial training, unstable, high quality</p>
+                </div>
+                <div class="bg-green-50 p-6 rounded-xl border-l-4 border-green-400">
+                    <h3 class="text-green-700 font-semibold mb-3">VAEs (2013)</h3>
+                    <p class="text-sm">Variational inference, stable, blurry outputs</p>
+                </div>
+                <div class="bg-blue-50 p-6 rounded-xl border-l-4 border-blue-400">
+                    <h3 class="text-blue-700 font-semibold mb-3">Diffusion Models (2020)</h3>
+                    <p class="text-sm">Denoising process, high quality, slow sampling</p>
+                </div>
+                <div class="bg-purple-50 p-6 rounded-xl border-l-4 border-purple-400">
+                    <h3 class="text-purple-700 font-semibold mb-3">Flow Matching (2022)</h3>
+                    <p class="text-sm">Continuous flows, fast sampling, unified framework</p>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <div class="inline-block bg-gray-100 px-6 py-3 rounded-lg">
+                    <p class="text-lg font-medium">
+                        <span class="text-purple-600">Flow Matching</span> combines the best aspects: 
+                        <span class="text-blue-600">stability</span>, 
+                        <span class="text-green-600">quality</span>, and 
+                        <span class="text-red-600">efficiency</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 4: Normalizing Flows to CNFs -->
+    <div class="slide">
+        <div class="header-accent"></div>
+        <h2>From Normalizing Flows to CNFs</h2>
+        <div class="grid grid-cols-2 gap-12 flex-1">
+            <div>
+                <h3 class="text-blue-600 mb-4">Normalizing Flows</h3>
+                <div class="bg-blue-50 p-6 rounded-xl mb-6">
+                    <p class="text-lg mb-4">Transform simple distribution (e.g., Gaussian) to complex data distribution through <strong>invertible transformations</strong>.</p>
+                    <div class="text-center">
+                        <div class="inline-block bg-white px-4 py-2 rounded-lg shadow">
+                            $z_0 \xrightarrow{f_1} z_1 \xrightarrow{f_2} z_2 \xrightarrow{f_3} x$
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 class="text-purple-600 mb-4">Continuous Normalizing Flows</h3>
+                <div class="bg-purple-50 p-6 rounded-xl">
+                    <p class="text-lg mb-4">Replace discrete transformations with <strong>continuous ODEs</strong>:</p>
+                    <div class="text-center bg-white p-4 rounded-lg shadow">
+                        $$\frac{d\mathbf{z}_t}{dt} = v(\mathbf{z}_t, t)$$
+                    </div>
+                    <p class="text-sm mt-3 text-gray-600">where $v(\mathbf{z}_t, t)$ is a learned vector field</p>
+                </div>
+            </div>
+            
+            <div class="flex flex-col justify-center">
+                <div class="bg-gradient-to-r from-blue-100 to-purple-100 p-8 rounded-2xl">
+                    <h3 class="text-center text-xl font-semibold mb-6">Key Insight</h3>
+                    <div class="space-y-4 text-lg">
+                        <div class="flex items-center">
+                            <span class="text-2xl mr-3">🔄</span>
+                            <span>Continuous transformations are more flexible</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="text-2xl mr-3">⚡</span>
+                            <span>Can be solved with ODE solvers</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="text-2xl mr-3">🎯</span>
+                            <span>Exact likelihood computation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5: Flow Matching Core Concepts -->
+    <div class="slide">
+        <div class="header-accent"></div>
+        <h2>Flow Matching: Core Concepts</h2>
+        <div class="flex-1">
+            <div class="grid grid-cols-2 gap-8 mb-8">
+                <div>
+                    <h3 class="text-blue-600 mb-4">The Problem</h3>
+                    <div class="bg-red-50 p-6 rounded-xl border-l-4 border-red-400">
+                        <p class="text-lg">Training CNFs traditionally requires:</p>
+                        <ul class="mt-3 space-y-2">
+                            <li>• Expensive ODE simulation</li>
+                            <li>• Complex likelihood calculations</li>
+                            <li>• Unstable training dynamics</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-green-600 mb-4">The Solution</h3>
+                    <div class="bg-green-50 p-6 rounded-xl border-l-4 border-green-400">
+                        <p class="text-lg">Flow Matching provides:</p>
+                        <ul class="mt-3 space-y-2">
+                            <li>• <strong>Simulation-free</strong> training</li>
+                            <li>• Direct vector field regression</li>
+                            <li>• Stable optimization</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-gray-50 p-8 rounded-2xl">
+                <h3 class="text-center text-xl font-semibold mb-6">Flow Matching Objective</h3>
+                <div class="text-center">
+                    <div class="bg-white p-6 rounded-xl shadow-lg inline-block">
+                        $$\mathcal{L}_{\text{FM}}(\theta) = \mathbb{E}_{t, p_t(x)} \left[ \|v_t(x) - u_t(x)\|^2 \right]$$
+                    </div>
+                    <p class="mt-4 text-lg text-gray-600">
+                        Learn vector field $v_t(x)$ to match target vector field $u_t(x)$
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 6: Mathematical Framework -->
+    <div class="slide">
+        <div class="header-accent"></div>
+        <h2>Mathematical Framework: Three Key Theorems</h2>
+        <div class="flex-1 space-y-6">
+            <div class="bg-blue-50 p-6 rounded-xl">
+                <h3 class="text-blue-700 font-semibold mb-3">Theorem 1: Marginal Construction</h3>
+                <p class="text-lg mb-3">Conditional vector fields $u_t(x|x_1)$ can generate marginal probability paths $p_t(x)$:</p>
+                <div class="bg-white p-4 rounded-lg">
+                    $$u_t(x) = \int u_t(x|x_1) \frac{p_t(x|x_1)q(x_1)}{p_t(x)} dx_1$$
+                </div>
+            </div>
+            
+            <div class="bg-green-50 p-6 rounded-xl">
+                <h3 class="text-green-700 font-semibold mb-3">Theorem 2: Loss Equivalence</h3>
+                <p class="text-lg mb-3">Conditional Flow Matching loss equals Flow Matching loss (same gradients):</p>
+                <div class="bg-white p-4 rounded-lg">
+                    $$\nabla_\theta \mathcal{L}_{\text{FM}}(\theta) = \nabla_\theta \mathcal{L}_{\text{CFM}}(\theta)$$
+                </div>
+            </div>
+            
+            <div class="bg-purple-50 p-6 rounded-xl">
+                <h3 class="text-purple-700 font-semibold mb-3">Theorem 3: Gaussian Paths</h3>
+                <p class="text-lg mb-3">For Gaussian conditional paths, the vector field has explicit form:</p>
+                <div class="bg-white p-4 rounded-lg">
+                    $$u_t(x|x_1) = \frac{\sigma'_t(x_1)}{\sigma_t(x_1)}(x - \mu_t(x_1)) + \mu'_t(x_1)$$
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 7: Conditional Flow Matching -->
+    <div class="slide">
+        <div class="header-accent"></div>
+        <h2>Conditional Flow Matching (CFM)</h2>
+        <div class="grid grid-cols-2 gap-12 flex-1">
+            <div>
+                <h3 class="text-blue-600 mb-4">Key Insight</h3>
+                <div class="bg-blue-50 p-6 rounded-xl mb-6">
+                    <p class="text-lg">Instead of learning the complex marginal vector field $u_t(x)$, learn simpler conditional vector fields $u_t(x|x_1)$.</p>
+                </div>
+                
+                <h3 class="text-green-600 mb-4">CFM Training Loss</h3>
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    $$\mathcal{L}_{\text{CFM}}(\theta) = \mathbb{E}_{t,q(x_1),p_t(x|x_1)} \left[ \|v_t(x) - u_t(x|x_1)\|^2 \right]$$
+                </div>
+                
+                <div class="mt-6 space-y-3">
+                    <div class="flex items-center text-lg">
+                        <span class="w-3 h-3 bg-blue-500 rounded-full mr-3"></span>
+                        $t \sim \text{Uniform}[0,1]$ - Random time
+                    </div>
+                    <div class="flex items-center text-lg">
+                        <span class="w-3 h-3 bg-green-500 rounded-full mr-3"></span>
+                        $x_1 \sim q(x_1)$ - Data sample
+                    </div>
+                    <div class="flex items-center text-lg">
+                        <span class="w-3 h-3 bg-purple-500 rounded-full mr-3"></span>
+                        $x \sim p_t(x|x_1)$ - Conditional path
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex flex-col justify-center">
+                <div class="bg-gradient-to-br from-gray-50 to-blue-50 p-8 rounded-2xl border-2 border-blue-200">
+                    <h3 class="text-xl font-semibold mb-6 text-center">Training Process</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center p-3 bg-white rounded-lg shadow">
+                            <span class="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm font-bold">1</span>
+                            <span>Sample time $t$ and data $x_1$</span>
+                        </div>
+                        <div class="flex items-center p-3 bg-white rounded-lg shadow">
+                            <span class="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm font-bold">2</span>
+                            <span>Sample from conditional path $p_t(x|x_1)$</span>
+                        </div>
+                        <div class="flex items-center p-3 bg-white rounded-lg shadow">
+                            <span class="bg-purple-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm font-bold">3</span>
+                            <span>Compute target vector field $u_t(x|x_1)$</span>
+                        </div>
+                        <div class="flex items-center p-3 bg-white rounded-lg shadow">
+                            <span class="bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm font-bold">4</span>
+                            <span>Train model $v_t(x)$ to match target</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 8: Probability Paths -->
+    <div class="slide">
+        <div class="header-accent"></div>
+        <h2>Probability Paths & Vector Fields</h2>
+        <div class="flex-1">
+            <p class="text-xl mb-8 text-center">Different choices of conditional probability paths lead to different training dynamics:</p>
+            
+            <div class="grid grid-cols-3 gap-6">
+                <div class="bg-red-50 p-6 rounded-xl border-l-4 border-red-400">
+                    <h3 class="text-red-700 font-semibold mb-4">Variance Exploding</h3>
+                    <div class="bg-white p-4 rounded-lg mb-4">
+                        $$p_t(x|x_1) = \mathcal{N}(x|x_1, \sigma_{1-t}^2 I)$$
+                    </div>
+                    <ul class="text-sm space-y-2">
+                        <li>• Data preserved, noise added</li>
+                        <li>• Explores wide space</li>
+                        <li>• Good for diversity</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-blue-50 p-6 rounded-xl border-l-4 border-blue-400">
+                    <h3 class="text-blue-700 font-semibold mb-4">Variance Preserving</h3>
+                    <div class="bg-white p-4 rounded-lg mb-4">
+                        $$p_t(x|x_1) = \mathcal{N}(x|\alpha_{1-t}x_1, (1-\alpha_{1-t}^2)I)$$
+                    </div>
+                    <ul class="text-sm space-y-2">
+                        <li>• Similar to DDPM</li>
+                        <li>• Stable variance</li>
+                        <li>• Well-studied properties</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-green-50 p-6 rounded-xl border-l-4 border-green-400">
+                    <h3 class="text-green-700 font-semibold mb-4">Optimal Transport</h3>
+                    <div class="bg-white p-4 rounded-lg mb-4">
+                        $$p_t(x|x_1) = \mathcal{N}(x|tx_1, (1-(1-\sigma_{\min})t)^2I)$$
+                    </div>
+                    <ul class="text-sm space-y-2">
+                        <li>• Straight-line paths</li>
+                        <li>• Minimal transport cost</li>
+                        <li>• Fastest sampling</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-8 bg-gray-100 p-6 rounded-xl">
+                <h3 class="text-center text-lg font-semibold mb-4">Key Properties</h3>
+                <div class="grid grid-cols-2 gap-8 text-lg">
+                    <div>
+                        <strong>Boundary Conditions:</strong>
+                        <ul class="mt-2 space-y-1">
+                            <li>• $t=0$: $p_0(x|x_1) = \mathcal{N}(0, I)$ (noise)</li>
+                            <li>• $t=1$: $p_1(x|x_1) \approx \delta(x - x_1)$ (data)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <strong>Vector Field:</strong>
+                        <ul class="mt-2 space-y-1">
+                            <li>• Defines how samples flow over time</li>
+                            <li>• Learned by neural network</li>
+                            <li>• Enables generation via ODE solving</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 9: Training & Sampling -->
+    <div class="slide">
+        <div class="header-accent"></div>
+        <h2>Training & Sampling Process</h2>
+        <div class="grid grid-cols-2 gap-12 flex-1">
+            <div>
+                <h3 class="text-blue-600 mb-6">Training Phase</h3>
+                <div class="space-y-4">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h4 class="font-semibold mb-2">1. Data Preparation</h4>
+                        <p class="text-sm">Sample time $t \sim U[0,1]$ and data point $x_1 \sim q(x_1)$</p>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h4 class="font-semibold mb-2">2. Path Sampling</h4>
+                        <p class="text-sm">Sample $x_0 \sim \mathcal{N}(0,I)$ and compute $x_t$ using probability path</p>
+                    </div>
+                    <div class="bg-purple-50 p-4 rounded-lg">
+                        <h4 class="font-semibold mb-2">3. Target Computation</h4>
+                        <p class="text-sm">Calculate target vector field $u_t(x_t|x_1)$ analytically</p>
+                    </div>
+                    <div class="bg-red-50 p-4 rounded-lg">
+                        <h4 class="font-semibold mb-2">4. Model Update</h4>
+                        <p class="text-sm">Train neural network $v_t(x_t)$ to match $u_t(x_t|x_1)$</p>
+                    </div>
+                </div>
+                
+                <div class="mt-6 bg-white p-4 rounded-lg shadow">
+                    <h4 class="font-semibold mb-2">Training Loss</h4>
+                    <div class="text-center">
+                        $$\mathcal{L} = \mathbb{E}[\|v_t(x_t) - u_t(x_t|x_1)\|^2]$$
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <h3 class="text-green-600 mb-6">Sampling Phase</h3>
+                <div class="space-y-4">
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-semibold mb-2">1. Initialize</h4>
+                        <p class="text-sm">Start with noise sample $x_0 \sim \mathcal{N}(0,I)$</p>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h4 class="font-semibold mb-2">2. ODE Integration</h4>
+                        <p class="text-sm">Solve $\frac{dx_t}{dt} = v_t(x_t)$ from $t=0$ to $t=1$</p>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h4 class="font-semibold mb-2">3. Numerical Solver</h4>
+                        <p class="text-sm">Use Euler, RK4, or adaptive solvers</p>
+                    </div>
+                    <div class="bg-purple-50 p-4 rounded-lg">
+                        <h4 class="font-semibold mb-2">4. Generated Sample</h4>
+                        <p class="text-sm">Final $x_1$ is the generated data sample</p>
+                    </div>
+                </div>
+                
+                <div class="mt-6 bg-gradient-to-r from-green-100 to-blue-100 p-6 rounded-xl">
+                    <h4 class="font-semibold mb-3 text-center">Key Advantage</h4>
+                    <p class="text-center text-lg">
+                        <span class="font-semibold text-green-600">No simulation during training!</span><br>
+                        Only need ODE solving for generation
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 10: Applications -->
+    <div class="slide">
+        <div class="header-accent"></div>
+        <h2>Applications in Image Generation</h2>
+        <div class="flex-1">
+            <div class="grid grid-cols-3 gap-8 mb-8">
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <span class="text-white text-2xl font-bold">SD3</span>
+                        </div>
+                        <h3 class="text-xl font-semibold">Stable Diffusion 3</h3>
+                    </div>
+                    <ul class="text-sm space-y-2">
+                        <li>• Uses Flow Matching for training</li>
+                        <li>• Improved text-image alignment</li>
+                        <li>• Better prompt adherence</li>
+                        <li>• Faster generation</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <span class="text-white text-2xl">⚡</span>
+                        </div>
+                        <h3 class="text-xl font-semibold">Flux</h3>
+                    </div>
+                    <ul class="text-sm space-y-2">
+                        <li>• Black Forest Labs model</li>
+                        <li>• Rectified Flow approach</li>
+                        <li>• High-quality outputs</li>
+                        <li>• Efficient sampling</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <span class="text-white text-2xl">🌟</span>
+                        </div>
+                        <h3 class="text-xl font-semibold">AuroFlow</h3>
+                    </div>
+                    <ul class="text-sm space-y-2">
+                        <li>• Research prototype</li>
+                        <li>• Advanced Flow Matching</li>
+                        <li>• Novel architectures</li>
+                        <li>• Experimental features</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="bg-gray-50 p-8 rounded-2xl">
+                <h3 class="text-center text-xl font-semibold mb-6">Why Flow Matching for Images?</h3>
+                <div class="grid grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="font-semibold text-blue-600 mb-3">Technical Benefits</h4>
+                        <ul class="space-y-2">
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                                <span>Straight-line probability paths</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                                <span>Fewer sampling steps needed</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                                <span>Better training stability</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                                <span>Unified theoretical framework</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-green-600 mb-3">Practical Advantages</h4>
+                        <ul class="space-y-2">
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
+                                <span>Faster inference time</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
+                                <span>Lower computational cost</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
+                                <span>Easier to control and condition</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
+                                <span>Better scalability</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 11: Comparison -->
+    <div class="slide">
+        <div class="header-accent"></div>
+        <h2>Comparison with Other Methods</h2>
+        <div class="flex-1">
+            <div class="overflow-x-auto">
+                <table class="w-full bg-white rounded-xl shadow-lg">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="p-4 text-left font-semibold">Method</th>
+                            <th class="p-4 text-center font-semibold">Training Stability</th>
+                            <th class="p-4 text-center font-semibold">Sampling Speed</th>
+                            <th class="p-4 text-center font-semibold">Quality</th>
+                            <th class="p-4 text-center font-semibold">Likelihood</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b">
+                            <td class="p-4 font-semibold text-red-600">GANs</td>
+                            <td class="p-4 text-center">❌ Unstable</td>
+                            <td class="p-4 text-center">✅ Very Fast</td>
+                            <td class="p-4 text-center">✅ High</td>
+                            <td class="p-4 text-center">❌ No</td>
+                        </tr>
+                        <tr class="border-b bg-gray-50">
+                            <td class="p-4 font-semibold text-green-600">VAEs</td>
+                            <td class="p-4 text-center">✅ Stable</td>
+                            <td class="p-4 text-center">✅ Fast</td>
+                            <td class="p-4 text-center">⚠️ Blurry</td>
+                            <td class="p-4 text-center">✅ Yes</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="p-4 font-semibold text-blue-600">Diffusion Models</td>
+                            <td class="p-4 text-center">✅ Stable</td>
+                            <td class="p-4 text-center">❌ Slow</td>
+                            <td class="p-4 text-center">✅ High</td>
+                            <td class="p-4 text-center">⚠️ Approximate</td>
+                        </tr>
+                        <tr class="bg-purple-50 border-b-2 border-purple-200">
+                            <td class="p-4 font-semibold text-purple-600">Flow Matching</td>
+                            <td class="p-4 text-center">✅ Stable</td>
+                            <td class="p-4 text-center">✅ Fast</td>
+                            <td class="p-4 text-center">✅ High</td>
+                            <td class="p-4 text-center">✅ Exact</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="mt-8 grid grid-cols-2 gap-8">
+                <div class="bg-blue-50 p-6 rounded-xl">
+                    <h3 class="text-blue-700 font-semibold mb-4">vs. Diffusion Models</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span><strong>Faster sampling:</strong> Straight paths require fewer steps</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span><strong>No noise scheduling:</strong> Simpler training setup</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span><strong>Unified framework:</strong> Can represent DDPM as special case</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-green-50 p-6 rounded-xl">
+                    <h3 class="text-green-700 font-semibold mb-4">vs. Normalizing Flows</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span><strong>More flexible:</strong> Continuous transformations</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span><strong>Better expressivity:</strong> Can model complex distributions</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-green-500 mr-2">✓</span>
+                            <span><strong>Easier training:</strong> No architectural constraints</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 12: Conclusion -->
+    <div class="slide">
+        <div class="header-accent"></div>
+        <h2>Conclusion & Future Directions</h2>
+        <div class="flex-1">
+            <div class="grid grid-cols-2 gap-12 mb-8">
+                <div>
+                    <h3 class="text-blue-600 mb-6">Key Takeaways</h3>
+                    <div class="space-y-4">
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h4 class="font-semibold mb-2">🎯 Unified Framework</h4>
+                            <p class="text-sm">Flow Matching provides a unified view of generative modeling through continuous flows</p>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h4 class="font-semibold mb-2">⚡ Practical Benefits</h4>
+                            <p class="text-sm">Faster sampling, stable training, and simulation-free optimization</p>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <h4 class="font-semibold mb-2">🔬 Mathematical Rigor</h4>
+                            <p class="text-sm">Strong theoretical foundations with three key theorems</p>
+                        </div>
+                        <div class="bg-red-50 p-4 rounded-lg">
+                            <h4 class="font-semibold mb-2">🚀 State-of-the-Art</h4>
+                            <p class="text-sm">Powers latest image generation models like Stable Diffusion 3</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-green-600 mb-6">Future Research Directions</h3>
+                    <div class="space-y-4">
+                        <div class="border-l-4 border-blue-400 pl-4">
+                            <h4 class="font-semibold text-blue-600">Architecture Innovation</h4>
+                            <p class="text-sm text-gray-600">Better neural network architectures for vector field learning</p>
+                        </div>
+                        <div class="border-l-4 border-green-400 pl-4">
+                            <h4 class="font-semibold text-green-600">Optimal Transport</h4>
+                            <p class="text-sm text-gray-600">Advanced optimal transport formulations for efficiency</p>
+                        </div>
+                        <div class="border-l-4 border-purple-400 pl-4">
+                            <h4 class="font-semibold text-purple-600">Conditional Generation</h4>
+                            <p class="text-sm text-gray-600">Better conditioning mechanisms for controllable generation</p>
+                        </div>
+                        <div class="border-l-4 border-red-400 pl-4">
+                            <h4 class="font-semibold text-red-600">Multi-modal Applications</h4>
+                            <p class="text-sm text-gray-600">Extension to video, 3D, and other modalities</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-8 rounded-2xl text-center">
+                <h3 class="text-2xl font-bold mb-4">Flow Matching: The Future of Generative Modeling</h3>
+                <p class="text-lg text-gray-700 mb-6">
+                    Combining theoretical elegance with practical efficiency, Flow Matching represents 
+                    a significant advancement in our ability to generate high-quality content.
+                </p>
+                <div class="flex justify-center space-x-8 text-sm">
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-blue-600">2022</div>
+                        <div>Original Paper</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-green-600">2024</div>
+                        <div>SD3 Release</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-purple-600">Future</div>
+                        <div>New Applications</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="navigation">
+        <button class="nav-btn" onclick="previousSlide()">Previous</button>
+        <button class="nav-btn" onclick="nextSlide()">Next</button>
+    </div>
+    
+    <div class="slide-counter">
+        <span id="current-slide">1</span> / <span id="total-slides">12</span>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        
+        document.getElementById('total-slides').textContent = totalSlides;
+        
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            document.getElementById('current-slide').textContent = currentSlide + 1;
+            
+            // Re-render MathJax for the new slide
+            if (window.MathJax) {
+                MathJax.typesetPromise([slides[currentSlide]]);
+            }
+        }
+        
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+        
+        function previousSlide() {
+            showSlide(currentSlide - 1);
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                previousSlide();
+            }
+        });
+        
+        // Initialize MathJax
+        window.addEventListener('load', function() {
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        });
+    </script>
+</body>
+</html>

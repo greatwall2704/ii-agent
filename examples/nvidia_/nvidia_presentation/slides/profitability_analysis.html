@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profitability & Margins</title>
+    <link rel="stylesheet" href="../main.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="header-bar"></div>
+        
+        <h1 class="slide-title">Profitability & Margins</h1>
+        
+        <div class="two-column">
+            <div class="column">
+                <h2 class="text-2xl font-bold mb-4" style="color: #76B900;">Margin Evolution</h2>
+                <div class="chart-container" style="height: 280px;">
+                    <canvas id="marginChart"></canvas>
+                </div>
+                
+                <div class="bg-green-50 p-4 rounded-lg mt-4">
+                    <h3 class="text-lg font-semibold mb-2" style="color: #76B900;">Margin Analysis</h3>
+                    <p class="text-sm">Exceptional gross margins of 78.4% demonstrate NVIDIA's pricing power in AI accelerators and the premium nature of its products. Operating leverage drives strong operating margin expansion.</p>
+                </div>
+            </div>
+            
+            <div class="column">
+                <h2 class="text-2xl font-bold mb-4" style="color: #76B900;">Cash Generation</h2>
+                
+                <div class="key-metrics mb-6">
+                    <div class="metric-box">
+                        <div class="metric-value">$15.3B</div>
+                        <div class="metric-label">Operating Cash Flow</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value">$14.9B</div>
+                        <div class="metric-label">Free Cash Flow</div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                    <h3 class="text-lg font-semibold mb-3">Profitability Metrics</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="font-medium">Gross Margin (GAAP)</span>
+                            <span class="text-xl font-bold" style="color: #76B900;">78.4%</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-medium">Operating Margin (GAAP)</span>
+                            <span class="text-xl font-bold" style="color: #76B900;">64.9%</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-medium">Net Margin (GAAP)</span>
+                            <span class="text-xl font-bold" style="color: #76B900;">57.1%</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-medium">Return on Revenue</span>
+                            <span class="text-xl font-bold" style="color: #76B900;">57.1%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bullet-point">
+                    <div class="bullet-icon"></div>
+                    <div class="content-text">
+                        <strong>Pricing Power:</strong> Premium AI accelerator pricing drives exceptional gross margins.
+                    </div>
+                </div>
+                
+                <div class="bullet-point">
+                    <div class="bullet-icon"></div>
+                    <div class="content-text">
+                        <strong>Operating Leverage:</strong> Revenue growth significantly outpaces expense growth.
+                    </div>
+                </div>
+                
+                <div class="bullet-point">
+                    <div class="bullet-icon"></div>
+                    <div class="content-text">
+                        <strong>Cash Generation:</strong> Strong free cash flow provides flexibility for R&D and shareholder returns.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            NVIDIA Q1 2025 Financial Analysis | Slide 6
+        </div>
+    </div>
+
+    <script>
+        // Margin Evolution Chart
+        const marginCtx = document.getElementById('marginChart').getContext('2d');
+        new Chart(marginCtx, {
+            type: 'line',
+            data: {
+                labels: ['Q1 FY24', 'Q2 FY24', 'Q3 FY24', 'Q4 FY24', 'Q1 FY25'],
+                datasets: [
+                    {
+                        label: 'Gross Margin (%)',
+                        data: [64.6, 70.1, 75.0, 76.0, 78.4],
+                        borderColor: '#76B900',
+                        backgroundColor: 'rgba(118, 185, 0, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#76B900',
+                        pointBorderColor: '#5A8A00',
+                        pointRadius: 5
+                    },
+                    {
+                        label: 'Operating Margin (%)',
+                        data: [29.8, 51.0, 62.0, 61.6, 64.9],
+                        borderColor: '#5A8A00',
+                        backgroundColor: 'rgba(90, 138, 0, 0.1)',
+                        tension: 0.4,
+                        fill: false,
+                        pointBackgroundColor: '#5A8A00',
+                        pointBorderColor: '#3E5F00',
+                        pointRadius: 5
+                    },
+                    {
+                        label: 'Net Margin (%)',
+                        data: [28.4, 48.4, 58.9, 55.6, 57.1],
+                        borderColor: '#A8D5A8',
+                        backgroundColor: 'rgba(168, 213, 168, 0.1)',
+                        tension: 0.4,
+                        fill: false,
+                        pointBackgroundColor: '#A8D5A8',
+                        pointBorderColor: '#76B900',
+                        pointRadius: 5
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 85,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            maxRotation: 45
+                        }
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                }
+            }
+        });
+    </script>
+</body>
+</html>
