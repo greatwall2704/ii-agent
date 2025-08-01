@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vietnam's Economic Resilience - Vietnam Investment Strategy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .slide-container {
+            width: 1280px;
+            min-height: 720px;
+            height: auto;
+            background: #FFFFFF;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            margin: 0 auto;
+            padding: 40px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="slide-container">
+        <div class="border-b-4 border-green-600 pb-4 mb-8">
+            <h1 class="text-4xl font-bold text-green-600 mb-2">Vietnam's Economic Resilience</h1>
+            <p class="text-xl text-gray-600">H1 2025: Strongest Performance in 15 Years</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-8 flex-grow">
+            <div class="space-y-6">
+                <div class="bg-green-50 border-l-4 border-green-500 p-6 rounded-r-lg">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-2xl font-bold text-green-700">GDP Growth</h3>
+                        <span class="text-4xl font-bold text-green-600">7.52%</span>
+                    </div>
+                    <p class="text-lg text-gray-700">Highest first-half growth in 15 years, outpacing most Southeast Asian economies</p>
+                </div>
+
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-2xl font-bold text-blue-700">Trade Surplus</h3>
+                        <span class="text-4xl font-bold text-blue-600">$7.63B</span>
+                    </div>
+                    <p class="text-lg text-gray-700">Strong export performance despite global headwinds and tariff concerns</p>
+                </div>
+
+                <div class="bg-purple-50 border-l-4 border-purple-500 p-6 rounded-r-lg">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-2xl font-bold text-purple-700">FDI Inflow</h3>
+                        <span class="text-4xl font-bold text-purple-600">$21.51B</span>
+                    </div>
+                    <p class="text-lg text-gray-700">+32.6% YoY increase showing strong investor confidence</p>
+                </div>
+
+                <div class="bg-yellow-50 border-l-4 border-yellow-500 p-6 rounded-r-lg">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-2xl font-bold text-yellow-700">Inflation Rate</h3>
+                        <span class="text-4xl font-bold text-yellow-600">3.22%</span>
+                    </div>
+                    <p class="text-lg text-gray-700">Manageable inflation under control, supporting purchasing power</p>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-white border border-gray-200 rounded-lg p-6">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">GDP Composition by Sector</h3>
+                    <div style="height: 300px;">
+                        <canvas id="gdpChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 rounded-lg p-6">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Key Growth Drivers</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="font-medium">Services Sector</span>
+                            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-bold">+8.14%</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="font-medium">Industrial Production</span>
+                            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-bold">+8.33%</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="font-medium">Agriculture & Fisheries</span>
+                            <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-bold">+3.84%</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="font-medium">Export Growth</span>
+                            <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-bold">+14.4%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 flex justify-between items-center">
+            <a href="tariff_impact.html" class="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600 transition-colors">
+                ← Back
+            </a>
+            <a href="investment_landscape.html" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition-colors">
+                Next: Investment Landscape →
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('gdpChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Services', 'Industry & Construction', 'Agriculture & Fisheries', 'Taxes'],
+                datasets: [{
+                    data: [43.4, 36.9, 11.2, 8.3],
+                    backgroundColor: ['#10B981', '#3B82F6', '#F59E0B', '#8B5CF6'],
+                    borderWidth: 2,
+                    borderColor: '#FFFFFF'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

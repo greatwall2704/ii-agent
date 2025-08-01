@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vietnam Investment Strategy Under Trump Tariffs - Full Presentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        .slide-frame {
+            width: 100%;
+            height: 100vh;
+            border: 2px solid #ffffff;
+            border-radius: 8px;
+            margin: 0 auto;
+            background: #FFFFFF;
+        }
+        .slide-nav {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            z-index: 1000;
+        }
+        .nav-button {
+            background: #3B82F6;
+            color: white;
+            padding: 8px 16px;
+            margin: 2px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .nav-button:hover {
+            background: #2563EB;
+        }
+        .nav-button.active {
+            background: #10B981;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="slide-nav">
+        <div class="text-sm font-bold mb-3">Navigation</div>
+        <div class="grid grid-cols-2 gap-1">
+            <button class="nav-button active" onclick="loadSlide('index.html', this)">Title</button>
+            <button class="nav-button" onclick="loadSlide('executive_summary.html', this)">Summary</button>
+            <button class="nav-button" onclick="loadSlide('tariff_impact.html', this)">Tariffs</button>
+            <button class="nav-button" onclick="loadSlide('economic_performance.html', this)">Economy</button>
+            <button class="nav-button" onclick="loadSlide('investment_landscape.html', this)">Landscape</button>
+            <button class="nav-button" onclick="loadSlide('stock_market.html', this)">Stocks</button>
+            <button class="nav-button" onclick="loadSlide('real_estate.html', this)">Real Estate</button>
+            <button class="nav-button" onclick="loadSlide('manufacturing.html', this)">Manufacturing</button>
+            <button class="nav-button" onclick="loadSlide('portfolio_allocation.html', this)">Portfolio</button>
+            <button class="nav-button" onclick="loadSlide('risk_assessment.html', this)">Risks</button>
+            <button class="nav-button" onclick="loadSlide('implementation.html', this)">Implementation</button>
+            <button class="nav-button" onclick="loadSlide('conclusion.html', this)">Conclusion</button>
+        </div>
+        <div class="mt-3 text-xs text-gray-300">
+            Use arrow keys or click buttons to navigate
+        </div>
+    </div>
+
+    <div class="slide-frame">
+        <iframe id="slideFrame" src="index.html" width="100%" height="100%" frameborder="0"></iframe>
+    </div>
+
+    </script>
+</body>
+</html>

@@ -17,15 +17,24 @@
         };
     </script>
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        html, body { 
+            font-family: 'Inter', sans-serif; 
+            overflow-x: hidden; 
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
         .slide { 
-            width: 1280px; 
-            height: 720px; 
+            width: 100%; 
+            max-width: 1280px; 
+            min-height: 720px; 
+            height: auto;
             display: none; 
             padding: 60px;
             background: white;
             position: relative;
-            overflow: hidden;
+            margin: 0 auto;
+            box-sizing: border-box;
         }
         .slide.active { display: flex; flex-direction: column; }
         .slide h1 { font-size: 3rem; font-weight: 700; color: #111827; margin-bottom: 2rem; }
@@ -67,6 +76,70 @@
             right: 0;
             height: 8px;
             background: linear-gradient(90deg, #2563EB, #7C3AED);
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px 20px;
+                min-height: 100vh;
+            }
+            .slide h1 { font-size: 2rem; }
+            .slide h2 { font-size: 1.8rem; }
+            .slide h3 { font-size: 1.5rem; }
+            .slide p, .slide li { font-size: 1.1rem; }
+            .navigation {
+                bottom: 10px;
+                right: 10px;
+            }
+            .nav-btn {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+            .slide-counter {
+                bottom: 10px;
+                left: 10px;
+                font-size: 0.9rem;
+            }
+            
+            /* Make grids responsive */
+            .grid.grid-cols-2 {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .grid.grid-cols-3 {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+        
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .slide {
+                padding: 40px 30px;
+            }
+            .grid.grid-cols-3 {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .slide {
+                padding: 20px 15px;
+            }
+            .slide h1 { font-size: 1.5rem; }
+            .slide h2 { font-size: 1.3rem; }
+            .slide h3 { font-size: 1.1rem; }
+            .slide p, .slide li { font-size: 1rem; }
+            
+            /* Make tables responsive */
+            .overflow-x-auto {
+                font-size: 0.8rem;
+            }
+            .overflow-x-auto th,
+            .overflow-x-auto td {
+                padding: 0.5rem 0.25rem;
+            }
         }
     </style>
 </head>

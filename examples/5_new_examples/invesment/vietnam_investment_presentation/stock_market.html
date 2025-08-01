@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Market Opportunities - Vietnam Investment Strategy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .slide-container {
+            width: 1280px;
+            min-height: 720px;
+            height: auto;
+            background: #FFFFFF;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            margin: 0 auto;
+            padding: 40px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="slide-container">
+        <div class="border-b-4 border-blue-600 pb-4 mb-8">
+            <h1 class="text-4xl font-bold text-blue-600 mb-2">Stock Market Opportunities</h1>
+            <p class="text-xl text-gray-600">VN-Index: Banking Sector Leading Market Returns</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-8 flex-grow">
+            <div class="space-y-6">
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                    <h3 class="text-2xl font-bold text-blue-700 mb-4">Market Performance</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="font-medium">VN-Index Level</span>
+                            <span class="text-2xl font-bold text-blue-600">~1,300 points</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-medium">Banking Contribution</span>
+                            <span class="text-2xl font-bold text-green-600">58.5%</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-medium">Real Estate Contribution</span>
+                            <span class="text-2xl font-bold text-purple-600">10.7%</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-medium">Expected Growth</span>
+                            <span class="text-2xl font-bold text-orange-600">Positive</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-green-50 border border-green-200 rounded-lg p-6">
+                    <h3 class="text-2xl font-bold text-green-700 mb-4">Top Banking Stocks</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between bg-white p-3 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
+                                <span class="font-medium">Vietcombank (VCB)</span>
+                            </div>
+                            <span class="text-green-600 font-bold">Strong Buy</span>
+                        </div>
+                        <div class="flex items-center justify-between bg-white p-3 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-blue-500 rounded-full mr-3"></div>
+                                <span class="font-medium">Techcombank (TCB)</span>
+                            </div>
+                            <span class="text-blue-600 font-bold">Buy</span>
+                        </div>
+                        <div class="flex items-center justify-between bg-white p-3 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-purple-500 rounded-full mr-3"></div>
+                                <span class="font-medium">BIDV (BID)</span>
+                            </div>
+                            <span class="text-purple-600 font-bold">Buy</span>
+                        </div>
+                        <div class="flex items-center justify-between bg-white p-3 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-orange-500 rounded-full mr-3"></div>
+                                <span class="font-medium">ACB</span>
+                            </div>
+                            <span class="text-orange-600 font-bold">Hold</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+                    <h3 class="text-2xl font-bold text-yellow-700 mb-4">Growth Catalysts</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-start">
+                            <div class="w-2 h-2 bg-yellow-500 rounded-full mr-3 mt-2"></div>
+                            <span>Market upgrade expectations</span>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-2 h-2 bg-yellow-500 rounded-full mr-3 mt-2"></div>
+                            <span>Institutional investment inflows</span>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-2 h-2 bg-yellow-500 rounded-full mr-3 mt-2"></div>
+                            <span>Strong earnings growth</span>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-2 h-2 bg-yellow-500 rounded-full mr-3 mt-2"></div>
+                            <span>Manufacturing resilience</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-white border border-gray-200 rounded-lg p-6">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Sector Allocation Strategy</h3>
+                    <div style="height: 300px;">
+                        <canvas id="sectorChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 rounded-lg p-6">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Investment Rationale</h3>
+                    <div class="space-y-4">
+                        <div class="bg-white p-4 rounded-lg border-l-4 border-blue-500">
+                            <h4 class="font-bold text-blue-700 mb-2">Banking Dominance</h4>
+                            <p class="text-gray-700">Banking sector contributing 58.5% to market returns with strong fundamentals and credit growth.</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg border-l-4 border-green-500">
+                            <h4 class="font-bold text-green-700 mb-2">Manufacturing Stability</h4>
+                            <p class="text-gray-700">Stable electricity supplies supporting manufacturing resilience and export competitiveness.</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg border-l-4 border-purple-500">
+                            <h4 class="font-bold text-purple-700 mb-2">Technology Growth</h4>
+                            <p class="text-gray-700">FPT and tech companies benefiting from digital transformation and fintech boom.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 flex justify-between items-center">
+            <a href="investment_landscape.html" class="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600 transition-colors">
+                ← Back
+            </a>
+            <a href="real_estate.html" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition-colors">
+                Next: Real Estate →
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('sectorChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Banking', 'Manufacturing', 'Technology', 'Real Estate', 'Consumer', 'Others'],
+                datasets: [{
+                    data: [40, 25, 15, 10, 5, 5],
+                    backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6', '#EF4444', '#6B7280'],
+                    borderWidth: 2,
+                    borderColor: '#FFFFFF'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 15,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
