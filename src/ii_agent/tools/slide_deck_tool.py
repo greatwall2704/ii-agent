@@ -138,190 +138,198 @@ class SlideInitializeTool(LLMTool):
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-    <div class="slide-container" id="slide-container">
-        <h1 id="slide-title">{title}</h1>
-        <div id="slide-content-placeholder" class="slide-content">
-            <!-- Content for this slide will be added here -->
-            <!-- Use class "two-column" for two-column layout -->
-            <!-- Use class "three-column" for three-column layout -->
-            <!-- Wrap images in "image-container" div -->
-            <!-- Wrap charts in "chart-container" div -->
-            <!-- Use "info-box" class for content boxes -->
+    <div class="slide-frame" id="slide-frame">
+        <div class="slide-container" id="slide-container">
+            <h1 id="slide-title">{title}</h1>
+            <div id="slide-content" class="slide-content">
+                <!-- Content for this slide will be added here -->
+            </div>
+            
+            <!-- Split slide navigation -->
+            <div class="split-nav hidden" id="split-nav">
+                <button class="split-prev" id="split-prev">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="split-indicator" id="split-indicator">
+                    Part 1 of 1
+                </div>
+                <button class="split-next" id="split-next">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
         </div>
     </div>
     
     <script>
-        let layoutMode = 'normal'; // normal, compact, ultra-compact
-        let isOverflowing = false;
+        // Split content management
+        let currentPart = 0;
+        let totalParts = 1;
+        const contentParts = [];
         
-        // Kiểm tra và điều chỉnh layout để tránh overflow
-        function checkAndAdjustLayout() {{
+        // Initialize the slide
+        function initSlide() {{
+            const contentElement = document.getElementById('slide-content');
+            contentParts[0] = contentElement.innerHTML;
+            checkContentLength();
+        }}
+        
+        // Check if content needs splitting
+        function checkContentLength() {{
             const container = document.getElementById('slide-container');
-            const content = document.getElementById('slide-content-placeholder');
-            const warning = document.getElementById('overflow-warning');
-            const indicator = document.querySelector('.layout-indicator') || createLayoutIndicator();
+            const content = document.getElementById('slide-content');
+            const frame = document.getElementById('slide-frame');
+            const nav = document.getElementById('split-nav');
+            const indicator = document.getElementById('split-indicator');
             
-            // Reset classes
-            container.className = 'slide-container';
-            if (warning) warning.classList.add('hidden');
+            // Reset scroll position
+            frame.scrollTop = 0;
             
-            // Kiểm tra overflow
-            const isContentOverflowing = container.scrollHeight > container.clientHeight;
+            // Check if content overflows
+            const isOverflowing = content.scrollHeight > frame.clientHeight;
             
-            if (isContentOverflowing) {{
-                // Áp dụng compact layout trước
-                if (layoutMode === 'normal') {{
-                    layoutMode = 'compact';
-                    container.classList.add('compact-layout');
-                    indicator.textContent = 'Compact Layout';
+            if (isOverflowing) {{
+                // Split the content
+                splitContent();
+            }} else {{
+                // Hide navigation if not needed
+                nav.classList.add('hidden');
+                totalParts = 1;
+                currentPart = 0;
+                indicator.textContent = `Part ${{currentPart+1}} of ${{totalParts}}`;
+            }}
+        }}
+        
+        // Split content into multiple parts
+        function splitContent() {{
+            const content = document.getElementById('slide-content');
+            const originalContent = content.innerHTML;
+            const frameHeight = document.getElementById('slide-frame').clientHeight;
+            const titleHeight = document.getElementById('slide-title').offsetHeight;
+            const navHeight = document.getElementById('split-nav').offsetHeight;
+            
+            // Calculate available space for content
+            const availableHeight = frameHeight - titleHeight - navHeight - 40; // 40px padding
+            
+            // Reset parts
+            contentParts.length = 0;
+            currentPart = 0;
+            
+            // Create a temporary element for measuring
+            const tempDiv = document.createElement('div');
+            tempDiv.style.visibility = 'hidden';
+            tempDiv.style.position = 'absolute';
+            tempDiv.style.width = '100%';
+            document.body.appendChild(tempDiv);
+            
+            // Clone the content for splitting
+            tempDiv.innerHTML = originalContent;
+            
+            // Split logic
+            let currentPartContent = '';
+            let currentHeight = 0;
+            let partCount = 1;
+            
+            // Process child nodes
+            const nodes = Array.from(tempDiv.childNodes);
+            for (let i = 0; i < nodes.length; i++) {{
+                const node = nodes[i];
+                const nodeClone = node.cloneNode(true);
+                
+                // Measure node height
+                tempDiv.innerHTML = '';
+                tempDiv.appendChild(nodeClone);
+                const nodeHeight = tempDiv.offsetHeight;
+                
+                // Check if node fits or needs to be split
+                if (currentHeight + nodeHeight <= availableHeight) {{
+                    currentPartContent += node.outerHTML || node.textContent;
+                    currentHeight += nodeHeight;
+                }} else {{
+                    // Save current part
+                    if (currentPartContent) {{
+                        contentParts.push(currentPartContent);
+                        partCount++;
+                    }}
                     
-                    // Kiểm tra lại sau khi áp dụng compact
-                    setTimeout(() => {{
-                        if (container.scrollHeight > container.clientHeight) {{
-                            layoutMode = 'ultra-compact';
-                            container.classList.remove('compact-layout');
-                            container.classList.add('ultra-compact-layout');
-                            indicator.textContent = 'Ultra-Compact Layout';
-                            
-                            // Nếu vẫn overflow, hiển thị cảnh báo
-                            setTimeout(() => {{
-                                if (container.scrollHeight > container.clientHeight) {{
-                                    showContentWarning();
-                                    indicator.textContent = 'Content Too Long - Consider Splitting';
-                                }}
-                            }}, 100);
-                        }}
-                    }}, 100);
+                    // Start new part
+                    currentPartContent = node.outerHTML || node.textContent;
+                    currentHeight = nodeHeight;
                 }}
-            }} else {{
-                indicator.textContent = 'Normal Layout';
-                hideContentWarning();
             }}
-        }}
-        
-        function createLayoutIndicator() {{
-            const indicator = document.createElement('div');
-            indicator.className = 'layout-indicator';
-            indicator.textContent = 'Normal Layout';
-            document.getElementById('slide-container').appendChild(indicator);
-            return indicator;
-        }}
-        
-        function showContentWarning() {{
-            let warning = document.getElementById('content-warning');
-            if (!warning) {{
-                warning = document.createElement('div');
-                warning.id = 'content-warning';
-                warning.className = 'content-warning';
-                warning.innerHTML = '⚠️ Nội dung quá dài<br>Cân nhắc chia thành nhiều slide';
-                document.getElementById('slide-container').appendChild(warning);
-            }}
-            warning.classList.remove('hidden');
-        }}
-        
-        function hideContentWarning() {{
-            const warning = document.getElementById('content-warning');
-            if (warning) {{
-                warning.classList.add('hidden');
-            }}
-        }}
-        
-        // Tối ưu hóa hình ảnh để tránh overflow
-        function optimizeImages() {{
-            const images = document.querySelectorAll('#slide-content-placeholder img');
-            images.forEach(img => {{
-                if (!img.closest('.image-container')) {{
-                    const container = document.createElement('div');
-                    container.className = 'image-container';
-                    img.parentNode.insertBefore(container, img);
-                    container.appendChild(img);
-                }}
-            }});
-        }}
-        
-        // Tối ưu hóa bảng và biểu đồ
-        function optimizeChartsAndTables() {{
-            const charts = document.querySelectorAll('#slide-content-placeholder canvas');
-            charts.forEach(chart => {{
-                if (!chart.closest('.chart-container')) {{
-                    const container = document.createElement('div');
-                    container.className = 'chart-container';
-                    chart.parentNode.insertBefore(container, chart);
-                    container.appendChild(chart);
-                }}
-            }});
-        }}
-        
-        // Xử lý responsive
-        function handleResponsive() {{
-            const container = document.getElementById('slide-container');
-            const screenWidth = window.innerWidth;
             
-            // Remove all responsive classes first
-            container.classList.remove('mobile-layout', 'tablet-layout', 'desktop-layout');
+            // Add last part
+            if (currentPartContent) {{
+                contentParts.push(currentPartContent);
+            }}
             
-            if (screenWidth <= 768) {{
-                container.classList.add('mobile-layout');
-            }} else if (screenWidth <= 1024) {{
-                container.classList.add('tablet-layout');
-            }} else {{
-                container.classList.add('desktop-layout');
+            // Clean up
+            document.body.removeChild(tempDiv);
+            
+            // Update navigation
+            totalParts = contentParts.length;
+            showPart(currentPart);
+            
+            // Show navigation if needed
+            const nav = document.getElementById('split-nav');
+            if (totalParts > 1) {{
+                nav.classList.remove('hidden');
+            }}
+        }}
+        
+        // Show specific part
+        function showPart(partIndex) {{
+            if (partIndex >= 0 && partIndex < totalParts) {{
+                currentPart = partIndex;
+                document.getElementById('slide-content').innerHTML = contentParts[partIndex];
+                document.getElementById('split-indicator').textContent = `Part ${{currentPart+1}} of ${{totalParts}}`;
+                
+                // Update button states
+                document.getElementById('split-prev').disabled = (currentPart === 0);
+                document.getElementById('split-next').disabled = (currentPart === totalParts - 1);
             }}
         }}
         
         // Event listeners
+        document.getElementById('split-prev').addEventListener('click', () => {{
+            if (currentPart > 0) {{
+                showPart(currentPart - 1);
+            }}
+        }});
+        
+        document.getElementById('split-next').addEventListener('click', () => {{
+            if (currentPart < totalParts - 1) {{
+                showPart(currentPart + 1);
+            }}
+        }});
+        
+        // Initialize on load
         window.addEventListener('load', () => {{
-            handleResponsive();
-            optimizeImages();
-            optimizeChartsAndTables();
-            setTimeout(checkAndAdjustLayout, 100);
+            initSlide();
+            
+            // Re-check on resize
+            window.addEventListener('resize', () => {{
+                setTimeout(checkContentLength, 100);
+            }});
         }});
-        
-        window.addEventListener('resize', () => {{
-            handleResponsive();
-            setTimeout(checkAndAdjustLayout, 200);
-        }});
-        
-        // Observer để theo dõi thay đổi nội dung
-        const observer = new MutationObserver(() => {{
-            optimizeImages();
-            optimizeChartsAndTables();
-            setTimeout(checkAndAdjustLayout, 100);
-        }});
-        
-        observer.observe(document.getElementById('slide-content-placeholder'), {{
-            childList: true,
-            subtree: true,
-            characterData: true,
-            attributes: true
-        }});
-        
-        // Debug function để test layout
-        window.testLayout = function() {{
-            console.log('Container height:', document.getElementById('slide-container').clientHeight);
-            console.log('Content height:', document.getElementById('slide-container').scrollHeight);
-            console.log('Layout mode:', layoutMode);
-            console.log('Is overflowing:', document.getElementById('slide-container').scrollHeight > document.getElementById('slide-container').clientHeight);
-        }};
     </script>
 </body>
 </html>
 """
 
     def _get_main_css_template(self, style_instruction: dict) -> str:
-        palette = style_instruction.get("color_palette", {})
-        typography = style_instruction.get("typography", {})
+    palette = style_instruction.get("color_palette", {})
+    typography = style_instruction.get("typography", {})
 
-        primary_color = palette.get("primary", "#4A90E2")
-        secondary_color = palette.get("secondary", "#F5A623")
-        background_color = palette.get("background", "#FFFFFF")
-        text_color = palette.get("text_color", "#333333")
-        header_color = palette.get("header_color", "#000000")
+    primary_color = palette.get("primary", "#4A90E2")
+    secondary_color = palette.get("secondary", "#F5A623")
+    background_color = palette.get("background", "#FFFFFF")
+    text_color = palette.get("text_color", "#333333")
+    header_color = palette.get("header_color", "#000000")
 
-        header_font = typography.get("header_font", "Arial, sans-serif")
-        body_font = typography.get("body_font", "Arial, sans-serif")
+    header_font = typography.get("header_font", "Arial, sans-serif")
+    body_font = typography.get("body_font", "Arial, sans-serif")
 
-        return f"""
+    return f"""
 :root {{
     --primary-color: {primary_color};
     --secondary-color: {secondary_color};
@@ -335,27 +343,36 @@ class SlideInitializeTool(LLMTool):
 /* Reset và thiết lập cơ bản */
 * {{
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }}
 
 body, html {{
-    margin: 0;
-    padding: 0;
-    width: 100vw;
-    height: 100vh;
-    overflow: auto;
+    width: 100%;
+    height: 100%;
     font-family: var(--body-font);
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 20px;
+    background: #f0f2f5;
+    overflow: hidden;
 }}
 
-/* Container cố định với kích thước chuẩn */
+/* Slide frame - khung chứa slide ở giữa màn hình */
+.slide-frame {{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    padding: 20px;
+    overflow: hidden;
+    background: #f0f2f5;
+}}
+
+/* Slide container - khung nội dung chính */
 .slide-container {{
-    width: 1280px;
-    min-height: 720px;
-    max-width: 100vw;
+    width: 100%;
+    max-width: 1200px;
+    height: 100%;
+    max-height: 90vh;
     padding: 40px;
     display: flex;
     flex-direction: column;
@@ -363,11 +380,32 @@ body, html {{
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     border-radius: 12px;
     position: relative;
-    overflow: visible;
+    overflow: hidden;
 }}
 
-/* Typography cơ bản với kích thước cố định */
-.slide-container h1 {{
+.slide-content {{
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 5px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-color) rgba(0, 0, 0, 0.1);
+}}
+
+.slide-content::-webkit-scrollbar {{
+    width: 6px;
+}}
+
+.slide-content::-webkit-scrollbar-track {{
+    background: rgba(0, 0, 0, 0.05);
+}}
+
+.slide-content::-webkit-scrollbar-thumb {{
+    background-color: var(--primary-color);
+    border-radius: 3px;
+}}
+
+/* Tiêu đề slide */
+#slide-title {{
     font-size: 36px;
     font-family: var(--header-font);
     color: var(--header-color);
@@ -375,91 +413,167 @@ body, html {{
     margin: 0 0 30px 0;
     line-height: 1.2;
     flex-shrink: 0;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--primary-color);
 }}
 
-.slide-container h2 {{
+/* Thanh điều hướng chia slide */
+.split-nav {{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.03);
+    border-radius: 8px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}}
+
+.split-prev, .split-next {{
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}}
+
+.split-prev:hover, .split-next:hover {{
+    background: {primary_color}CC;
+    transform: scale(1.05);
+}}
+
+.split-prev:disabled, .split-next:disabled {{
+    background: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+}}
+
+.split-indicator {{
+    margin: 0 15px;
+    font-size: 14px;
+    color: var(--text-color);
+    font-weight: 500;
+}}
+
+/* Styling cho nội dung */
+.slide-content h2 {{
     font-size: 28px;
     font-family: var(--header-font);
     color: var(--header-color);
-    font-weight: bold;
-    margin: 25px 0 15px 0;
-    line-height: 1.3;
+    margin: 20px 0 15px 0;
 }}
 
-.slide-container h3 {{
+.slide-content h3 {{
     font-size: 24px;
     font-family: var(--header-font);
     color: var(--header-color);
-    font-weight: bold;
-    margin: 20px 0 10px 0;
-    line-height: 1.3;
+    margin: 15px 0 10px 0;
 }}
 
-.slide-container p, .slide-container li, .slide-container span {{
+.slide-content p {{
     font-size: 18px;
-    font-family: var(--body-font);
-    color: var(--text-color);
     line-height: 1.6;
-    margin: 12px 0;
+    margin-bottom: 15px;
+    color: var(--text-color);
 }}
 
-.slide-container ul, .slide-container ol {{
+.slide-content ul, .slide-content ol {{
     padding-left: 30px;
+    margin-bottom: 20px;
+}}
+
+.slide-content li {{
+    margin-bottom: 8px;
+    line-height: 1.6;
+}}
+
+.slide-content img {{
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
     margin: 15px 0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }}
 
-.slide-container li {{
-    margin: 8px 0;
+.slide-content table {{
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
 }}
 
-/* Nội dung slide với flexbox layout */
-.slide-content {{
-    flex: 1;
-    overflow: visible;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    min-height: 0;
+.slide-content th {{
+    background-color: var(--primary-color);
+    color: white;
+    padding: 12px;
+    text-align: left;
 }}
 
-/* Content container với flexbox */
-.content-container {{
-    flex: 1;
-    display: flex;
-    gap: 30px;
-    align-items: stretch;
+.slide-content td {{
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
 }}
 
-/* Info box với kích thước được kiểm soát */
-.info-box {{
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    background: rgba(0, 0, 0, 0.02);
-    border-radius: 8px;
+.slide-content tr:nth-child(even) {{
+    background-color: #f9f9f9;
+}}
+
+.slide-content blockquote {{
     border-left: 4px solid var(--primary-color);
+    padding: 10px 20px;
+    margin: 20px 0;
+    background-color: #f9f9f9;
+    font-style: italic;
 }}
 
-/* Image container với kích thước cố định */
-.image-container {{
-    height: 250px;
-    overflow: hidden;
+.slide-content code {{
+    font-family: monospace;
+    background-color: #f5f5f5;
+    padding: 2px 6px;
+    border-radius: 4px;
+}}
+
+.slide-content pre {{
+    background-color: #2d2d2d;
+    color: #f8f8f2;
+    padding: 15px;
     border-radius: 8px;
+    overflow-x: auto;
+    margin: 20px 0;
+}}
+
+.slide-content pre code {{
+    background: none;
+    padding: 0;
+}}
+
+/* Layouts */
+.two-column {{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin: 20px 0;
+}}
+
+.three-column {{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    margin: 20px 0;
+}}
+
+.image-container {{
+    border-radius: 8px;
+    overflow: hidden;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     margin: 15px 0;
 }}
 
-/* Hình ảnh với kích thước được kiểm soát */
-.slide-container img {{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 8px;
-    display: block;
-}}
-
-/* Chart container với kích thước cố định */
 .chart-container {{
     height: 250px;
     overflow: hidden;
@@ -471,275 +585,109 @@ body, html {{
     justify-content: center;
 }}
 
-/* Links */
-.slide-container a {{
-    color: var(--primary-color);
-    text-decoration: none;
+.info-box {{
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-color);
+    margin: 15px 0;
 }}
 
-.slide-container a:hover {{
-    text-decoration: underline;
-}}
-
-/* Two column layout với gap kiểm soát */
-.two-column {{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-    height: auto;
-    align-items: start;
-}}
-
-/* Three column layout */
-.three-column {{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 20px;
-    height: auto;
-    align-items: start;
-}}
-
-/* Compact layout cho nội dung dài */
-.compact-layout {{
-    padding: 30px;
-}}
-
-.compact-layout h1 {{
-    font-size: 32px;
-    margin: 0 0 25px 0;
-}}
-
-.compact-layout h2 {{
-    font-size: 24px;
-    margin: 20px 0 12px 0;
-}}
-
-.compact-layout h3 {{
-    font-size: 20px;
-    margin: 15px 0 8px 0;
-}}
-
-.compact-layout p, 
-.compact-layout li {{
-    font-size: 16px;
-    line-height: 1.5;
-    margin: 10px 0;
-}}
-
-.compact-layout .image-container {{
-    height: 200px;
-}}
-
-.compact-layout .chart-container {{
-    height: 200px;
-}}
-
-/* Ultra-compact layout cho nội dung rất dài */
-.ultra-compact-layout {{
-    padding: 25px;
-}}
-
-.ultra-compact-layout h1 {{
-    font-size: 28px;
-    margin: 0 0 20px 0;
-}}
-
-.ultra-compact-layout h2 {{
-    font-size: 22px;
-    margin: 15px 0 10px 0;
-}}
-
-.ultra-compact-layout h3 {{
-    font-size: 18px;
-    margin: 12px 0 6px 0;
-}}
-
-.ultra-compact-layout p, 
-.ultra-compact-layout li {{
-    font-size: 14px;
-    line-height: 1.4;
-    margin: 8px 0;
-}}
-
-.ultra-compact-layout .image-container {{
-    height: 180px;
-}}
-
-.ultra-compact-layout .chart-container {{
-    height: 180px;
-}}
-
-/* Text overflow handling */
-.text-ellipsis {{
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}}
-
-.text-clamp-2 {{
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}}
-
-.text-clamp-3 {{
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}}
-
-/* Cảnh báo content overflow - ít invasive hơn */
-.content-warning {{
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: rgba(255, 193, 7, 0.9);
-    color: #212529;
-    padding: 8px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 500;
-    z-index: 1000;
-    animation: fadeIn 0.3s ease-in-out;
-    max-width: 200px;
-}}
-
-.content-warning.hidden {{
-    display: none;
-}}
-
-@keyframes fadeIn {{
-    from {{ opacity: 0; transform: translateY(-10px); }}
-    to {{ opacity: 1; transform: translateY(0); }}
-}}
-
-/* Layout adjustment indicators */
-.layout-indicator {{
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    background: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 4px 8px;
-    border-radius: 10px;
-    font-size: 10px;
-    font-weight: 500;
-    z-index: 999;
-}}
-
-/* Responsive breakpoints để giữ tỷ lệ */
-@media (max-width: 1400px) {{
+/* Responsive design */
+@media (max-width: 1200px) {{
     .slide-container {{
-        width: 90vw;
-        min-height: 540px; /* Giữ tỷ lệ 16:9 */
+        max-width: 95vw;
+        max-height: 95vh;
         padding: 30px;
     }}
     
-    .slide-container h1 {{ font-size: 32px; }}
-    .slide-container h2 {{ font-size: 26px; }}
-    .slide-container h3 {{ font-size: 22px; }}
-    .slide-container p, .slide-container li {{ font-size: 16px; }}
+    #slide-title {{
+        font-size: 32px;
+    }}
 }}
 
-@media (max-width: 1024px) {{
-    .slide-container {{
-        width: 95vw;
-        min-height: 480px;
-        padding: 25px;
-    }}
-    
-    .slide-container h1 {{ font-size: 28px; }}
-    .slide-container h2 {{ font-size: 24px; }}
-    .slide-container h3 {{ font-size: 20px; }}
-    .slide-container p, .slide-container li {{ font-size: 14px; }}
-    
+@media (max-width: 992px) {{
     .two-column {{
         grid-template-columns: 1fr;
-        gap: 20px;
     }}
     
     .three-column {{
         grid-template-columns: 1fr 1fr;
-        gap: 15px;
-    }}
-    
-    .image-container, .chart-container {{
-        height: 200px;
     }}
 }}
+
 @media (max-width: 768px) {{
+    .slide-frame {{
+        padding: 10px;
+    }}
+    
     .slide-container {{
-        width: 100vw;
-        min-height: 400px;
-        padding: 20px;
+        padding: 25px;
+        max-height: 100vh;
         border-radius: 0;
     }}
     
-    .slide-container h1 {{ font-size: 24px; }}
-    .slide-container h2 {{ font-size: 20px; }}
-    .slide-container h3 {{ font-size: 18px; }}
-    .slide-container p, .slide-container li {{ font-size: 14px; }}
-    
-    .two-column, .three-column {{
-        grid-template-columns: 1fr;
-        gap: 15px;
+    #slide-title {{
+        font-size: 28px;
+        margin-bottom: 20px;
     }}
     
-    .image-container, .chart-container {{
-        height: 150px;
+    .slide-content h2 {{
+        font-size: 24px;
+    }}
+    
+    .slide-content h3 {{
+        font-size: 20px;
+    }}
+    
+    .slide-content p {{
+        font-size: 16px;
+    }}
+    
+    .three-column {{
+        grid-template-columns: 1fr;
     }}
 }}
 
 @media (max-width: 480px) {{
     .slide-container {{
-        padding: 15px;
-        min-height: 320px;
+        padding: 20px;
     }}
     
-    .slide-container h1 {{ font-size: 20px; margin-bottom: 15px; }}
-    .slide-container h2 {{ font-size: 18px; margin: 15px 0 10px 0; }}
-    .slide-container h3 {{ font-size: 16px; margin: 12px 0 8px 0; }}
-    .slide-container p, .slide-container li {{ font-size: 12px; margin: 8px 0; }}
-    
-    .image-container, .chart-container {{
-        height: 120px;
+    #slide-title {{
+        font-size: 24px;
     }}
     
-    .info-box {{
-        padding: 15px;
+    .slide-content h2 {{
+        font-size: 20px;
+    }}
+    
+    .slide-content p {{
+        font-size: 14px;
+    }}
+    
+    .split-nav {{
+        padding: 8px;
+    }}
+    
+    .split-indicator {{
+        font-size: 12px;
     }}
 }}
 
-/* Print styles */
-@media print {{
-    body {{
-        padding: 0;
-        background: none;
-    }}
-    
-    .slide-container {{
-        width: 100%;
-        min-height: auto;
-        padding: 2cm;
-        box-shadow: none;
-        border-radius: 0;
-        page-break-inside: avoid;
-    }}
-    
-    .slide-content {{
-        overflow: visible;
-    }}
-    
-    .content-warning, .layout-indicator {{
-        display: none;
-    }}
+/* Hiệu ứng chuyển phần */
+@keyframes fadeIn {{
+    from {{ opacity: 0; }}
+    to {{ opacity: 1; }}
 }}
-    
-    .overflow-warning {{
-        display: none;
-    }}
+
+.slide-content {{
+    animation: fadeIn 0.3s ease-out;
+}}
+
+/* Trạng thái ẩn cho thanh điều hướng chia slide */
+.hidden {{
+    display: none !important;
 }}
 """
 
@@ -1067,59 +1015,6 @@ class SlidePresentTool(LLMTool):
         .controls-hidden #top-controls {{
             opacity: 0;
             pointer-events: none;
-        }}
-        
-        /* Slide overview mode */
-        .overview-mode {{
-            background: #1a1a1a;
-        }}
-        
-        .overview-grid {{
-            display: none;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 30px;
-            padding: 40px;
-            max-height: 100vh;
-            overflow-y: auto;
-        }}
-        
-        .overview-grid.active {{
-            display: grid;
-        }}
-        
-        .overview-slide {{
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            aspect-ratio: 16/9; /* Giữ tỷ lệ chuẩn */
-        }}
-        
-        .overview-slide:hover {{
-            transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }}
-        
-        .overview-slide iframe {{
-            width: 100%;
-            height: 100%;
-            border: none;
-            pointer-events: none;
-            transform: scale(0.8); /* Scale down để xem overview */
-            transform-origin: top left;
-        }}
-        
-        .overview-slide-number {{
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 12px;
         }}
     </style>
 </head>

@@ -10,6 +10,7 @@
         body { 
             font-family: 'Inter', sans-serif; 
             overflow-x: hidden;
+            overflow-y: hidden;
             margin: 0;
             padding: 0;
         }
@@ -30,6 +31,35 @@
             padding: 15px;
             border-radius: 8px;
             z-index: 1000;
+            display: none;
+        }
+        .nav-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1001;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: background 0.0s ease;
+        }
+        .nav-toggle:hover {
+            background: rgba(0, 0, 0, 0.9);
+        }
+        .nav-toggle.close {
+            background: transparent;
+        }
+        .nav-toggle.close:hover {
+            background: rgba(0, 0, 0, 0.1);
         }
         .nav-button {
             background: #3B82F6;
@@ -47,9 +77,101 @@
         .nav-button.active {
             background: #10B981;
         }
+        .fullscreen-button {
+            background: #F59E0B;
+            color: white;
+            padding: 8px 16px;
+            margin: 2px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            width: 100%;
+            margin-top: 8px;
+        }
+        .fullscreen-button:hover {
+            background: #D97706;
+        }
+        .fullscreen-button.fullscreen {
+            background: #EF4444;
+        }
+        .fullscreen-button.fullscreen:hover {
+            background: #DC2626;
+        }
+        .navigation-buttons {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+        .nav-btn {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+        .nav-btn:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: translateY(-2px);
+        }
+        .nav-btn:disabled {
+            display: none;
+        }
+        .nav-btn.back {
+            background: rgba(107, 114, 128, 0.8);
+        }
+        .nav-btn.back:hover {
+            background: rgba(107, 114, 128, 0.9);
+        }
+        .nav-btn.next {
+            background: rgba(59, 130, 246, 0.8);
+        }
+        .nav-btn.next:hover {
+            background: rgba(59, 130, 246, 0.9);
+        }
+        .fullscreen-mode .slide-nav {
+            display: none;
+        }
+        .fullscreen-mode .nav-toggle {
+            display: none;
+        }
+        .fullscreen-mode .slide-frame {
+            border: none;
+            border-radius: 0;
+        }
+        .fullscreen-mode .navigation-buttons {
+            bottom: 30px;
+        }
+        .slide-info {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            z-index: 1000;
+        }
+        .fullscreen-mode .slide-info {
+            bottom: 30px;
+            right: 30px;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
+    <button class="nav-toggle" onclick="toggleNavigation()" id="navToggle">
+        ☰
+    </button>
     <div class="slide-nav">
         <div class="text-sm font-bold mb-3">Navigation</div>
         <div class="grid grid-cols-2 gap-1">
@@ -66,15 +188,211 @@
             <button class="nav-button" onclick="loadSlide('implementation.html', this)">Implementation</button>
             <button class="nav-button" onclick="loadSlide('conclusion.html', this)">Conclusion</button>
         </div>
-        <div class="mt-3 text-xs text-gray-300">
-            Use arrow keys or click buttons to navigate
-        </div>
+        <button class="fullscreen-button" onclick="toggleFullscreen()" id="fullscreenBtn">
+            <span id="fullscreenText">Enter Fullscreen</span>
+        </button>
+
+    </div>
+
+    <div class="navigation-buttons">
+        <button class="nav-btn back" onclick="previousSlide()" id="backBtn">
+            ← Back
+        </button>
+        <button class="nav-btn next" onclick="nextSlide()" id="nextBtn">
+            Next →
+        </button>
     </div>
 
     <div class="slide-frame">
         <iframe id="slideFrame" src="index.html" width="100%" height="100%" frameborder="0"></iframe>
     </div>
 
+    <script>
+        let currentSlideIndex = 0;
+        const slides = [
+            'index.html',
+            'executive_summary.html',
+            'tariff_impact.html',
+            'economic_performance.html',
+            'investment_landscape.html',
+            'stock_market.html',
+            'real_estate.html',
+            'manufacturing.html',
+            'portfolio_allocation.html',
+            'risk_assessment.html',
+            'implementation.html',
+            'conclusion.html'
+        ];
+
+        const slideNames = [
+            'Title',
+            'Executive Summary',
+            'Tariff Impact',
+            'Economic Performance',
+            'Investment Landscape',
+            'Stock Market',
+            'Real Estate',
+            'Manufacturing',
+            'Portfolio Allocation',
+            'Risk Assessment',
+            'Implementation',
+            'Conclusion'
+        ];
+
+        function loadSlide(slidePath, button) {
+            document.getElementById('slideFrame').src = slidePath;
+            
+            // Update active button
+            document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            
+            // Update current slide index
+            currentSlideIndex = slides.indexOf(slidePath);
+            
+            // Update navigation buttons and slide info
+            updateNavigation();
+        }
+
+        function nextSlide() {
+            if (currentSlideIndex < slides.length - 1) {
+                currentSlideIndex++;
+                loadSlide(slides[currentSlideIndex], document.querySelectorAll('.nav-button')[currentSlideIndex]);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlideIndex > 0) {
+                currentSlideIndex--;
+                loadSlide(slides[currentSlideIndex], document.querySelectorAll('.nav-button')[currentSlideIndex]);
+            }
+        }
+
+        function toggleNavigation() {
+            const slideNav = document.querySelector('.slide-nav');
+            const navToggle = document.getElementById('navToggle');
+            
+            if (slideNav.style.display === 'none' || slideNav.style.display === '') {
+                slideNav.style.display = 'block';
+                navToggle.textContent = '✕';
+                navToggle.classList.add('close');
+            } else {
+                slideNav.style.display = 'none';
+                navToggle.textContent = '☰';
+                navToggle.classList.remove('close');
+            }
+        }
+
+        function updateNavigation() {
+            const backBtn = document.getElementById('backBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const slideInfo = document.getElementById('slideInfo');
+            
+            // Update back button
+            if (currentSlideIndex === 0) {
+                backBtn.style.display = 'none';
+                nextBtn.style.display = 'block';
+                nextBtn.textContent = 'Start';
+            } else if (currentSlideIndex === slides.length - 1) {
+                nextBtn.style.display = 'none'
+                backBtn.style.display = 'block';
+                backBtn.textContent = '← Back'
+            } else {
+                nextBtn.style.display = 'block';
+                nextBtn.textContent = 'Next →';
+                backBtn.style.display = 'block';
+                backBtn.textContent = '← Back'
+            }
+        }
+
+        function toggleFullscreen() {
+            const body = document.body;
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            const fullscreenText = document.getElementById('fullscreenText');
+            const slideNav = document.querySelector('.slide-nav');
+            const navToggle = document.getElementById('navToggle');
+            
+            if (!body.classList.contains('fullscreen-mode')) {
+                // Enter fullscreen
+                body.classList.add('fullscreen-mode');
+                fullscreenBtn.classList.add('fullscreen');
+                fullscreenText.textContent = 'Exit Fullscreen';
+                
+                // Hide navigation when entering fullscreen
+                slideNav.style.display = 'none';
+                navToggle.classList.remove('close');
+                navToggle.textContent = '☰';
+                
+                // Try to enter browser fullscreen
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.documentElement.webkitRequestFullscreen) {
+                    document.documentElement.webkitRequestFullscreen();
+                } else if (document.documentElement.msRequestFullscreen) {
+                    document.documentElement.msRequestFullscreen();
+                }
+            } else {
+                // Exit fullscreen
+                body.classList.remove('fullscreen-mode');
+                fullscreenBtn.classList.remove('fullscreen');
+                fullscreenText.textContent = 'Enter Fullscreen';
+                
+                // Try to exit browser fullscreen
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                previousSlide();
+            } else if (e.key === 'f' || e.key === 'F') {
+                e.preventDefault();
+                toggleFullscreen();
+            }
+        });
+
+        // Handle fullscreen change events
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('msfullscreenchange', handleFullscreenChange);
+
+        function handleFullscreenChange() {
+            const body = document.body;
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            const fullscreenText = document.getElementById('fullscreenText');
+            const slideNav = document.querySelector('.slide-nav');
+            const navToggle = document.getElementById('navToggle');
+            
+            if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
+                body.classList.add('fullscreen-mode');
+                fullscreenBtn.classList.add('fullscreen');
+                fullscreenText.textContent = 'Exit Fullscreen';
+                
+                // Hide navigation when entering fullscreen
+                slideNav.style.display = 'none';
+                navToggle.classList.remove('close');
+                navToggle.textContent = '☰';
+            } else {
+                body.classList.remove('fullscreen-mode');
+                fullscreenBtn.classList.remove('fullscreen');
+                fullscreenText.textContent = 'Enter Fullscreen';
+            }
+        }
+
+        // Initialize navigation on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateNavigation();
+        });
     </script>
 </body>
 </html>

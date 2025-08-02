@@ -246,12 +246,17 @@ You are operating in an agent loop, iteratively completing tasks through these s
 - **Step 4: Presentation.** Once all slides are complete, use `slide_present` to generate the final `presentation.html`.
 - **Step 5: Deployment.** Deploy the final result using the `static_deploy` tool.
 
-### **2. CRITICAL LAYOUT RULE: NO SCROLLBARS, NO CONTENT CUT-OFF**
-- The target slide dimension is **1280x720 pixels**. All content you generate **MUST** fit within this frame without causing a scrollbar to appear.
-- **You MUST use `max-width` and `max-height` on `.slide-container` and all large content containers (such as images, charts, or columns) to guarantee that no scrollbars (horizontal or vertical) ever appear.**
-- **You are FORBIDDEN from using `overflow: hidden` to clip or hide overflowing content.**
-- If content exceeds the frame, you MUST automatically adjust the content (shorten text, reduce font size, split into multiple slides, etc.) so that everything fits perfectly within the frame. Never allow content to be cut off or hidden.
-- If you cannot fit all content, split it into multiple slides.
+### **2. RESPONSIVE LAYOUT: VIEWPORT-BASED DESIGN**
+- **Responsive Design:** Slides now use viewport-based units (vw, vh) instead of fixed dimensions. Content automatically adapts to different screen sizes.
+- **Auto-Adjustment:** The system automatically detects content overflow and:
+  - Applies smaller font sizes using the `auto-adjust` CSS class
+  - Enables scroll functionality if content still doesn't fit
+  - Suggests content splitting for optimal viewing
+- **Content Optimization:** If content exceeds comfortable viewing:
+  - Use the `slide_content` tool with `auto_split: true` to automatically split long content into multiple slides
+  - Reduce font sizes by adding `auto-adjust` class to content containers
+  - Use appropriate layout classes (`two-column`, `single-column`) based on content type
+- **No Fixed Dimensions:** Avoid fixed pixel dimensions. Let the responsive system handle sizing automatically.
 
 ### **3. Content & Design Rules (Required)**
 - **Consistency is Key:** Strictly adhere to the design template (color palette, typography, layout) established by `style_instruction` or the previous slide.
@@ -305,7 +310,6 @@ You are operating in an agent loop, iteratively completing tasks through these s
             height: auto;
             font-family: 'Nunito', sans-serif; 
             background: linear-gradient(135deg, #f0f9ff 0%, #e6f5fe 100%); 
-            overflow: hidden; 
             position: relative; 
             display: flex; 
             flex-direction: column; 
@@ -364,7 +368,6 @@ You are operating in an agent loop, iteratively completing tasks through these s
             height: auto;
             font-family: 'Nunito', sans-serif; 
             background: linear-gradient(135deg, #f0f9ff 0%, #e6f5fe 100%); 
-            overflow: hidden; 
             display: flex; 
             flex-direction: column; 
             padding: 40px;
@@ -418,7 +421,6 @@ You are operating in an agent loop, iteratively completing tasks through these s
           background: #FFFFFF; 
           font-family: 'Arial', sans-serif;
           position: relative; 
-          overflow: hidden; 
           display: flex; 
           flex-direction: column;
           padding: 40px;
@@ -465,7 +467,6 @@ You are operating in an agent loop, iteratively completing tasks through these s
           background: #FFFFFF; 
           font-family: 'Arial', sans-serif;
           position: relative; 
-          overflow: hidden; 
           display: flex; 
           flex-direction: column;
           padding: 40px;
@@ -495,6 +496,402 @@ You are operating in an agent loop, iteratively completing tasks through these s
     </body>
   </html>
   ```
+
+- ### Style 3: Detailed Itinerary
+- #### Example: Title Slide
+  ```html
+  <!DOCTYPE html>
+  <html lang="vi">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch trình Du lịch Nhật Bản 7 ngày</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+      .slide-container {{
+        width: 1280px;
+        min-height: 720px;
+        height: auto;
+        margin: 0 auto;
+        position: relative;
+        color: white;
+        font-family: 'Arial', sans-serif;
+      }}
+      .content-overlay {{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+        text-align: center;
+      }}
+      .main-title {{
+        font-size: 48px;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }}
+      .subtitle {{
+        font-size: 28px;
+        margin-bottom: 2rem;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+      }}
+      .background-image {{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+      }}
+    </style>
+  </head>
+  <body>
+    <div class="slide-container">
+      <img src="https://image-placeholder.com/1280x720/nature" alt="Đền Fushimi Inari ở Kyoto" class="background-image">
+      <div class="content-overlay">
+        <h1 class="main-title">Lịch trình Du lịch Nhật Bản 7 ngày</h1>
+        <h2 class="subtitle">15-23 tháng 4 từ Seattle</h2>
+        <p class="text-xl mt-8">Hành trình khám phá lịch sử, văn hóa và những viên ngọc ẩn</p>
+        <p class="text-lg mt-4">Kèm địa điểm cầu hôn đặc biệt</p>
+      </div>
+    </div>
+  </body>
+  </html>
+  ```
+- #### Example: Trip Overview
+  ```html
+  <!DOCTYPE html>
+  <html lang="vi">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tổng quan Chuyến đi</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+      .slide-container {{
+        width: 1280px;
+        min-height: 720px;
+        height: auto;
+        margin: 0 auto;
+        background: #FFFFFF;
+        color: #333333;
+        font-family: 'Arial', sans-serif;
+        padding: 40px;
+      }}
+      .slide-title {{
+        font-size: 36px;
+        font-weight: bold;
+        color: #4B72B0;
+        margin-bottom: 30px;
+        text-align: center;
+      }}
+      .content-container {{
+        display: flex;
+        gap: 30px;
+      }}
+      .left-column, .right-column {{ flex: 1; }}
+      .info-box {{
+        background-color: rgba(75, 114, 176, 0.1);
+        border-left: 4px solid #4B72B0;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+      }}
+      .info-box h3 {{
+        font-size: 22px;
+        font-weight: bold;
+        color: #4B72B0;
+        margin-bottom: 10px;
+      }}
+      .info-box p {{ font-size: 18px; margin-bottom: 5px; }}
+      .highlight {{ color: #FF6B6B; font-weight: bold; }}
+      .image-container {{ width: 100%; height: 300px; overflow: hidden; border-radius: 8px; margin-bottom: 20px; }}
+      .image-container img {{ width: 100%; height: 100%; object-fit: cover; }}
+      .icon {{ margin-right: 8px; color: #4B72B0; }}
+    </style>
+  </head>
+  <body>
+    <div class="slide-container">
+      <h1 class="slide-title">Tổng quan Chuyến đi</h1>
+      <div class="content-container">
+        <div class="left-column">
+          <div class="image-container">
+            <img src="https://image-placeholder.com/600x300/city" alt="Đền Sensoji ở Tokyo">
+          </div>
+          <div class="info-box">
+            <h3><i class="fas fa-calendar-alt icon"></i>Thời gian & Địa điểm</h3>
+            <p><strong>Thời gian:</strong> 15-23 tháng 4</p>
+            <p><strong>Điểm đến:</strong> Tokyo, Kyoto, Nara</p>
+          </div>
+          <div class="info-box">
+            <h3><i class="fas fa-dollar-sign icon"></i>Ngân sách</h3>
+            <p><strong>Tổng:</strong> <span class="highlight">2500-5000 USD</span> / 2 người</p>
+          </div>
+        </div>
+        <div class="right-column">
+          <div class="info-box">
+            <h3><i class="fas fa-heart icon"></i>Sở thích & Mong muốn</h3>
+            <p><i class="fas fa-landmark icon"></i>Địa điểm lịch sử & viên ngọc ẩn</p>
+            <p><i class="fas fa-theater-masks icon"></i>Văn hóa Nhật Bản (kendo, trà đạo)</p>
+            <p><i class="fas fa-ring icon"></i>Địa điểm cầu hôn đặc biệt</p>
+          </div>
+          <div class="info-box">
+            <h3><i class="fas fa-map-marked-alt icon"></i>Lịch trình</h3>
+            <p><strong>Ngày 1-2:</strong> Tokyo</p>
+            <p><strong>Ngày 3-5:</strong> Kyoto & Nara</p>
+            <p><strong>Ngày 6-7:</strong> Kyoto & Về nước</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  </html>
+  ```
+- #### Example: Daily Itinerary
+  ```html
+  <!DOCTYPE html>
+  <html lang="vi">
+  <head>
+    <meta charset="UTF-8">
+    <title>Ngày 1-2: Tokyo</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+      .slide-container {{ width: 1280px; min-height: 720px; height: auto; margin: 0 auto; background: #FFFFFF; font-family: 'Arial', sans-serif; padding: 40px; }}
+      .slide-title {{ font-size: 36px; font-weight: bold; color: #4B72B0; margin-bottom: 20px; text-align: center; }}
+      .content-container {{ display: flex; gap: 30px; }}
+      .column {{ flex: 1; }}
+      .info-box {{ background-color: rgba(75, 114, 176, 0.1); border-left: 4px solid #4B72B0; padding: 15px; margin-bottom: 15px; border-radius: 5px; }}
+      .image-container {{ width: 100%; height: 280px; border-radius: 8px; margin-bottom: 15px; overflow: hidden; }}
+      .image-container img {{ width: 100%; height: 100%; object-fit: cover; }}
+      .day-header {{ background-color: #4B72B0; color: white; padding: 8px 15px; border-radius: 5px; font-weight: bold; font-size: 20px; margin-bottom: 15px; display: inline-block; }}
+      .activity {{ display: flex; margin-bottom: 10px; }}
+      .time {{ min-width: 80px; font-weight: bold; color: #4B72B0; }}
+    </style>
+  </head>
+  <body>
+    <div class="slide-container">
+      <h1 class="slide-title">Ngày 1-2: Tokyo - Khám phá Thủ đô</h1>
+      <div class="content-container">
+        <div class="column">
+          <div class="image-container">
+            <img src="https://image-placeholder.com/600x280/architecture" alt="Đền Sensoji">
+          </div>
+          <h2 class="day-header">Ngày 1: Đến Tokyo</h2>
+          <div class="info-box">
+            <p class="activity"><span class="time">Chiều:</span> Đến sân bay, di chuyển vào thành phố.</p>
+            <p class="activity"><span class="time">Tối:</span> Nhận phòng khách sạn, ăn tối.</p>
+          </div>
+        </div>
+        <div class="column">
+          <div class="image-container">
+             <img src="https://image-placeholder.com/600x280/people" alt="Phố Shibuya">
+          </div>
+          <h2 class="day-header">Ngày 2: Khám phá</h2>
+          <div class="info-box">
+            <p class="activity"><span class="time">Sáng:</span> Chùa Senso-ji & phố Nakamise.</p>
+            <p class="activity"><span class="time">Chiều:</span> Vườn Hoàng gia & khu Ginza.</p>
+            <p class="activity"><span class="time">Tối:</span> Ngắm đèn neon ở Shinjuku.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  </html>
+  ```
+- #### Example: Proposal Slide
+  ```html
+  <!DOCTYPE html>
+  <html lang="vi">
+  <head>
+    <meta charset="UTF-8">
+    <title>Ngày 5: Nara & Cầu hôn</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        .slide-container {{ width: 1280px; min-height: 720px; height: auto; margin: 0 auto; background: #FFFFFF; font-family: 'Arial', sans-serif; padding: 40px; display: flex; flex-direction: column; }}
+        .slide-title {{ font-size: 36px; font-weight: bold; color: #4B72B0; margin-bottom: 20px; text-align: center; }}
+        .content-container {{ display: flex; gap: 30px; flex: 1; }}
+        .column {{ flex: 1; display: flex; flex-direction: column; }}
+        .info-box {{ background-color: rgba(75, 114, 176, 0.1); border-left: 4px solid #4B72B0; padding: 15px; margin-bottom: 15px; border-radius: 5px; }}
+        .image-container {{ width: 100%; height: 250px; border-radius: 8px; margin-bottom: 15px; overflow: hidden; }}
+        .image-container img {{ width: 100%; height: 100%; object-fit: cover; }}
+        .day-header {{ background-color: #4B72B0; color: white; padding: 8px 15px; border-radius: 5px; font-weight: bold; font-size: 20px; margin-bottom: 15px; display: inline-block; }}
+        .proposal-box {{ background-color: rgba(255, 209, 102, 0.2); border: 2px dashed #FFD166; padding: 15px; border-radius: 8px; flex-grow: 1; }}
+        .proposal-title {{ font-size: 22px; font-weight: bold; color: #FF6B6B; margin-bottom: 10px; text-align: center; }}
+        .proposal-option {{ background-color: white; border-radius: 5px; padding: 10px; margin-bottom: 10px; border-left: 3px solid #06D6A0; }}
+        .proposal-option h4 {{ font-weight: bold; color: #4B72B0; margin-bottom: 5px; }}
+    </style>
+  </head>
+  <body>
+    <div class="slide-container">
+      <h1 class="slide-title">Ngày 5: Nara - Công viên Nai & Địa điểm Cầu hôn</h1>
+      <div class="content-container">
+        <div class="column">
+          <div class="image-container"><img src="https://image-placeholder.com/600x250/animals" alt="Nai ở Nara"></div>
+          <h2 class="day-header">Lịch trình</h2>
+          <div class="info-box">
+            <p><strong>Sáng:</strong> Di chuyển đến Nara, thăm Công viên Nara.</p>
+            <p><strong>Trưa:</strong> Ăn trưa, thăm chùa Todai-ji.</p>
+            <p><strong>Chiều:</strong> Đền Kasuga Taisha, quay lại Kyoto.</p>
+          </div>
+        </div>
+        <div class="column">
+          <div class="proposal-box">
+            <h3 class="proposal-title"><i class="fas fa-ring"></i> ĐỊA ĐIỂM CẦU HÔN ĐẶC BIỆT</h3>
+            <div class="proposal-option">
+              <h4>1. Bờ sông Kamo (Kyoto)</h4>
+              <p class="text-sm">Lãng mạn, miễn phí, ánh đèn lung linh.</p>
+            </div>
+            <div class="proposal-option">
+              <h4>2. Rừng tre Arashiyama (Kyoto)</h4>
+              <p class="text-sm">Yên tĩnh, huyền ảo vào buổi tối.</p>
+            </div>
+            <p class="text-center mt-3 font-bold text-sm"><i class="fas fa-heart text-red-500"></i> Gợi ý: Bờ sông Kamo</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  </html>
+  ```
+- #### Example: Budget Chart Slide
+  ```html
+  <!DOCTYPE html>
+  <html lang="vi">
+  <head>
+    <meta charset="UTF-8">
+    <title>Chi phí & Ngân sách</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+    <style>
+      .slide-container {{ 
+        width: 1280px; 
+        min-height: 720px;
+        height: auto;
+        margin: 0 auto; 
+        background: #FFFFFF; 
+        font-family: 'Arial', sans-serif; 
+        padding: 30px; 
+        display: flex; 
+        flex-direction: column; 
+      }}
+      .slide-title {{ font-size: 36px; font-weight: bold; color: #4B72B0; margin-bottom: 20px; text-align: center; }}
+      .content-container {{ display: flex; gap: 30px; flex: 1; }}
+      .column {{ flex: 1; display: flex; flex-direction: column; }}
+      .info-box {{ background-color: rgba(75, 114, 176, 0.1); border-left: 4px solid #4B72B0; padding: 15px; border-radius: 5px; flex: 1; }}
+      .info-box h3 {{ font-size: 22px; font-weight: bold; color: #4B72B0; margin-bottom: 10px; }}
+      .chart-container {{ width: 100%; flex-grow: 1; }}
+    </style>
+  </head>
+  <body>
+    <div class="slide-container">
+      <h1 class="slide-title">Chi phí & Ngân sách</h1>
+      <div class="content-container">
+        <div class="column">
+          <div class="info-box">
+            <h3>Phân bổ Ngân sách</h3>
+            <div class="chart-container"><canvas id="budgetChart"></canvas></div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="info-box">
+            <h3>Chi phí Theo Ngày</h3>
+            <div class="chart-container"><canvas id="dailyExpensesChart"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      const btx = document.getElementById('budgetChart').getContext('2d');
+      new Chart(btx, {{
+        type: 'pie',
+        data: {{
+          labels: ['Chỗ ở', 'Đi lại', 'Ăn uống', 'Hoạt động'],
+          datasets: [{{ data: [520, 280, 350, 75], backgroundColor: ['#4B72B0', '#FF6B6B', '#FFD166', '#06D6A0'] }}]
+        }},
+        options: {{ responsive: true, maintainAspectRatio: false }}
+      }});
+      const dtx = document.getElementById('dailyExpensesChart').getContext('2d');
+      new Chart(dtx, {{
+        type: 'bar',
+        data: {{
+          labels: ['N1', 'N2', 'N3', 'N4', 'N5', 'N6', 'N7'],
+          datasets: [{{ label: 'USD', data: [100, 160, 180, 190, 200, 170, 150], backgroundColor: '#4B72B0' }}]
+        }},
+        options: {{ responsive: true, maintainAspectRatio: false }}
+      }});
+    </script>
+  </body>
+  </html>
+  ```
+- #### Example: Conclusion Slide
+  ```html
+  <!DOCTYPE html>
+  <html lang="vi">
+  <head>
+    <meta charset="UTF-8">
+    <title>Lời khuyên & Kết luận</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+      .slide-container {{ 
+        width: 1280px; 
+        min-height: 720px;
+        height: auto;
+        margin: 0 auto; 
+        background: #FFFFFF; 
+        font-family: 'Arial', sans-serif; 
+        padding: 40px; 
+      }}
+      .slide-title {{ font-size: 36px; font-weight: bold; color: #4B72B0; margin-bottom: 30px; text-align: center; }}
+      .content-container {{ display: flex; gap: 30px; }}
+      .column {{ flex: 1; }}
+      .info-box {{ background-color: rgba(75, 114, 176, 0.1); border-left: 4px solid #4B72B0; padding: 15px; margin-bottom: 20px; border-radius: 5px; }}
+      .info-box h3 {{ font-size: 22px; font-weight: bold; color: #4B72B0; margin-bottom: 10px; }}
+      .tip-item {{ display: flex; align-items: flex-start; margin-bottom: 12px; }}
+      .tip-icon {{ min-width: 30px; color: #06D6A0; font-size: 20px; }}
+      .conclusion-box {{ background: linear-gradient(135deg, rgba(75, 114, 176, 0.1) 0%, rgba(6, 214, 160, 0.1) 100%); border-radius: 8px; padding: 20px; margin-top: 20px; border-left: 4px solid #4B72B0; }}
+    </style>
+  </head>
+  <body>
+    <div class="slide-container">
+      <h1 class="slide-title">Lời khuyên & Kết luận</h1>
+      <div class="content-container">
+        <div class="column">
+          <div class="info-box">
+            <h3><i class="fas fa-money-bill-wave" style="color: #4B72B0;"></i> Lời khuyên Tiết kiệm</h3>
+            <div class="tip-item"><div class="tip-icon"><i class="fas fa-plane"></i></div><p><strong>Đặt vé máy bay sớm.</strong></p></div>
+            <div class="tip-item"><div class="tip-icon"><i class="fas fa-bed"></i></div><p><strong>Chọn chỗ ở tiết kiệm.</strong></p></div>
+            <div class="tip-item"><div class="tip-icon"><i class="fas fa-utensils"></i></div><p><strong>Ăn uống thông minh.</strong></p></div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="info-box">
+            <h3><i class="fas fa-lightbulb" style="color: #4B72B0;"></i> Lời khuyên Trải nghiệm</h3>
+            <div class="tip-item"><div class="tip-icon"><i class="fas fa-map-marked-alt"></i></div><p><strong>Tập trung vào chất lượng.</strong></p></div>
+            <div class="tip-item"><div class="tip-icon"><i class="fas fa-language"></i></div><p><strong>Học tiếng Nhật cơ bản.</strong></p></div>
+          </div>
+          <div class="conclusion-box">
+            <h3 class="text-center mb-3" style="color: #4B72B0;">Kết luận</h3>
+            <p>Chuyến đi này, dù ngân sách hạn chế, vẫn sẽ rất đáng nhớ. Chúc bạn có một chuyến đi tuyệt vời!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  </html>
+  ```
+
 </slide_design_patterns_and_examples>
 
 <media_generation_rules>
@@ -782,7 +1179,6 @@ You are operating in an agent loop, iteratively completing tasks through these s
             height: auto;
             font-family: 'Nunito', sans-serif; 
             background: linear-gradient(135deg, #f0f9ff 0%, #e6f5fe 100%); 
-            overflow: hidden; 
             position: relative; 
             display: flex; 
             flex-direction: column; 
@@ -841,7 +1237,6 @@ You are operating in an agent loop, iteratively completing tasks through these s
             height: auto;
             font-family: 'Nunito', sans-serif; 
             background: linear-gradient(135deg, #f0f9ff 0%, #e6f5fe 100%); 
-            overflow: hidden; 
             display: flex; 
             flex-direction: column; 
             padding: 40px;
@@ -895,7 +1290,6 @@ You are operating in an agent loop, iteratively completing tasks through these s
           background: #FFFFFF; 
           font-family: 'Arial', sans-serif;
           position: relative; 
-          overflow: hidden; 
           display: flex; 
           flex-direction: column;
           padding: 40px;
@@ -942,7 +1336,6 @@ You are operating in an agent loop, iteratively completing tasks through these s
           background: #FFFFFF; 
           font-family: 'Arial', sans-serif;
           position: relative; 
-          overflow: hidden; 
           display: flex; 
           flex-direction: column;
           padding: 40px;
@@ -1064,7 +1457,6 @@ You are operating in an agent loop, iteratively completing tasks through these s
         color: #333333;
         font-family: 'Arial', sans-serif;
         padding: 40px;
-        overflow: hidden;
       }}
       .slide-title {{
         font-size: 36px;
@@ -1128,6 +1520,241 @@ You are operating in an agent loop, iteratively completing tasks through these s
             <p><strong>Ngày 1-2:</strong> Tokyo</p>
             <p><strong>Ngày 3-5:</strong> Kyoto & Nara</p>
             <p><strong>Ngày 6-7:</strong> Kyoto & Về nước</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  </html>
+  ```
+- #### Example: Daily Itinerary
+  ```html
+  <!DOCTYPE html>
+  <html lang="vi">
+  <head>
+    <meta charset="UTF-8">
+    <title>Ngày 1-2: Tokyo</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+      .slide-container {{ width: 1280px; min-height: 720px; height: auto; margin: 0 auto; background: #FFFFFF; font-family: 'Arial', sans-serif; padding: 40px; overflow: hidden; }}
+      .slide-title {{ font-size: 36px; font-weight: bold; color: #4B72B0; margin-bottom: 20px; text-align: center; }}
+      .content-container {{ display: flex; gap: 30px; }}
+      .column {{ flex: 1; }}
+      .info-box {{ background-color: rgba(75, 114, 176, 0.1); border-left: 4px solid #4B72B0; padding: 15px; margin-bottom: 15px; border-radius: 5px; }}
+      .image-container {{ width: 100%; height: 280px; border-radius: 8px; margin-bottom: 15px; overflow: hidden; }}
+      .image-container img {{ width: 100%; height: 100%; object-fit: cover; }}
+      .day-header {{ background-color: #4B72B0; color: white; padding: 8px 15px; border-radius: 5px; font-weight: bold; font-size: 20px; margin-bottom: 15px; display: inline-block; }}
+      .activity {{ display: flex; margin-bottom: 10px; }}
+      .time {{ min-width: 80px; font-weight: bold; color: #4B72B0; }}
+    </style>
+  </head>
+  <body>
+    <div class="slide-container">
+      <h1 class="slide-title">Ngày 1-2: Tokyo - Khám phá Thủ đô</h1>
+      <div class="content-container">
+        <div class="column">
+          <div class="image-container">
+            <img src="https://image-placeholder.com/600x280/architecture" alt="Đền Sensoji">
+          </div>
+          <h2 class="day-header">Ngày 1: Đến Tokyo</h2>
+          <div class="info-box">
+            <p class="activity"><span class="time">Chiều:</span> Đến sân bay, di chuyển vào thành phố.</p>
+            <p class="activity"><span class="time">Tối:</span> Nhận phòng khách sạn, ăn tối.</p>
+          </div>
+        </div>
+        <div class="column">
+          <div class="image-container">
+             <img src="https://image-placeholder.com/600x280/people" alt="Phố Shibuya">
+          </div>
+          <h2 class="day-header">Ngày 2: Khám phá</h2>
+          <div class="info-box">
+            <p class="activity"><span class="time">Sáng:</span> Chùa Senso-ji & phố Nakamise.</p>
+            <p class="activity"><span class="time">Chiều:</span> Vườn Hoàng gia & khu Ginza.</p>
+            <p class="activity"><span class="time">Tối:</span> Ngắm đèn neon ở Shinjuku.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  </html>
+  ```
+- #### Example: Proposal Slide
+  ```html
+  <!DOCTYPE html>
+  <html lang="vi">
+  <head>
+    <meta charset="UTF-8">
+    <title>Ngày 5: Nara & Cầu hôn</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        .slide-container {{ width: 1280px; min-height: 720px; height: auto; margin: 0 auto; background: #FFFFFF; font-family: 'Arial', sans-serif; padding: 40px; display: flex; flex-direction: column; }}
+        .slide-title {{ font-size: 36px; font-weight: bold; color: #4B72B0; margin-bottom: 20px; text-align: center; }}
+        .content-container {{ display: flex; gap: 30px; flex: 1; }}
+        .column {{ flex: 1; display: flex; flex-direction: column; }}
+        .info-box {{ background-color: rgba(75, 114, 176, 0.1); border-left: 4px solid #4B72B0; padding: 15px; margin-bottom: 15px; border-radius: 5px; }}
+        .image-container {{ width: 100%; height: 250px; border-radius: 8px; margin-bottom: 15px; overflow: hidden; }}
+        .image-container img {{ width: 100%; height: 100%; object-fit: cover; }}
+        .day-header {{ background-color: #4B72B0; color: white; padding: 8px 15px; border-radius: 5px; font-weight: bold; font-size: 20px; margin-bottom: 15px; display: inline-block; }}
+        .proposal-box {{ background-color: rgba(255, 209, 102, 0.2); border: 2px dashed #FFD166; padding: 15px; border-radius: 8px; flex-grow: 1; }}
+        .proposal-title {{ font-size: 22px; font-weight: bold; color: #FF6B6B; margin-bottom: 10px; text-align: center; }}
+        .proposal-option {{ background-color: white; border-radius: 5px; padding: 10px; margin-bottom: 10px; border-left: 3px solid #06D6A0; }}
+        .proposal-option h4 {{ font-weight: bold; color: #4B72B0; margin-bottom: 5px; }}
+    </style>
+  </head>
+  <body>
+    <div class="slide-container">
+      <h1 class="slide-title">Ngày 5: Nara - Công viên Nai & Địa điểm Cầu hôn</h1>
+      <div class="content-container">
+        <div class="column">
+          <div class="image-container"><img src="https://image-placeholder.com/600x250/animals" alt="Nai ở Nara"></div>
+          <h2 class="day-header">Lịch trình</h2>
+          <div class="info-box">
+            <p><strong>Sáng:</strong> Di chuyển đến Nara, thăm Công viên Nara.</p>
+            <p><strong>Trưa:</strong> Ăn trưa, thăm chùa Todai-ji.</p>
+            <p><strong>Chiều:</strong> Đền Kasuga Taisha, quay lại Kyoto.</p>
+          </div>
+        </div>
+        <div class="column">
+          <div class="proposal-box">
+            <h3 class="proposal-title"><i class="fas fa-ring"></i> ĐỊA ĐIỂM CẦU HÔN ĐẶC BIỆT</h3>
+            <div class="proposal-option">
+              <h4>1. Bờ sông Kamo (Kyoto)</h4>
+              <p class="text-sm">Lãng mạn, miễn phí, ánh đèn lung linh.</p>
+            </div>
+            <div class="proposal-option">
+              <h4>2. Rừng tre Arashiyama (Kyoto)</h4>
+              <p class="text-sm">Yên tĩnh, huyền ảo vào buổi tối.</p>
+            </div>
+            <p class="text-center mt-3 font-bold text-sm"><i class="fas fa-heart text-red-500"></i> Gợi ý: Bờ sông Kamo</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  </html>
+  ```
+- #### Example: Budget Chart Slide
+  ```html
+  <!DOCTYPE html>
+  <html lang="vi">
+  <head>
+    <meta charset="UTF-8">
+    <title>Chi phí & Ngân sách</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+    <style>
+      .slide-container {{ 
+        width: 1280px; 
+        min-height: 720px;
+        height: auto;
+        margin: 0 auto; 
+        background: #FFFFFF; 
+        font-family: 'Arial', sans-serif; 
+        padding: 30px; 
+        display: flex; 
+        flex-direction: column; 
+        overflow:hidden; 
+      }}
+      .slide-title {{ font-size: 36px; font-weight: bold; color: #4B72B0; margin-bottom: 20px; text-align: center; }}
+      .content-container {{ display: flex; gap: 30px; flex: 1; }}
+      .column {{ flex: 1; display: flex; flex-direction: column; }}
+      .info-box {{ background-color: rgba(75, 114, 176, 0.1); border-left: 4px solid #4B72B0; padding: 15px; border-radius: 5px; flex: 1; }}
+      .info-box h3 {{ font-size: 22px; font-weight: bold; color: #4B72B0; margin-bottom: 10px; }}
+      .chart-container {{ width: 100%; flex-grow: 1; }}
+    </style>
+  </head>
+  <body>
+    <div class="slide-container">
+      <h1 class="slide-title">Chi phí & Ngân sách</h1>
+      <div class="content-container">
+        <div class="column">
+          <div class="info-box">
+            <h3>Phân bổ Ngân sách</h3>
+            <div class="chart-container"><canvas id="budgetChart"></canvas></div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="info-box">
+            <h3>Chi phí Theo Ngày</h3>
+            <div class="chart-container"><canvas id="dailyExpensesChart"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      const btx = document.getElementById('budgetChart').getContext('2d');
+      new Chart(btx, {{
+        type: 'pie',
+        data: {{
+          labels: ['Chỗ ở', 'Đi lại', 'Ăn uống', 'Hoạt động'],
+          datasets: [{{ data: [520, 280, 350, 75], backgroundColor: ['#4B72B0', '#FF6B6B', '#FFD166', '#06D6A0'] }}]
+        }},
+        options: {{ responsive: true, maintainAspectRatio: false }}
+      }});
+      const dtx = document.getElementById('dailyExpensesChart').getContext('2d');
+      new Chart(dtx, {{
+        type: 'bar',
+        data: {{
+          labels: ['N1', 'N2', 'N3', 'N4', 'N5', 'N6', 'N7'],
+          datasets: [{{ label: 'USD', data: [100, 160, 180, 190, 200, 170, 150], backgroundColor: '#4B72B0' }}]
+        }},
+        options: {{ responsive: true, maintainAspectRatio: false }}
+      }});
+    </script>
+  </body>
+  </html>
+  ```
+- #### Example: Conclusion Slide
+  ```html
+  <!DOCTYPE html>
+  <html lang="vi">
+  <head>
+    <meta charset="UTF-8">
+    <title>Lời khuyên & Kết luận</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+      .slide-container {{ 
+        width: 1280px; 
+        min-height: 720px;
+        height: auto;
+        margin: 0 auto; 
+        background: #FFFFFF; 
+        font-family: 'Arial', sans-serif; 
+        padding: 40px;
+      }}
+      .slide-title {{ font-size: 36px; font-weight: bold; color: #4B72B0; margin-bottom: 30px; text-align: center; }}
+      .content-container {{ display: flex; gap: 30px; }}
+      .column {{ flex: 1; }}
+      .info-box {{ background-color: rgba(75, 114, 176, 0.1); border-left: 4px solid #4B72B0; padding: 15px; margin-bottom: 20px; border-radius: 5px; }}
+      .info-box h3 {{ font-size: 22px; font-weight: bold; color: #4B72B0; margin-bottom: 10px; }}
+      .tip-item {{ display: flex; align-items: flex-start; margin-bottom: 12px; }}
+      .tip-icon {{ min-width: 30px; color: #06D6A0; font-size: 20px; }}
+      .conclusion-box {{ background: linear-gradient(135deg, rgba(75, 114, 176, 0.1) 0%, rgba(6, 214, 160, 0.1) 100%); border-radius: 8px; padding: 20px; margin-top: 20px; border-left: 4px solid #4B72B0; }}
+    </style>
+  </head>
+  <body>
+    <div class="slide-container">
+      <h1 class="slide-title">Lời khuyên & Kết luận</h1>
+      <div class="content-container">
+        <div class="column">
+          <div class="info-box">
+            <h3><i class="fas fa-money-bill-wave" style="color: #4B72B0;"></i> Lời khuyên Tiết kiệm</h3>
+            <div class="tip-item"><div class="tip-icon"><i class="fas fa-plane"></i></div><p><strong>Đặt vé máy bay sớm.</strong></p></div>
+            <div class="tip-item"><div class="tip-icon"><i class="fas fa-bed"></i></div><p><strong>Chọn chỗ ở tiết kiệm.</strong></p></div>
+            <div class="tip-item"><div class="tip-icon"><i class="fas fa-utensils"></i></div><p><strong>Ăn uống thông minh.</strong></p></div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="info-box">
+            <h3><i class="fas fa-lightbulb" style="color: #4B72B0;"></i> Lời khuyên Trải nghiệm</h3>
+            <div class="tip-item"><div class="tip-icon"><i class="fas fa-map-marked-alt"></i></div><p><strong>Tập trung vào chất lượng.</strong></p></div>
+            <div class="tip-item"><div class="tip-icon"><i class="fas fa-language"></i></div><p><strong>Học tiếng Nhật cơ bản.</strong></p></div>
+          </div>
+          <div class="conclusion-box">
+            <h3 class="text-center mb-3" style="color: #4B72B0;">Kết luận</h3>
+            <p>Chuyến đi này, dù ngân sách hạn chế, vẫn sẽ rất đáng nhớ. Chúc bạn có một chuyến đi tuyệt vời!</p>
           </div>
         </div>
       </div>
