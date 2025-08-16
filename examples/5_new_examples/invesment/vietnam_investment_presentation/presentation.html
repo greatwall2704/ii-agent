@@ -17,7 +17,6 @@
         .slide-frame {
             width: 100%;
             height: 100vh;
-            border: 2px solid #ffffff;
             border-radius: 8px;
             margin: 0 auto;
             background: #FFFFFF;
@@ -147,30 +146,21 @@
         .fullscreen-mode .slide-frame {
             border: none;
             border-radius: 0;
+            position: absolute;
+            /* top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); */
+            /* width: 100%;
+            height: 100vh; */
         }
         .fullscreen-mode .navigation-buttons {
-            bottom: 30px;
-        }
-        .slide-info {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 12px;
-            z-index: 1000;
-        }
-        .fullscreen-mode .slide-info {
-            bottom: 30px;
-            right: 30px;
+            display: none;
         }
     </style>
 </head>
 <body class="bg-gray-100">
-    <button class="nav-toggle" onclick="toggleNavigation()" id="navToggle">
-        ☰
+    <button class="nav-toggle" onclick="toggleFullscreen()" id="navToggle">
+        ⛶
     </button>
     <div class="slide-nav">
         <div class="text-sm font-bold mb-3">Navigation</div>
@@ -191,7 +181,6 @@
         <button class="fullscreen-button" onclick="toggleFullscreen()" id="fullscreenBtn">
             <span id="fullscreenText">Enter Fullscreen</span>
         </button>
-
     </div>
 
     <div class="navigation-buttons">
@@ -224,21 +213,6 @@
             'conclusion.html'
         ];
 
-        const slideNames = [
-            'Title',
-            'Executive Summary',
-            'Tariff Impact',
-            'Economic Performance',
-            'Investment Landscape',
-            'Stock Market',
-            'Real Estate',
-            'Manufacturing',
-            'Portfolio Allocation',
-            'Risk Assessment',
-            'Implementation',
-            'Conclusion'
-        ];
-
         function loadSlide(slidePath, button) {
             document.getElementById('slideFrame').src = slidePath;
             
@@ -267,25 +241,9 @@
             }
         }
 
-        function toggleNavigation() {
-            const slideNav = document.querySelector('.slide-nav');
-            const navToggle = document.getElementById('navToggle');
-            
-            if (slideNav.style.display === 'none' || slideNav.style.display === '') {
-                slideNav.style.display = 'block';
-                navToggle.textContent = '✕';
-                navToggle.classList.add('close');
-            } else {
-                slideNav.style.display = 'none';
-                navToggle.textContent = '☰';
-                navToggle.classList.remove('close');
-            }
-        }
-
         function updateNavigation() {
             const backBtn = document.getElementById('backBtn');
             const nextBtn = document.getElementById('nextBtn');
-            const slideInfo = document.getElementById('slideInfo');
             
             // Update back button
             if (currentSlideIndex === 0) {
@@ -381,7 +339,7 @@
                 // Hide navigation when entering fullscreen
                 slideNav.style.display = 'none';
                 navToggle.classList.remove('close');
-                navToggle.textContent = '☰';
+                navToggle.textContent = '⛶';
             } else {
                 body.classList.remove('fullscreen-mode');
                 fullscreenBtn.classList.remove('fullscreen');

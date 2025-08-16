@@ -26,7 +26,7 @@ from ii_agent.tools.static_deploy_tool import StaticDeployTool
 from ii_agent.tools.clients.terminal_client import TerminalClient
 from ii_agent.tools.memory.compactify_memory import CompactifyMemoryTool
 from ii_agent.tools.memory.simple_memory import SimpleMemoryTool
-from ii_agent.tools.slide_deck_tool import SlideInitializeTool, SlidePresentTool
+from ii_agent.tools.slide_deck_tool import SlideInitializeTool, SlidePresentTool, SlideContentTool
 from ii_agent.tools.web_dev_tool import FullStackInitTool
 from ii_agent.tools.web_search_tool import WebSearchTool
 from ii_agent.tools.visit_webpage_tool import VisitWebpageTool
@@ -163,6 +163,9 @@ def get_system_tools(
             WebSearchTool(settings=settings),
             VisitWebpageTool(settings=settings),
             SlideInitializeTool(
+                workspace_manager=workspace_manager,
+            ),
+            SlideContentTool(
                 workspace_manager=workspace_manager,
             ),
             SlidePresentTool(
