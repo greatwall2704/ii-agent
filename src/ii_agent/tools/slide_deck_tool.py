@@ -519,8 +519,13 @@ class SlideContentTool(LLMTool):
             },
             "template_type": {
                 "type": "string",
-                "description": "The type of content template to use (e.g., 'basic_content', 'chart_data', 'front_page').",
-                "enum": ["front_page", "basic_content", "comparison", "chart_data", "thank_you", "custom"], # Add templates provided
+                "description": "The type of content template to use with various visual styles.",
+                "enum": [
+                    "front_page", "basic_content", "comparison", "chart_data", "thank_you", "custom",
+                    "hero_banner", "feature_showcase", "timeline", "process_flow", "team_grid", 
+                    "stats_highlight", "quote_slide", "image_gallery", "split_content", 
+                    "full_image", "minimal_text", "bullet_points", "icon_grid", "video_embed"
+                ],
             },
             "content_data": {
                 "type": "object",
@@ -602,18 +607,21 @@ class SlideContentTool(LLMTool):
 <style>
 .basic-content {{
     padding: 40px;
+    background: linear-gradient(135deg, var(--background-color) 0%, rgba(255,255,255,0.95) 100%);
 }}
 
 .content-area {{
     display: flex;
     gap: 40px;
     height: calc(100% - 100px);
+    align-items: center;
 }}
 
 .text-content {{
     flex: 1;
     display: flex;
     flex-direction: column;
+    justify-content: center;
 }}
 
 .media-content {{
@@ -621,17 +629,36 @@ class SlideContentTool(LLMTool):
     display: flex;
     align-items: center;
     justify-content: center;
+    background: rgba(255,255,255,0.8);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
 }}
 
 .text-content p {{
-    font-size: 18px;
-    line-height: 1.6;
+    font-size: 20px;
+    line-height: 1.7;
     margin-bottom: 20px;
+    text-align: justify;
 }}
 
 .text-content ul, .text-content ol {{
     font-size: 18px;
     line-height: 1.8;
+    padding-left: 20px;
+}}
+
+.text-content li {{
+    margin-bottom: 12px;
+    position: relative;
+}}
+
+.text-content ul li::before {{
+    content: "▶";
+    color: var(--primary-color);
+    font-weight: bold;
+    position: absolute;
+    left: -20px;
 }}
 
 .media-content img {{
@@ -639,6 +666,11 @@ class SlideContentTool(LLMTool):
     max-height: 100%;
     object-fit: contain;
     border-radius: 10px;
+    transition: transform 0.3s ease;
+}}
+
+.media-content img:hover {{
+    transform: scale(1.02);
 }}
 </style>"""
 
@@ -816,10 +848,364 @@ class SlideContentTool(LLMTool):
     color: var(--text-color);
     opacity: 0.8;
 }}
-
 .contact-info a {{
     color: var(--primary-color);
     text-decoration: none;
+}}
+</style>"""
+
+    def _get_hero_banner_template(self) -> str:
+        return """<div class="slide-container hero-banner">
+    <div class="hero-background" style="background-image: url('{background_image}');">
+        <div class="hero-overlay">
+            <div class="hero-content">
+                <h1 class="hero-title">{title}</h1>
+                <h2 class="hero-subtitle">{subtitle}</h2>
+                <p class="hero-description">{description}</p>
+                <div class="hero-cta">
+                    {call_to_action}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.hero-banner {{
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+}}
+
+.hero-background {{
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    background-color: var(--primary-color);
+}}
+
+.hero-overlay {{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}}
+
+.hero-content {{
+    color: white;
+    max-width: 800px;
+    padding: 40px;
+}}
+
+.hero-title {{
+    font-size: 56px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}}
+
+.hero-subtitle {{
+    font-size: 32px;
+    margin-bottom: 30px;
+    opacity: 0.9;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}}
+
+.hero-description {{
+    font-size: 20px;
+    line-height: 1.6;
+    margin-bottom: 40px;
+    opacity: 0.9;
+}}
+
+.hero-cta {{
+    font-size: 18px;
+    font-weight: bold;
+}}
+</style>"""
+
+    def _get_feature_showcase_template(self) -> str:
+        return """<div class="slide-container feature-showcase">
+    <h1 class="slide-title">{title}</h1>
+    <div class="features-grid">
+        <div class="feature-item">
+            <div class="feature-icon">{icon1}</div>
+            <h3 class="feature-title">{feature1_title}</h3>
+            <p class="feature-description">{feature1_description}</p>
+        </div>
+        <div class="feature-item">
+            <div class="feature-icon">{icon2}</div>
+            <h3 class="feature-title">{feature2_title}</h3>
+            <p class="feature-description">{feature2_description}</p>
+        </div>
+        <div class="feature-item">
+            <div class="feature-icon">{icon3}</div>
+            <h3 class="feature-title">{feature3_title}</h3>
+            <p class="feature-description">{feature3_description}</p>
+        </div>
+    </div>
+</div>
+
+<style>
+.feature-showcase {{
+    padding: 40px;
+    background: linear-gradient(135deg, var(--background-color) 0%, rgba(240,245,255,1) 100%);
+}}
+
+.features-grid {{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    height: calc(100% - 100px);
+    align-items: stretch;
+}}
+
+.feature-item {{
+    background: white;
+    border-radius: 20px;
+    padding: 40px 30px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}}
+
+.feature-item:hover {{
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    border-color: var(--primary-color);
+}}
+
+.feature-icon {{
+    font-size: 48px;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+}}
+
+.feature-title {{
+    font-size: 24px;
+    color: var(--header-color);
+    margin-bottom: 15px;
+    font-weight: bold;
+}}
+
+.feature-description {{
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text-color);
+    opacity: 0.8;
+}}
+</style>"""
+
+    def _get_timeline_template(self) -> str:
+        return """<div class="slide-container timeline">
+    <h1 class="slide-title">{title}</h1>
+    <div class="timeline-container">
+        <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+                <h3>{step1_title}</h3>
+                <p>{step1_description}</p>
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+                <h3>{step2_title}</h3>
+                <p>{step2_description}</p>
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+                <h3>{step3_title}</h3>
+                <p>{step3_description}</p>
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+                <h3>{step4_title}</h3>
+                <p>{step4_description}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline {{
+    padding: 40px;
+    background: linear-gradient(135deg, var(--background-color) 0%, rgba(248,250,252,1) 100%);
+}}
+
+.timeline-container {{
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px 0;
+}}
+
+.timeline-container::before {{
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+    border-radius: 2px;
+}}
+
+.timeline-item {{
+    position: relative;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+}}
+
+.timeline-item:nth-child(odd) {{
+    flex-direction: row;
+}}
+
+.timeline-item:nth-child(even) {{
+    flex-direction: row-reverse;
+}}
+
+.timeline-marker {{
+    width: 20px;
+    height: 20px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    border: 4px solid white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}}
+
+.timeline-content {{
+    background: white;
+    padding: 25px 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    width: 40%;
+    margin: 0 60px;
+    position: relative;
+}}
+
+.timeline-item:nth-child(odd) .timeline-content {{
+    margin-right: 60px;
+    margin-left: 0;
+}}
+
+.timeline-item:nth-child(even) .timeline-content {{
+    margin-left: 60px;
+    margin-right: 0;
+}}
+
+.timeline-content h3 {{
+    color: var(--header-color);
+    font-size: 20px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}}
+
+.timeline-content p {{
+    color: var(--text-color);
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0;
+}}
+</style>"""
+
+    def _get_stats_highlight_template(self) -> str:
+        return """<div class="slide-container stats-highlight">
+    <h1 class="slide-title">{title}</h1>
+    <div class="stats-grid">
+        <div class="stat-item">
+            <div class="stat-number">{stat1_number}</div>
+            <div class="stat-label">{stat1_label}</div>
+            <div class="stat-description">{stat1_description}</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">{stat2_number}</div>
+            <div class="stat-label">{stat2_label}</div>
+            <div class="stat-description">{stat2_description}</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">{stat3_number}</div>
+            <div class="stat-label">{stat3_label}</div>
+            <div class="stat-description">{stat3_description}</div>
+        </div>
+    </div>
+</div>
+
+<style>
+.stats-highlight {{
+    padding: 40px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+}}
+
+.slide-title {{
+    color: white !important;
+    text-align: center;
+    margin-bottom: 60px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}}
+
+.stats-grid {{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 50px;
+    height: calc(100% - 150px);
+    align-items: center;
+}}
+
+.stat-item {{
+    text-align: center;
+    background: rgba(255,255,255,0.15);
+    padding: 40px 20px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    transition: all 0.3s ease;
+}}
+
+.stat-item:hover {{
+    transform: translateY(-10px);
+    background: rgba(255,255,255,0.2);
+}}
+
+.stat-number {{
+    font-size: 56px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}}
+
+.stat-label {{
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: rgba(255,255,255,0.95);
+}}
+
+.stat-description {{
+    font-size: 16px;
+    line-height: 1.5;
+    color: rgba(255,255,255,0.85);
 }}
 </style>"""
 
@@ -880,6 +1266,24 @@ class SlideContentTool(LLMTool):
             template_content = self._get_chart_data_template()
         elif template_type == "thank_you":
             template_content = self._get_thank_you_template()
+        elif template_type == "hero_banner":
+            template_content = self._get_hero_banner_template()
+        elif template_type == "feature_showcase":
+            template_content = self._get_feature_showcase_template()
+        elif template_type == "timeline":
+            template_content = self._get_timeline_template()
+        elif template_type == "stats_highlight":
+            template_content = self._get_stats_highlight_template()
+        elif template_type == "split_content":
+            template_content = self._get_split_content_template()
+        elif template_type == "quote_slide":
+            template_content = self._get_quote_slide_template()
+        elif template_type == "bullet_points":
+            template_content = self._get_bullet_points_template()
+        elif template_type == "full_image":
+            template_content = self._get_full_image_template()
+        elif template_type == "minimal_text":
+            template_content = self._get_minimal_text_template()
         elif template_type == "custom":
             template_content = content_data.get("custom_html", "<!-- Custom content -->")
         else:
@@ -1122,37 +1526,97 @@ class SlideDeckManager:
         return results
     
     def get_available_templates(self) -> dict:
-        """Return list of available templates and their descriptions"""
+        """Return enhanced list of available templates and their descriptions"""
         return {
             "front_page": {
                 "name": "Cover Page",
-                "description": "Template for opening slide with main title, subtitle and author info",
-                "required_fields": ["main_title", "subtitle", "author", "date"]
+                "description": "Enhanced opening slide with gradient backgrounds and modern typography",
+                "required_fields": ["main_title", "subtitle", "author", "date"],
+                "style_features": ["Gradient overlay", "Glass effect", "Modern typography", "Smooth animations"]
             },
             "basic_content": {
-                "name": "Basic Content",
-                "description": "Template for slide with text content and media",
-                "required_fields": ["title", "content", "media"]
+                "name": "Enhanced Basic Content",
+                "description": "Improved two-column layout with better visual hierarchy and animations",
+                "required_fields": ["title", "content", "media"],
+                "style_features": ["Enhanced animations", "Better spacing", "Gradient backgrounds", "Interactive elements"]
             },
             "comparison": {
-                "name": "Comparison",
-                "description": "Template for comparing two contents side by side",
-                "required_fields": ["title", "left_title", "left_content", "right_title", "right_content"]
+                "name": "Modern Comparison",
+                "description": "Side-by-side comparison with enhanced visual design",
+                "required_fields": ["title", "left_title", "left_content", "right_title", "right_content"],
+                "style_features": ["Card-based design", "Border animations", "Color coding", "Hover effects"]
             },
             "chart_data": {
-                "name": "Chart Data",
-                "description": "Template for slide displaying charts and explanations",
-                "required_fields": ["title", "chart_html", "description"]
+                "name": "Data Visualization",
+                "description": "Enhanced charts with modern styling and descriptions",
+                "required_fields": ["title", "chart_html", "description"],
+                "style_features": ["Clean backgrounds", "Shadow effects", "Responsive design", "Typography hierarchy"]
             },
             "thank_you": {
-                "name": "Thank You",
-                "description": "Template for closing slide",
-                "required_fields": ["title", "message", "contact_info"]
+                "name": "Thank You Slide",
+                "description": "Beautiful closing slide with enhanced styling",
+                "required_fields": ["title", "message", "contact_info"],
+                "style_features": ["Gradient background", "Glass morphism", "Elegant typography", "Subtle animations"]
+            },
+            "hero_banner": {
+                "name": "Hero Banner",
+                "description": "Full-screen impact slide with background image support",
+                "required_fields": ["title", "subtitle", "description", "background_image", "call_to_action"],
+                "style_features": ["Full-screen background", "Dramatic typography", "Text shadows", "Overlay effects"]
+            },
+            "feature_showcase": {
+                "name": "Feature Showcase",
+                "description": "Three-column grid with icons and feature descriptions",
+                "required_fields": ["title", "icon1", "feature1_title", "feature1_description", "icon2", "feature2_title", "feature2_description", "icon3", "feature3_title", "feature3_description"],
+                "style_features": ["Card hover effects", "Icon styling", "Grid layout", "Transform animations"]
+            },
+            "timeline": {
+                "name": "Timeline",
+                "description": "Vertical timeline for processes or historical events",
+                "required_fields": ["title", "step1_title", "step1_description", "step2_title", "step2_description", "step3_title", "step3_description", "step4_title", "step4_description"],
+                "style_features": ["Alternating layout", "Connection lines", "Marker animations", "Progressive disclosure"]
+            },
+            "stats_highlight": {
+                "name": "Statistics Highlight",
+                "description": "Eye-catching numbers and metrics display",
+                "required_fields": ["title", "stat1_number", "stat1_label", "stat1_description", "stat2_number", "stat2_label", "stat2_description", "stat3_number", "stat3_label", "stat3_description"],
+                "style_features": ["Glass morphism", "Large typography", "Animated backgrounds", "Gradient effects"]
+            },
+            "quote_slide": {
+                "name": "Quote Slide",
+                "description": "Elegant quote presentation with author attribution",
+                "required_fields": ["quote_text", "author_name", "author_title"],
+                "style_features": ["Centered design", "Large quotation marks", "Elegant typography", "Gradient backgrounds"]
+            },
+            "split_content": {
+                "name": "Split Content",
+                "description": "Two-section layout with contrasting backgrounds",
+                "required_fields": ["left_title", "left_content", "right_title", "right_content"],
+                "style_features": ["50/50 split", "Contrasting colors", "Independent animations", "Visual separation"]
+            },
+            "bullet_points": {
+                "name": "Enhanced Bullet Points",
+                "description": "Structured bullet points with icons and visual content",
+                "required_fields": ["title", "icon1", "point1_title", "point1_description", "icon2", "point2_title", "point2_description", "icon3", "point3_title", "point3_description", "icon4", "point4_title", "point4_description", "visual_content"],
+                "style_features": ["Icon integration", "Card design", "Hover animations", "Side-by-side layout"]
+            },
+            "full_image": {
+                "name": "Full Image Slide",
+                "description": "Image-focused slide with minimal text overlay",
+                "required_fields": ["image_url", "title", "subtitle"],
+                "style_features": ["Full-screen image", "Text overlay", "Image filters", "Responsive scaling"]
+            },
+            "minimal_text": {
+                "name": "Minimal Text",
+                "description": "Clean, typography-focused design for important messages",
+                "required_fields": ["title", "content", "accent_text"],
+                "style_features": ["Clean design", "Typography focus", "Subtle gradients", "Whitespace usage"]
             },
             "custom": {
-                "name": "Custom",
-                "description": "Custom template with custom HTML",
-                "required_fields": ["custom_html"]
+                "name": "Custom HTML",
+                "description": "Fully customizable template with your own HTML/CSS",
+                "required_fields": ["custom_html"],
+                "style_features": ["Complete freedom", "Custom styling", "Advanced layouts", "Personal branding"]
             }
         }
 
