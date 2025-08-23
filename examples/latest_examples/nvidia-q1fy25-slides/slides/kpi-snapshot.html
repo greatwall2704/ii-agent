@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>
+   Quarter at a Glance &mdash; Q1 FY2025
+  </title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1">
+  </script>
+  <link href="../css/main.css" rel="stylesheet">
+ </head>
+ <body>
+  <div class="slide-container">
+   <header class="slide-header">
+    <h1 class="slide-title">
+     Quarter at a Glance &mdash; Q1 FY2025
+    </h1>
+   </header>
+   <main class="slide-content two-column">
+    <!-- Cột bên trái (slide-text ) không thay đổi -->
+    <div class="slide-text">
+     <h2 class="section-title">
+      Headline KPIs
+     </h2>
+     <p class="section-content">
+      NVIDIA delivered record results as accelerated computing demand surged across training and inference workloads. Growth was led by Data Center, with broad-based customer adoption and continued mix shift toward high-value platforms and software.
+     </p>
+     <ul class="slide-list">
+      <li>
+       Revenue:
+       <strong>
+        $26.0B
+       </strong>
+       (+18% Q/Q, +262% Y/Y)
+      </li>
+      <li>
+       Data Center revenue:
+       <strong>
+        $22.6B
+       </strong>
+       (+23% Q/Q, +427% Y/Y)
+      </li>
+      <li>
+       GAAP EPS:
+       <strong>
+        $5.98
+       </strong>
+       ; Non-GAAP EPS:
+       <strong>
+        $6.12
+       </strong>
+      </li>
+      <li>
+       Gross Margin:
+       <strong>
+        78.4% GAAP
+       </strong>
+       |
+       <strong>
+        78.9% non-GAAP
+       </strong>
+      </li>
+      <li>
+       Operating income:
+       <strong>
+        $16.9B
+       </strong>
+       ; Free Cash Flow:
+       <strong>
+        $14.9B
+       </strong>
+      </li>
+      <li>
+       Capital return: $7.74B buybacks; dividend raised 150% (post-split $0.01/share)
+      </li>
+     </ul>
+     <div class="highlighted-section">
+      <p class="section-content">
+       <span class="highlight">
+        Source:
+       </span>
+       NVIDIA Newsroom, &ldquo;NVIDIA Announces Financial Results for First Quarter Fiscal 2025,&rdquo; May 22, 2024.
+      </p>
+     </div>
+    </div>
+
+    <!-- CỘT BÊN PHẢI (ĐÃ SỬA LỖI) -->
+    <!-- Bỏ đi lớp .slide-image không cần thiết -->
+    <div class="chart-container">
+     <!-- 1. Wrapper cho canvas -->
+     <div class="canvas-wrapper">
+      <canvas id="revChart"></canvas>
+   </div>
+   
+   <!-- 2. Tiêu đề nằm ngay sau wrapper -->
+   <h3 class="chart-title">
+    Revenue Momentum
+   </h3>
+     <script>
+      const rc = document.getElementById('revChart').getContext('2d');
+      new Chart(rc, {
+        type: 'bar',
+        data: {
+          labels: ['Q1 FY2024', 'Q4 FY2024', 'Q1 FY2025'],
+          datasets: [{
+            label: 'Revenue ($B)',
+            data: [7.192, 22.103, 26.044],
+            backgroundColor: ['#99ccff','#6699ff','#000080']
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, title: { display: true, text: '$ Billions' } }
+          }
+        }
+      });
+     </script>
+    </div>
+   </main>
+  </div>
+ </body>
+</html>

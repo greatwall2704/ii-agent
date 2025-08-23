@@ -1,0 +1,155 @@
+{
+  "main_title": "Investing 10B VND in Vietnam Under a Tariff-Driven Global Regime",
+  "project_dir": "vn_investment_slides",
+  "outline": [
+    {
+      "id": "cover",
+      "page_title": "Investing 10B VND Under Tariff Shifts",
+      "summary": "Cover slide with title, subtitle, presenter, date, and a Vietnam-themed background image.",
+      "content_outline": [
+        "Title, subtitle contextualizing tariffs and Vietnam",
+        "Presenter name and date",
+        "Striking background image of Vietnam skyline"
+      ]
+    },
+    {
+      "id": "assumptions",
+      "page_title": "Investor Profile & Assumptions",
+      "summary": "Clarify horizon, risk tolerance, liquidity, currency, and objectives.",
+      "content_outline": [
+        "Horizon 3–5 years; medium risk",
+        "Liquidity: keep 12 months expenses; maintain near-cash",
+        "Currency: mix of VND and USD exposures",
+        "Objective: preserve and grow VND purchasing power"
+      ]
+    },
+    {
+      "id": "tariff_scenarios",
+      "page_title": "Tariff Backdrop & Scenarios",
+      "summary": "Frame three tariff scenarios and high-level impacts.",
+      "content_outline": [
+        "Scenario A: Broad base tariff + higher China-specific rates",
+        "Scenario B: Targeted sector tariffs; anti-circumvention focus",
+        "Scenario C: Limited changes; negotiation-led gradualism",
+        "Implications for USD, growth, and Vietnam trade/FDI"
+      ]
+    },
+    {
+      "id": "vn_macro",
+      "page_title": "Vietnam Macro Snapshot (2025)",
+      "summary": "Growth, inflation, policy stance with reputable references.",
+      "content_outline": [
+        "ADB ADO Apr 2025: GDP ~6.6% (2025), inflation ~4.0%",
+        "World Bank overview updated May 9, 2025",
+        "SBV balancing growth support with FX stability",
+        "Takeaway: constructive medium-term with external risks"
+      ]
+    },
+    {
+      "id": "transmission",
+      "page_title": "How Tariffs Hit Portfolios",
+      "summary": "Explain the channels from tariffs to a Vietnam investor’s portfolio.",
+      "content_outline": [
+        "Demand/margins: export sectors",
+        "USD strength and tighter financial conditions",
+        "Supply-chain relocation to Vietnam (China+1)",
+        "Commodities and inflation pass-through",
+        "Policy responses at home and abroad"
+      ]
+    },
+    {
+      "id": "equities_view",
+      "page_title": "Equities: Where to Focus",
+      "summary": "Positioning across Vietnam sectors with quality and resilience.",
+      "content_outline": [
+        "Banks: quality balance sheets and fee income",
+        "Consumer staples and utilities: defensiveness",
+        "Industrials/logistics: FDI and infrastructure buildout",
+        "Selective tech/services; export exposure with pricing power"
+      ]
+    },
+    {
+      "id": "fixed_fx_gold",
+      "page_title": "Bonds, USD Hedge, and Gold",
+      "summary": "Roles of VND fixed income, USD assets, and gold in this regime.",
+      "content_outline": [
+        "Short-duration VND bonds/deposits as ballast",
+        "USD sleeve via T-bills and small global equity",
+        "Gold as convex hedge; SJC vs international pricing",
+        "Implementation tips & access"
+      ]
+    },
+    {
+      "id": "balanced_allocation",
+      "page_title": "Recommended Balanced Allocation",
+      "summary": "Proposed base allocation for 10B VND with rationale.",
+      "content_outline": [
+        "Liquidity & near-cash: 20%",
+        "VND bonds/treasuries: 25%",
+        "USD assets: 20% (mostly T-bills + 5–7% global equity)",
+        "Vietnam equities: 35% diversified",
+        "Gold: 10%"
+      ]
+    },
+    {
+      "id": "alts_def_agg",
+      "page_title": "Defensive vs Aggressive Options",
+      "summary": "Alternative allocations with expected return and drawdown bands.",
+      "content_outline": [
+        "Defensive: more bonds/cash; less equities; 10% gold",
+        "Aggressive: more equities; smaller USD/bond sleeves",
+        "Expected return bands and drawdown ranges",
+        "When to tilt between them"
+      ]
+    },
+    {
+      "id": "implementation",
+      "page_title": "Execution: DCA, Rebalancing, Risk",
+      "summary": "How to enter, maintain, and adjust the portfolio.",
+      "content_outline": [
+        "DCA over 3–6 months, 4–6 tranches",
+        "Rebalancing bands: +/-20% deviation within sleeves",
+        "Risk limits: cash ≥15%; USD 15–25%; single name <5%",
+        "Triggers to go defensive/aggressive"
+      ]
+    },
+    {
+      "id": "closing",
+      "page_title": "Thank You",
+      "summary": "Closing slide with key takeaway and contact line.",
+      "content_outline": [
+        "One-line takeaway: balance growth with hedges",
+        "Contact line for follow-up",
+        "Simple, elegant thank-you design"
+      ]
+    }
+  ],
+  "style_instruction": {
+    "theme": "professional_corporate",
+    "color_palette": {
+      "primary": "2C3E50",
+      "secondary": "3498DB",
+      "background": "FFFFFF",
+      "text_color": "2C3E50",
+      "header_color": "2C3E50"
+    },
+    "typography": {
+      "header_font": "Montserrat",
+      "body_font": "Open Sans"
+    },
+    "layout_description": "Clean, organized layout with ample white space. Large headings, concise paragraphs, and selective imagery. Use two-column and grid layouts for content slides; title and closing slides follow dedicated layouts."
+  },
+  "slides_order": [
+    "cover",
+    "assumptions",
+    "tariff_scenarios",
+    "vn_macro",
+    "transmission",
+    "equities_view",
+    "fixed_fx_gold",
+    "balanced_allocation",
+    "alts_def_agg",
+    "implementation",
+    "closing"
+  ]
+}

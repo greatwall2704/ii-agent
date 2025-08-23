@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>
+   Revenue Mix by Segment
+  </title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1">
+  </script>
+  <link href="../css/main.css" rel="stylesheet">
+ </head>
+ <body>
+  <div class="slide-container">
+   <header class="slide-header">
+    <h1 class="slide-title">
+     Revenue Mix by Segment
+    </h1>
+   </header>
+   <!-- Sử dụng layout .grid cho hai cột chính -->
+   <main class="slide-content grid">
+    
+    <!-- CỘT 1: Chứa toàn bộ phần văn bản -->
+    <div class="content-section">
+     <h2 class="section-title">
+      Q1 FY2025 Segment Revenues
+     </h2>
+     <ul class="slide-list">
+      <li>
+       Data Center:
+       <strong>
+        $22.6B
+       </strong>
+       (~86.7% )
+      </li>
+      <li>
+       Gaming:
+       <strong>
+        $2.6B
+       </strong>
+       (~10.0%)
+      </li>
+      <li>
+       Professional Visualization:
+       <strong>
+        $0.43B
+       </strong>
+       (~1.6%)
+      </li>
+      <li>
+       Automotive:
+       <strong>
+        $0.33B
+       </strong>
+       (~1.3%)
+      </li>
+      <li>
+       OEM & Other:
+       <strong>
+        ~$0.09B
+       </strong>
+       (~0.3%)
+      </li>
+     </ul>
+     <p class="section-content">
+      The business is now predominantly Data Center, reflecting the AI compute cycle. Gaming remains healthy Y/Y, while Pro Viz and Auto contribute modestly with secular AI tailwinds.
+     </p>
+     <div class="highlighted-section">
+      <p class="section-content">
+       <span class="highlight">
+        Source:
+       </span>
+       NVIDIA press release Q1 FY2025 segment disclosures.
+      </p>
+     </div>
+    </div>
+
+    <!-- CỘT 2: Chứa cả hai biểu đồ -->
+    <div class="content-section">
+      <!-- Biểu đồ 1: Bar Chart -->
+      <div class="chart-container">
+        <div class="canvas-wrapper">
+          <canvas id="segBar"></canvas>
+        </div>
+        <h3 class="chart-title">Revenue by Segment ($B)</h3>
+      </div>
+
+      <!-- Biểu đồ 2: Pie Chart -->
+      <div class="chart-container pie-chart">
+        <div class="canvas-wrapper">
+          <canvas id="segPie"></canvas>
+        </div>
+        <h3 class="chart-title">Segment Mix (%)</h3>
+      </div>
+    </div>
+
+   </main>
+   
+   <!-- Đặt script ở cuối cùng, bên ngoài <main> để đảm bảo tất cả HTML đã được tải -->
+   <script>
+      // Script cho Bar Chart
+      const segBarCtx = document.getElementById('segBar').getContext('2d');
+      new Chart(segBarCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Data Center','Gaming','Pro Viz','Automotive','OEM & Other'],
+          datasets: [{
+            label: '$ Billions',
+            data: [22.6, 2.6, 0.427, 0.329, 0.088],
+            backgroundColor: ['#000080','#00A3FF','#7F7FFF','#3CB371','#B0C4DE']
+          }]
+        },
+        options: { 
+          responsive: true, 
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } } 
+        }
+      });
+
+      // Script cho Pie Chart
+      const segPieCtx = document.getElementById('segPie').getContext('2d');
+      new Chart(segPieCtx, {
+        type: 'pie',
+        data: {
+          labels: ['Data Center','Gaming','Pro Viz','Automotive','OEM & Other'],
+          datasets: [{
+            data: [86.7, 10.0, 1.6, 1.3, 0.3], // Sử dụng dữ liệu % cho biểu đồ tròn
+            backgroundColor: ['#000080','#00A3FF','#7F7FFF','#3CB371','#B0C4DE']
+          }]
+        },
+        options: { 
+          responsive: true,
+          maintainAspectRatio: false,
+        }
+      });
+   </script>
+  </div>
+ </body>
+</html>

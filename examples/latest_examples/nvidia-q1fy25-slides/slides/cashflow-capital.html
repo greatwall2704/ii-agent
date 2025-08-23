@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>
+   Cash Flow & Capital Returns
+  </title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1">
+  </script>
+  <link href="../css/main.css" rel="stylesheet">
+ </head>
+ <body>
+  <div class="slide-container">
+   <header class="slide-header">
+    <h1 class="slide-title">
+     Cash Flow & Capital Returns
+    </h1>
+   </header>
+   <main class="slide-content two-column">
+    
+    <!-- CỘT 1: Chứa toàn bộ phần văn bản (Không thay đổi ) -->
+    <div class="slide-text">
+     <h2 class="section-title">
+      Exceptional Cash Generation
+     </h2>
+     <p class="section-content">
+      Operating cash flow of $15.3B translated to free cash flow of $14.9B, reflecting strong profitability and modest capital intensity this quarter. NVIDIA returned $7.74B via buybacks and increased the dividend by 150% (to $0.10 pre-split; $0.01 post-split).
+     </p>
+     <ul class="slide-list">
+      <li>
+       OCF:
+       <strong>
+        $15.3B
+       </strong>
+       | FCF:
+       <strong>
+        $14.9B
+       </strong>
+      </li>
+      <li>
+       Capex: ~$0.37B; principal payments ~$0.04B
+      </li>
+      <li>
+       Buybacks:
+       <strong>
+        $7.74B
+       </strong>
+       ; Dividend:
+       <strong>
+        $0.10
+       </strong>
+       pre-split
+      </li>
+      <li>
+       Cash & equivalents:
+       <strong>
+        $7.6B
+       </strong>
+       at Q1 end
+      </li>
+     </ul>
+     <div class="highlighted-section">
+      <p class="section-content">
+       <span class="highlight">
+        Source:
+       </span>
+       NVIDIA Q1 FY2025 cash flow statement; press release.
+      </p>
+     </div>
+    </div>
+
+    <!-- CỘT 2: Chứa biểu đồ (Đã sửa lỗi) -->
+    <div class="chart-container">
+      <div class="canvas-wrapper">
+        <canvas id="fcfChart"></canvas>
+      </div>
+      <h3 class="chart-title">
+        Quarterly Free Cash Flow ($B)
+      </h3>
+    </div>
+
+   </main>
+
+   <!-- Script được đặt ở cuối cùng, bên ngoài <main> -->
+   <script>
+      const fcfCtx = document.getElementById('fcfChart').getContext('2d');
+      new Chart(fcfCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Q1 FY2024','Q4 FY2024','Q1 FY2025'],
+          datasets: [{ 
+            label: 'FCF ($B)', 
+            data: [2.643, 11.217, 14.936], 
+            backgroundColor: ['#7F7FFF','#00A3FF','#000080'] 
+          }]
+        },
+        options: { 
+          responsive: true, 
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } } 
+        }
+      });
+   </script>
+  </div>
+ </body>
+</html>

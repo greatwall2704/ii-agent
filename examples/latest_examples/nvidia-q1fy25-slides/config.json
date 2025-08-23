@@ -1,0 +1,155 @@
+{
+  "main_title": "NVIDIA Q1 FY2025: In-Depth Financial Analysis",
+  "project_dir": "nvidia-q1fy25-slides",
+  "outline": [
+    {
+      "id": "cover",
+      "page_title": "NVIDIA Q1 FY2025: In-Depth Financial Analysis",
+      "summary": "Cover page introducing the topic and presenter.",
+      "content_outline": [
+        "Prominent background image of data center",
+        "Title, subtitle, presenter name, date"
+      ]
+    },
+    {
+      "id": "kpi-snapshot",
+      "page_title": "Quarter at a Glance — Q1 FY2025",
+      "summary": "Headline KPIs summarizing revenue growth, margins, EPS, and Data Center strength.",
+      "content_outline": [
+        "Revenue: $26.0B (+18% Q/Q, +262% Y/Y)",
+        "Data Center: $22.6B (+23% Q/Q, +427% Y/Y)",
+        "GAAP EPS $5.98; Non-GAAP EPS $6.12",
+        "GAAP GM 78.4%; Non-GAAP GM 78.9%",
+        "Operating income $16.9B; Free cash flow $14.9B",
+        "Stock split 10-for-1; dividend +150% (to $0.10 pre-split / $0.01 post-split)"
+      ]
+    },
+    {
+      "id": "segment-mix",
+      "page_title": "Revenue Mix by Segment",
+      "summary": "Breakdown of segment revenues and mix highlighting Data Center dominance.",
+      "content_outline": [
+        "Data Center $22.6B (~86.7%)",
+        "Gaming $2.6B (~10.0%)",
+        "Pro Viz $0.43B (~1.6%)",
+        "Automotive $0.33B (~1.3%)",
+        "OEM & Other ~$0.09B (~0.3%)",
+        "Bar + pie charts for segment values and mix"
+      ]
+    },
+    {
+      "id": "datacenter-deep-dive",
+      "page_title": "Data Center Deep Dive",
+      "summary": "Drivers of Data Center outperformance across platforms, customers, and software.",
+      "content_outline": [
+        "Hopper demand across training and inference",
+        "Customer breadth: CSPs, consumer internet, enterprise, sovereign AI",
+        "Networking: InfiniBand and Spectrum-X",
+        "Software: NVIDIA AI Enterprise 5.0, NIM microservices"
+      ]
+    },
+    {
+      "id": "networking-platforms",
+      "page_title": "Platforms & Networking",
+      "summary": "Platform cadence and networking strategy to maximize AI throughput.",
+      "content_outline": [
+        "Hopper → Blackwell architecture cadence",
+        "Quantum (InfiniBand) and Spectrum-X (Ethernet) switches",
+        "DGX systems and AI factory reference designs",
+        "Cloud partner expansions in GenAI services"
+      ]
+    },
+    {
+      "id": "profitability",
+      "page_title": "Profitability & Margins",
+      "summary": "Margin expansion from mix and scale; operating leverage.",
+      "content_outline": [
+        "GAAP GM 78.4%; non-GAAP GM 78.9%",
+        "GAAP opex ~$3.5B; non-GAAP opex ~$2.5B",
+        "GAAP operating income $16.9B; non-GAAP ~$18.1B",
+        "Margin progression chart and operating leverage illustration"
+      ]
+    },
+    {
+      "id": "cashflow-capital",
+      "page_title": "Cash Flow & Capital Returns",
+      "summary": "Cash generation, capex, buybacks, and dividend update.",
+      "content_outline": [
+        "OCF $15.3B; FCF $14.9B; capex ~$0.37B",
+        "Buybacks $7.74B; dividend raised 150%",
+        "Cash & equivalents ~$7.6B",
+        "Quarterly FCF chart"
+      ]
+    },
+    {
+      "id": "guidance",
+      "page_title": "Guidance & Implied Trajectory",
+      "summary": "Q2 FY2025 outlook and implied sequential growth and margins.",
+      "content_outline": [
+        "Revenue $28.0B ±2% (~+7.7% Q/Q at mid)",
+        "Non-GAAP GM ~75.5%; GAAP GM ~74.8%",
+        "Non-GAAP opex ~$2.8B; tax ~17% ±1%",
+        "Sequential revenue line chart incl. guide midpoint"
+      ]
+    },
+    {
+      "id": "risks",
+      "page_title": "Risks & Watch Items",
+      "summary": "Key risks across supply, competition, regulation, and demand timing.",
+      "content_outline": [
+        "Execution & supply constraints",
+        "Competitive landscape (AMD, custom silicon)",
+        "Regulatory/export controls and geo exposure",
+        "Demand elasticity and digestion phases"
+      ]
+    },
+    {
+      "id": "strategy",
+      "page_title": "Strategy & Catalysts",
+      "summary": "NVIDIA’s platform + software strategy and upcoming catalysts.",
+      "content_outline": [
+        "Rapid architecture cadence; software attach",
+        "AI factories & sovereign AI capex cycles",
+        "Vertical expansion: healthcare, automotive, robotics",
+        "Blackwell ramp as a catalyst"
+      ]
+    },
+    {
+      "id": "closing",
+      "page_title": "Thank You",
+      "summary": "Closing / Q&A slide with contact info.",
+      "content_outline": [
+        "Thank you message",
+        "Contact information"
+      ]
+    }
+  ],
+  "style_instruction": {
+    "theme": "tech_modern",
+    "color_palette": {
+      "primary": "000080",
+      "secondary": "00FFFF",
+      "background": "FFFFFF",
+      "text_color": "333333",
+      "header_color": "000080"
+    },
+    "typography": {
+      "header_font": "Roboto",
+      "body_font": "Source Code Pro"
+    },
+    "layout_description": "Modern, structured layout with two-column and grid options; use charts and high-tech imagery; ensure high contrast and readability."
+  },
+  "slides_order": [
+    "cover",
+    "kpi-snapshot",
+    "segment-mix",
+    "datacenter-deep-dive",
+    "networking-platforms",
+    "profitability",
+    "cashflow-capital",
+    "guidance",
+    "risks",
+    "strategy",
+    "closing"
+  ]
+}

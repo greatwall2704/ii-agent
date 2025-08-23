@@ -1,5 +1,7 @@
 import json
 import os
+import shutil
+from bs4 import BeautifulSoup
 from pathlib import Path
 from typing import Any, Optional
 
@@ -46,8 +48,16 @@ class SlideInitializeTool(LLMTool):
                             "type": "string",
                             "description": "A brief summary of the slide's content.",
                         },
+                        "content_outline": {
+                            "type": "array",
+                            "description": "Detailed outline/bullet points for the slide content.",
+                            "items": {
+                                "type": "string",
+                                "description": "A bullet point or content item for the slide.",
+                            },
+                        },
                     },
-                    "required": ["id", "page_title", "summary"],
+                    "required": ["id", "page_title", "summary", "content_outline"],
                 },
             },
             "style_instruction": {
@@ -84,7 +94,7 @@ class SlideInitializeTool(LLMTool):
                         "description": "A text description of the desired layout (e.g., 'Use two-column layouts for slides with text and images.').",
                     },
                 },
-                "required": ["theme", "color_palette", "typography"],
+                "required": ["theme", "color_palette", "typography", "layout_description"],
             },
         },
         "required": ["main_title", "project_dir", "outline", "style_instruction"],
@@ -104,202 +114,581 @@ class SlideInitializeTool(LLMTool):
     def _get_base_html_template(self, title: str, css_path: str) -> str:
         # Basic HTML template for each slide
         return f"""<!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{title}</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
     <link rel="stylesheet" href="{css_path}">
-    <!-- Additional JS/CSS libraries can be added here -->
 </head>
 <body>
     <div class="slide-container">
-        <!-- Slide content will be filled here by SlideContentTool -->
+        <!-- All components for the slide will be added here by the AI -->
     </div>
 </body>
 </html>"""
 
     def _get_main_css_content(self, style_instruction: dict) -> str:
-        # Generate main CSS content based on style_instruction
-        # This is where you convert style_instruction to actual CSS
-        # Simple example:
-        primary_color = style_instruction['color_palette']['primary']
-        background_color = style_instruction['color_palette']['background']
-        text_color = style_instruction['color_palette']['text_color']
-        header_color = style_instruction['color_palette']['header_color']
-        header_font = style_instruction['typography']['header_font']
-        body_font = style_instruction['typography']['body_font']
+        # --- 1. Extract and Sanitize Variables ---
         
-        # Get secondary color if available
-        secondary_color = style_instruction['color_palette'].get('secondary', primary_color)
+        # Color Palette
+        primary_color = style_instruction.get('color_palette', {}).get('primary', '#1E88E5')
+        background_color = style_instruction.get('color_palette', {}).get('background', '#FFFFFF')
+        text_color = style_instruction.get('color_palette', {}).get('text_color', '#333333')
+        header_color = style_instruction.get('color_palette', {}).get('header_color', primary_color)
+        secondary_color = style_instruction.get('color_palette', {}).get('secondary', '#0D47A1')
+        accent_color = style_instruction.get('color_palette', {}).get('accent', '#FFC107')
+        primary_light = style_instruction.get('color_palette', {}).get('primary_light', '#64B5F6')
+        primary_dark = style_instruction.get('color_palette', {}).get('primary_dark', '#0D47A1')
+        light_gray = style_instruction.get('color_palette', {}).get('light_gray', '#F5F9FF')
+        
+        # Functional Colors
+        success_color = style_instruction.get('color_palette', {}).get('success', '#4CAF50')
+        warning_color = style_instruction.get('color_palette', {}).get('warning', '#FF9800')
+        danger_color = style_instruction.get('color_palette', {}).get('danger', '#F44336')
+        info_color = style_instruction.get('color_palette', {}).get('info', '#2196F3')
 
-        return f"""/* main.css - Generated Slide Styles */
+        # Typography
+        header_font = style_instruction.get('typography', {}).get('header_font', 'Roboto')
+        body_font = style_instruction.get('typography', {}).get('body_font', 'Open Sans')
+        header_size = style_instruction.get('typography', {}).get('header_size', '36px')
+        subheader_size = style_instruction.get('typography', {}).get('subheader_size', '24px')
+        body_size = style_instruction.get('typography', {}).get('body_size', '18px')
+
+        # Helper to ensure colors have a '#' prefix
+        def ensure_hex_prefix(color):
+            return f"#{color.lstrip('#')}"
+
+        # Apply prefix to all colors
+        primary_color = ensure_hex_prefix(primary_color)
+        secondary_color = ensure_hex_prefix(secondary_color)
+        background_color = ensure_hex_prefix(background_color)
+        text_color = ensure_hex_prefix(text_color)
+        header_color = ensure_hex_prefix(header_color)
+        accent_color = ensure_hex_prefix(accent_color)
+        primary_light = ensure_hex_prefix(primary_light)
+        primary_dark = ensure_hex_prefix(primary_dark)
+        light_gray = ensure_hex_prefix(light_gray)
+        success_color = ensure_hex_prefix(success_color)
+        warning_color = ensure_hex_prefix(warning_color)
+        danger_color = ensure_hex_prefix(danger_color)
+        info_color = ensure_hex_prefix(info_color)
+
+        # --- 2. Generate CSS String ---
+        return f"""/*
+* =========================================
+* main.css - Custom Slide Deck Stylesheet
+* =========================================
+*/
+
+/* -----------------------------------------
+ * 1. CSS Variables & Base Setup
+ * ----------------------------------------- */
 :root {{
-    --primary-color: {primary_color};
-    --secondary-color: {secondary_color};
-    --background-color: {background_color};
-    --text-color: {text_color};
-    --header-color: {header_color};
-    --header-font: '{header_font}', sans-serif;
-    --body-font: '{body_font}', sans-serif;
+  /* Color Palette */
+  --primary-color: {primary_color};
+  --primary-dark: {primary_dark};
+  --primary-light: {primary_light};
+  --secondary-color: {secondary_color};
+  --accent-color: {accent_color};
+  
+  /* Background & Text Colors */
+  --background-color: {background_color};
+  --text-color: {text_color};
+  --header-color: {header_color};
+  --light-gray: {light_gray};
+  
+  /* Functional Colors */
+  --success-color: {success_color};
+  --warning-color: {warning_color};
+  --danger-color: {danger_color};
+  --info-color: {info_color};
+  
+  /* Typography */
+  --header-font: '{header_font}', 'Roboto', sans-serif;
+  --body-font: '{body_font}', 'Open Sans', sans-serif;
+  
+  /* Font Sizes */
+  --header-size: {header_size};
+  --subheader-size: {subheader_size};
+  --body-size: {body_size};
 }}
 
 * {{
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}}
+
+html, body {{
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }}
 
 body {{
-    margin: 0;
-    padding: 0;
-    font-family: var(--body-font);
-    overflow: hidden;
+  font-family: var(--body-font);
+  background-color: #e0e0e0; /* Light gray background outside the slide */
+  color: var(--text-color);
+  line-height: 1.6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }}
 
+/* -----------------------------------------
+ * 2. Core Slide Structure
+ * ----------------------------------------- */
 .slide-container {{
-    width: 1280px;
-    min-height: 720px;
-    margin: 0 auto;
-    background: var(--background-color);
-    color: var(--text-color);
-    font-family: var(--body-font);
-    padding: 40px;
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-    position: relative;
+  width: 1280px;
+  min-height: 720px;
+  background: var(--background-color);
+  margin: 0 auto;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  overflow: hidden; /* Crucial for border-radius and absolute children */
+}}
+
+.slide-header {{
+  margin-bottom: 30px;
+  flex-shrink: 0; /* Prevent header from shrinking */
 }}
 
 .slide-title {{
-    font-size: 36px;
-    font-weight: bold;
-    color: var(--header-color);
-    font-family: var(--header-font);
-    margin-bottom: 30px;
-    text-align: center;
+  font-size: var(--header-size);
+  color: var(--header-color);
+  font-weight: bold;
+  text-align: center;
+  font-family: var(--header-font);
 }}
 
-/* Layout utilities */
-.content-container {{
-    display: flex;
-    gap: 30px;
-    flex: 1;
+.slide-content {{
+  display: flex;
+  flex: 1; /* Allow content to fill remaining space */
+  gap: 40px;
+  min-height: 0; /* Fix for flexbox overflow issues */
 }}
 
-.column {{
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+/* -----------------------------------------
+ * 3. Special Slide Types
+ * ----------------------------------------- */
+
+/* --- A. Opening / Title Slide --- */
+.slide-container.title-slide {{
+  padding: 0;
+  justify-content: center;
+  align-items: center;
+  color: white; /* Default text color for this slide */
+}}  
+
+.title-slide .slide-background-image {{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.6) saturate(1.1);
+  z-index: 1;
 }}
 
-.text-content {{
-    flex: 1;
+.title-slide .content-overlay {{
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  text-align: center;
+  width: 100%;
+  height: 100%;
 }}
 
-.media-content {{
-    flex: 1;
+.title-slide .main-title {{
+  color: white;
+  font-size: 52px;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+}}
+
+.title-slide .subtitle {{
+  color: #e0e0e0;
+  font-size: 30px;
+  max-width: 80%;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+  margin-top: 1rem;
+}}
+
+.title-slide .presenter-info {{
+  margin-top: 40px;
+  color: #d0d0d0;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  padding-top: 20px;
+}}
+
+/* --- B. Thank You Slide --- */
+.thank-you-slide-content {{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+}}
+.thank-you-title {{
+  font-size: calc(var(--header-size) * 1.5);
+  color: var(--primary-color);
+  margin-bottom: 20px;
+}}
+.thank-you-subtitle {{
+  font-size: var(--header-size);
+  color: var(--secondary-color);
+  margin-bottom: 40px;
+}}
+.contact-info {{
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 40px;
+}}
+.contact-item {{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}}
+.contact-item i {{
+  color: var(--primary-color);
+}}
+
+/* --- C. Quote Slide --- */
+.quote-slide-content {{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+  padding: 0 80px;
+}}
+.quote-icon {{
+  font-size: 48px;
+  color: var(--primary-light);
+  margin-bottom: 20px;
+}}
+.quote-text {{
+  font-size: calc(var(--body-size) * 1.5);
+  font-style: italic;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}}
+.quote-attribution {{
+  margin-top: 20px;
+}}
+.quote-author {{
+  font-size: calc(var(--body-size) * 1.2);
+  font-weight: bold;
+  color: var(--primary-color);
+}}
+.quote-source {{
+  font-size: var(--body-size);
+}}
+
+/* -----------------------------------------
+ * 4. Content Components
+ * ----------------------------------------- */
+
+/* --- A. Text & Lists --- */
+.slide-text {{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}}
+.section-title {{
+  font-size: var(--subheader-size);
+  color: var(--primary-dark);
+  margin-bottom: 15px;
+  font-weight: 600;
+  font-family: var(--header-font);
+}}
+.section-content {{
+  font-size: var(--body-size);
+  line-height: 1.5;
+}}
+.highlighted-section {{
+  background-color: var(--light-gray);
+  border-left: 4px solid var(--primary-color);
+  padding: 20px;
+  border-radius: 0 10px 10px 0;
+  margin: 20px 0;
+}}
+.slide-list {{ list-style-type: none; padding: 0; }}
+.slide-list li {{ margin-bottom: 1rem; padding-left: 1.5rem; position: relative; }}
+.slide-list li:before {{
+  content: ""; position: absolute; left: 0; top: 0.5rem;
+  width: 0.5rem; height: 0.5rem; background-color: var(--primary-light); border-radius: 50%;
+}}
+
+/* --- B. Image Blocks --- */
+.slide-image {{
+  flex: 0 0 45%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-height: 500px;
+  overflow: hidden;
+}}
+.image-wrapper {{
+  display: flex; flex-direction: column; align-items: center;
+  width: 100%; height: 100%;
+}}
+.slide-image img {{
+  max-width: 100%; max-height: calc(100% - 30px);
+  width: auto; height: auto; object-fit: contain;
+  border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}}
+.image-caption {{
+  margin-top: 10px; padding: 0 10px; font-size: 14px;
+  color: #666; text-align: center; font-style: italic;
+  width: 100%; flex-shrink: 0;
+}}
+
+/* --- C. Code Blocks (Scalable) --- */
+.code-scaler {{
+  width: 100%;
+  overflow: hidden;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}}
+.code-block {{
+  background-color: #2d3748;
+  color: #e2e8f0;
+  padding-top: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  font-family: 'Fira Code', 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 16px;
+  white-space: pre;
+  display: inline-block;
+  min-width: 100%;
+  transform-origin: left top;
+  transition: transform 0.2s ease-in-out;
+}}
+
+/* --- D. Charts & Tables --- */
+.chart-container {{
+  flex: 1; /* Cho phép co giãn trong layout flex */
+  display: flex;
+  flex-direction: column; /* Xếp canvas và tiêu đề theo chiều dọc */
+  justify-content: center; /* Căn giữa theo chiều dọc */
+  align-items: center;   /* Căn giữa theo chiều ngang */
+  
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  background: rgba(255, 255, 255, 0.8); /* Nền bán trong suốt để nổi bật */
+  min-height: 300px; /* Đảm bảo biểu đồ không quá nhỏ */
+  margin-bottom: 20px; /* Khoảng cách nếu có nhiều biểu đồ xếp chồng */
+}}
+
+/* Lớp bọc cho canvas để kiểm soát kích thước và co giãn */
+.canvas-wrapper {{
+    width: 100%;
+    flex-grow: 1; /* Cho phép canvas chiếm không gian dọc còn lại */
     display: flex;
     align-items: center;
     justify-content: center;
+    min-height: 0; /* Sửa lỗi co giãn của flexbox */
 }}
 
-/* Typography */
-h1, h2, h3, h4, h5, h6 {{
-    font-family: var(--header-font);
-    color: var(--header-color);
+/* Canvas của Chart.js */
+.chart-container canvas {{
+  max-width: 100%;
+  max-height: 100%;
 }}
 
-p {{
-    line-height: 1.6;
-    margin-bottom: 16px;
+/* Tiêu đề của biểu đồ, nằm dưới canvas */
+.chart-title {{
+  /* Đây là một khối văn bản bình thường, không dùng position: absolute */
+  margin-top: 15px; /* Khoảng cách với biểu đồ ở trên */
+  font-size: 18px;
+  font-weight: 600;
+  font-family: var(--header-font);
+  color: var(--primary-dark);
+  text-align: center;
+  width: 100%;
+  flex-shrink: 0; /* Ngăn tiêu đề bị co lại */
 }}
 
-/* Lists */
-ul, ol {{
-    line-height: 1.6;
-    margin-bottom: 16px;
+/* Modifiers cho các kích thước biểu đồ khác nhau */
+.chart-container.full-width {{
+  flex-basis: 100%;
+  height: 500px;
+}}
+.chart-container.small {{
+  flex-basis: 300px;
+  height: 250px;
 }}
 
-li {{
-    margin-bottom: 8px;
+/* Chú thích (legend) tùy chỉnh nếu cần */
+.chart-legend {{
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}}
+.chart-legend-item {{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+}}
+.chart-legend-color {{
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}}
+/* Container cho bảng so sánh */
+.comparison-table-container {{
+  width: 100%;
+  overflow-x: auto;
+  margin: 20px 0;
+  border-radius: 10px;
+  border: 1px solid var(--light-gray, #E0E0E0);
+  overflow: hidden;
 }}
 
-/* Images */
-img {{
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
+/* Bảng so sánh */
+.comparison-table {{
+  width: 100%;
+  border-collapse: collapse;
+}}
+.comparison-table th, .comparison-table td {{
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid var(--light-gray, #E0E0E0);
+}}
+.comparison-table th {{
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: bold;
+}}
+.comparison-table tr:nth-child(even) {{
+  background-color: var(--light-gray);
+}}
+.comparison-table tr:last-child td {{
+  border-bottom: none;
+}}
+/* -----------------------------------------
+ * 5. Layout Systems
+ * ----------------------------------------- */
+
+/* --- A. Code Layout --- */
+.slide-content.code-layout {{
+  display: flex;
+  gap: 40px;
+  align-items: flex-start; /* Align columns to the top */
+}}
+.code-layout .slide-text {{
+  flex: 0 0 40%;
+  padding-right: 20px;
+}}
+.code-layout .slide-code {{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  max-height: 600px; /* Set a max height for the code column */
+  overflow-y: auto;  /* Add vertical scroll if code column is too long */
+}}
+.code-title {{
+  font-size: 18px;
+  font-family: var(--header-font);
+  color: var(--primary-dark);
+  margin-top: 15px;
+  margin-bottom: 5px;
+  font-weight: 600;
+}}
+.code-layout .slide-code .code-title:first-child {{
+    margin-top: 0;
 }}
 
-/* Buttons and interactive elements */
-.btn {{
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 6px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.3s ease;
+/* --- B. Standard Layouts --- */
+.slide-content.two-column {{ align-items: stretch; }}
+.two-column .slide-text {{ padding-right: 20px; }}
+.two-column .slide-image, .two-column .chart-container {{ flex: 0 0 45%; }}
+
+.slide-content.three-column {{ display: flex; gap: 30px; align-items: stretch; }}
+.three-column .slide-text {{ flex: 0 0 35%; }}
+.three-column .slide-image, .three-column .chart-container {{ flex: 0 0 30%; }}
+
+.slide-content.vertical {{ flex-direction: column; }}
+
+.slide-content.grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }}
+
+.slide-content.image-only, .slide-content.chart-only {{ justify-content: center; align-items: center; }}
+.image-only .slide-image, .chart-only .chart-container {{ flex: none; width: 90%; height: 80%; }}
+.slide-content.gallery {{
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px; padding: 20px 0;
 }}
 
-.btn:hover {{
-    background: var(--secondary-color);
-    transform: translateY(-2px);
+.gallery .slide-image {{ height: 150px; }}
+.slide-content.text-wrap {{ display: block; }}
+.text-wrap .slide-image {{
+  float: right; margin: 0 0 20px 20px;
+  max-width: 40%; max-height: 300px;
 }}
-
-/* Cards and boxes */
-.info-box {{
-    background: rgba(255, 255, 255, 0.9);
-    border-left: 4px solid var(--primary-color);
-    padding: 20px;
-    margin: 20px 0;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}}
-
-.highlight-box {{
-    background: var(--primary-color);
-    color: white;
-    padding: 20px;
-    border-radius: 8px;
-    margin: 20px 0;
-}}
-
-/* Animations */
-@keyframes fadeInUp {{
-    from {{
-        opacity: 0;
-        transform: translateY(30px);
-    }}
-    to {{
-        opacity: 1;
-        transform: translateY(0);
-    }}
-}}
-
-.fade-in-up {{
-    animation: fadeInUp 0.6s ease-out;
-}}
-
-/* Responsive design */
+.text-wrap .slide-text {{ text-align: justify; }}
+/* -----------------------------------------
+ * 6. Responsive Design
+ * ----------------------------------------- */
 @media (max-width: 1280px) {{
-    .slide-container {{
-        width: 100vw;
-        height: 100vh;
-        padding: 30px;
-    }}
+  .slide-container {{
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    padding: 20px;
+  }}
+  .slide-content, .slide-content.two-column, .slide-content.three-column, .slide-content.code-layout {{
+    flex-direction: column;
+    gap: 20px;
+  }}
+  .slide-image, .chart-container {{
+    flex: none !important;
+    max-height: 300px;
+  }}
+}}
+@media (max-width: 768px) {{
+  :root {{
+    --header-size: calc({header_size} * 0.8);
+    --subheader-size: calc({subheader_size} * 0.8);
+    --body-size: calc({body_size} * 0.9);
+  }}
+  .slide-container {{ padding: 15px; }}
+  .chart-container {{ height: 250px; padding: 10px; }}
+  .slide-image {{ max-height: 200px; }}
+  .title-slide .main-title {{ font-size: 36px; }}
+  .title-slide .subtitle {{ font-size: 22px; }}
 }}
 """
+
 
     def execute(self, main_title: str, project_dir: str, outline: list, style_instruction: dict) -> ToolImplOutput:
         project_path = Path(project_dir)
         slides_path = project_path / "slides"
-        assets_path = project_path / "assets"
         css_path = project_path / "css"
 
-        # 1. Create directory structure
+        # 1. Create directory structure (NO assets directory as per system prompt)
         os.makedirs(slides_path, exist_ok=True)
-        os.makedirs(assets_path, exist_ok=True)
         os.makedirs(css_path, exist_ok=True)
 
         # 2. Save project configuration
@@ -407,8 +796,8 @@ class SlidePresentTool(LLMTool):
             gap: 10px;
             z-index: 1000;
         }}
-        .nav-button {{
-            background: #4B72B0;
+        .navigation-controls button {{
+            background: var(--primary-color, #4B72B0);
             color: white;
             border: none;
             padding: 8px 15px;
@@ -416,11 +805,11 @@ class SlidePresentTool(LLMTool):
             cursor: pointer;
             font-size: 16px;
         }}
-        .nav-button:disabled {{
+        .navigation-controls button:disabled {{
             background: #cccccc;
             cursor: not-allowed;
         }}
-        .slide-indicator {{
+        .navigation-controls span {{
             color: white;
             font-size: 18px;
             display: flex;
@@ -432,9 +821,9 @@ class SlidePresentTool(LLMTool):
     <iframe id="slideFrame" src="" allowfullscreen></iframe>
 
     <div class="navigation-controls">
-        <button id="prevBtn" class="nav-button">Previous</button>
-        <span id="slideIndicator" class="slide-indicator">1 / {len(slide_ids)}</span>
-        <button id="nextBtn" class="nav-button">Next</button>
+        <button id="prevBtn">Previous</button>
+        <span id="slideIndicator">1 / {len(slide_ids)}</span>
+        <button id="nextBtn">Next</button>
     </div>
 
     <script>
@@ -499,12 +888,12 @@ class SlidePresentTool(LLMTool):
         )
 
 
-class SlideContentTool(LLMTool):
-    name = "slide_content"
+class SlideContentWriterTool(LLMTool):
+    name = "slide_content_writer"
     description = (
-        "Fills content into a specific slide HTML file based on a chosen template type. "
-        "This tool takes the raw content and integrates it into the pre-defined slide structure."
-    )
+         "Injects HTML content into a specific slide file that has already been created by 'slide_initialize'. "
+        "This tool safely modifies the existing file to prevent HTML nesting errors."
+        )
 
     input_schema = {
         "type": "object",
@@ -515,24 +904,14 @@ class SlideContentTool(LLMTool):
             },
             "slide_id": {
                 "type": "string",
-                "description": "The unique identifier of the slide to update (e.g., 'intro').",
+                "description": "The unique identifier of the slide to write content to (e.g., 'intro').",
             },
-            "template_type": {
+            "slide_content": {
                 "type": "string",
-                "description": "The type of content template to use with various visual styles.",
-                "enum": [
-                    "front_page", "basic_content", "comparison", "chart_data", "thank_you", "custom",
-                    "hero_banner", "feature_showcase", "timeline", "process_flow", "team_grid", 
-                    "stats_highlight", "quote_slide", "image_gallery", "split_content", 
-                    "full_image", "minimal_text", "bullet_points", "icon_grid", "video_embed"
-                ],
-            },
-            "content_data": {
-                "type": "object",
-                "description": "A dictionary containing data to populate the template (e.g., text, image paths, chart data).",
+                "description": "The inner HTML content to be placed inside the slide's main container.",
             },
         },
-        "required": ["project_dir", "slide_id", "template_type", "content_data"],
+        "required": ["project_dir", "slide_id", "slide_content"],
     }
 
     def __init__(self, workspace_manager: WorkspaceManager = None):
@@ -542,1084 +921,58 @@ class SlideContentTool(LLMTool):
         return self.execute(
             tool_input["project_dir"],
             tool_input["slide_id"], 
-            tool_input["template_type"],
-            tool_input["content_data"]
+            tool_input["slide_content"]
         )
 
-    def _get_front_page_template(self) -> str:
-        return """<div class="slide-container front-page">
-    <div class="content-overlay">
-        <h1 class="main-title">{main_title}</h1>
-        <h2 class="subtitle">{subtitle}</h2>
-        <p class="author-date">{author} - {date}</p>
-    </div>
-</div>
-
-<style>
-.front-page {{
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}}
-
-.content-overlay {{
-    background: rgba(255, 255, 255, 0.9);
-    padding: 60px;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-}}
-
-.main-title {{
-    font-size: 48px;
-    margin-bottom: 20px;
-    color: var(--header-color);
-}}
-
-.subtitle {{
-    font-size: 24px;
-    margin-bottom: 30px;
-    color: var(--text-color);
-    font-weight: normal;
-}}
-
-.author-date {{
-    font-size: 18px;
-    color: var(--text-color);
-    opacity: 0.8;
-}}
-</style>"""
-
-    def _get_basic_content_template(self) -> str:
-        return """<div class="slide-container basic-content">
-    <h1 class="slide-title">{title}</h1>
-    <div class="content-area">
-        <div class="text-content">
-            {content}
-        </div>
-        <div class="media-content">
-            {media}
-        </div>
-    </div>
-</div>
-
-<style>
-.basic-content {{
-    padding: 40px;
-    background: linear-gradient(135deg, var(--background-color) 0%, rgba(255,255,255,0.95) 100%);
-}}
-
-.content-area {{
-    display: flex;
-    gap: 40px;
-    height: calc(100% - 100px);
-    align-items: center;
-}}
-
-.text-content {{
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}}
-
-.media-content {{
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255,255,255,0.8);
-    border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-}}
-
-.text-content p {{
-    font-size: 20px;
-    line-height: 1.7;
-    margin-bottom: 20px;
-    text-align: justify;
-}}
-
-.text-content ul, .text-content ol {{
-    font-size: 18px;
-    line-height: 1.8;
-    padding-left: 20px;
-}}
-
-.text-content li {{
-    margin-bottom: 12px;
-    position: relative;
-}}
-
-.text-content ul li::before {{
-    content: "▶";
-    color: var(--primary-color);
-    font-weight: bold;
-    position: absolute;
-    left: -20px;
-}}
-
-.media-content img {{
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    border-radius: 10px;
-    transition: transform 0.3s ease;
-}}
-
-.media-content img:hover {{
-    transform: scale(1.02);
-}}
-</style>"""
-
-    def _get_comparison_template(self) -> str:
-        return """<div class="slide-container comparison">
-    <h1 class="slide-title">{title}</h1>
-    <div class="comparison-grid">
-        <div class="comparison-item">
-            <h3>{left_title}</h3>
-            <div class="comparison-content">
-                {left_content}
-            </div>
-        </div>
-        <div class="vs-divider">VS</div>
-        <div class="comparison-item">
-            <h3>{right_title}</h3>
-            <div class="comparison-content">
-                {right_content}
-            </div>
-        </div>
-    </div>
-</div>
-
-<style>
-.comparison {{
-    padding: 40px;
-}}
-
-.comparison-grid {{
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    gap: 30px;
-    height: calc(100% - 100px);
-    align-items: center;
-}}
-
-.comparison-item {{
-    background: var(--background-color);
-    border: 2px solid var(--primary-color);
-    border-radius: 15px;
-    padding: 30px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}}
-
-.comparison-item h3 {{
-    color: var(--header-color);
-    font-size: 24px;
-    margin-bottom: 20px;
-    text-align: center;
-}}
-
-.comparison-content {{
-    flex: 1;
-    font-size: 16px;
-    line-height: 1.6;
-}}
-
-.vs-divider {{
-    background: var(--primary-color);
-    color: white;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 18px;
-}}
-</style>"""
-
-    def _get_chart_data_template(self) -> str:
-        return """<div class="slide-container chart-data">
-    <h1 class="slide-title">{title}</h1>
-    <div class="chart-container">
-        <div class="chart-area">
-            {chart_html}
-        </div>
-        <div class="chart-description">
-            {description}
-        </div>
-    </div>
-</div>
-
-<style>
-.chart-data {{
-    padding: 40px;
-}}
-
-.chart-container {{
-    display: flex;
-    gap: 40px;
-    height: calc(100% - 100px);
-}}
-
-.chart-area {{
-    flex: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: white;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}}
-
-.chart-description {{
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}}
-
-.chart-description h3 {{
-    color: var(--header-color);
-    font-size: 22px;
-    margin-bottom: 20px;
-}}
-
-.chart-description p {{
-    font-size: 16px;
-    line-height: 1.6;
-    margin-bottom: 15px;
-}}
-
-.chart-description ul {{
-    font-size: 16px;
-    line-height: 1.6;
-}}
-</style>"""
-
-    def _get_thank_you_template(self) -> str:
-        return """<div class="slide-container thank-you">
-    <div class="thank-you-content">
-        <h1 class="thank-you-title">{title}</h1>
-        <p class="thank-you-message">{message}</p>
-        <div class="contact-info">
-            {contact_info}
-        </div>
-    </div>
-</div>
-
-<style>
-.thank-you {{
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}}
-
-.thank-you-content {{
-    background: rgba(255, 255, 255, 0.9);
-    padding: 60px;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-}}
-
-.thank-you-title {{
-    font-size: 48px;
-    color: var(--header-color);
-    margin-bottom: 30px;
-}}
-
-.thank-you-message {{
-    font-size: 24px;
-    color: var(--text-color);
-    margin-bottom: 40px;
-}}
-
-.contact-info {{
-    font-size: 18px;
-    color: var(--text-color);
-    opacity: 0.8;
-}}
-.contact-info a {{
-    color: var(--primary-color);
-    text-decoration: none;
-}}
-</style>"""
-
-    def _get_hero_banner_template(self) -> str:
-        return """<div class="slide-container hero-banner">
-    <div class="hero-background" style="background-image: url('{background_image}');">
-        <div class="hero-overlay">
-            <div class="hero-content">
-                <h1 class="hero-title">{title}</h1>
-                <h2 class="hero-subtitle">{subtitle}</h2>
-                <p class="hero-description">{description}</p>
-                <div class="hero-cta">
-                    {call_to_action}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<style>
-.hero-banner {{
-    padding: 0;
-    position: relative;
-    overflow: hidden;
-}}
-
-.hero-background {{
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    position: relative;
-    background-color: var(--primary-color);
-}}
-
-.hero-overlay {{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}}
-
-.hero-content {{
-    color: white;
-    max-width: 800px;
-    padding: 40px;
-}}
-
-.hero-title {{
-    font-size: 56px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-}}
-
-.hero-subtitle {{
-    font-size: 32px;
-    margin-bottom: 30px;
-    opacity: 0.9;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-}}
-
-.hero-description {{
-    font-size: 20px;
-    line-height: 1.6;
-    margin-bottom: 40px;
-    opacity: 0.9;
-}}
-
-.hero-cta {{
-    font-size: 18px;
-    font-weight: bold;
-}}
-</style>"""
-
-    def _get_feature_showcase_template(self) -> str:
-        return """<div class="slide-container feature-showcase">
-    <h1 class="slide-title">{title}</h1>
-    <div class="features-grid">
-        <div class="feature-item">
-            <div class="feature-icon">{icon1}</div>
-            <h3 class="feature-title">{feature1_title}</h3>
-            <p class="feature-description">{feature1_description}</p>
-        </div>
-        <div class="feature-item">
-            <div class="feature-icon">{icon2}</div>
-            <h3 class="feature-title">{feature2_title}</h3>
-            <p class="feature-description">{feature2_description}</p>
-        </div>
-        <div class="feature-item">
-            <div class="feature-icon">{icon3}</div>
-            <h3 class="feature-title">{feature3_title}</h3>
-            <p class="feature-description">{feature3_description}</p>
-        </div>
-    </div>
-</div>
-
-<style>
-.feature-showcase {{
-    padding: 40px;
-    background: linear-gradient(135deg, var(--background-color) 0%, rgba(240,245,255,1) 100%);
-}}
-
-.features-grid {{
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 40px;
-    height: calc(100% - 100px);
-    align-items: stretch;
-}}
-
-.feature-item {{
-    background: white;
-    border-radius: 20px;
-    padding: 40px 30px;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
-}}
-
-.feature-item:hover {{
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-    border-color: var(--primary-color);
-}}
-
-.feature-icon {{
-    font-size: 48px;
-    margin-bottom: 20px;
-    color: var(--primary-color);
-}}
-
-.feature-title {{
-    font-size: 24px;
-    color: var(--header-color);
-    margin-bottom: 15px;
-    font-weight: bold;
-}}
-
-.feature-description {{
-    font-size: 16px;
-    line-height: 1.6;
-    color: var(--text-color);
-    opacity: 0.8;
-}}
-</style>"""
-
-    def _get_timeline_template(self) -> str:
-        return """<div class="slide-container timeline">
-    <h1 class="slide-title">{title}</h1>
-    <div class="timeline-container">
-        <div class="timeline-item">
-            <div class="timeline-marker"></div>
-            <div class="timeline-content">
-                <h3>{step1_title}</h3>
-                <p>{step1_description}</p>
-            </div>
-        </div>
-        <div class="timeline-item">
-            <div class="timeline-marker"></div>
-            <div class="timeline-content">
-                <h3>{step2_title}</h3>
-                <p>{step2_description}</p>
-            </div>
-        </div>
-        <div class="timeline-item">
-            <div class="timeline-marker"></div>
-            <div class="timeline-content">
-                <h3>{step3_title}</h3>
-                <p>{step3_description}</p>
-            </div>
-        </div>
-        <div class="timeline-item">
-            <div class="timeline-marker"></div>
-            <div class="timeline-content">
-                <h3>{step4_title}</h3>
-                <p>{step4_description}</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<style>
-.timeline {{
-    padding: 40px;
-    background: linear-gradient(135deg, var(--background-color) 0%, rgba(248,250,252,1) 100%);
-}}
-
-.timeline-container {{
-    position: relative;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 20px 0;
-}}
-
-.timeline-container::before {{
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
-    border-radius: 2px;
-}}
-
-.timeline-item {{
-    position: relative;
-    margin-bottom: 40px;
-    display: flex;
-    align-items: center;
-}}
-
-.timeline-item:nth-child(odd) {{
-    flex-direction: row;
-}}
-
-.timeline-item:nth-child(even) {{
-    flex-direction: row-reverse;
-}}
-
-.timeline-marker {{
-    width: 20px;
-    height: 20px;
-    background: var(--primary-color);
-    border-radius: 50%;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2;
-    border: 4px solid white;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}}
-
-.timeline-content {{
-    background: white;
-    padding: 25px 30px;
-    border-radius: 15px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-    width: 40%;
-    margin: 0 60px;
-    position: relative;
-}}
-
-.timeline-item:nth-child(odd) .timeline-content {{
-    margin-right: 60px;
-    margin-left: 0;
-}}
-
-.timeline-item:nth-child(even) .timeline-content {{
-    margin-left: 60px;
-    margin-right: 0;
-}}
-
-.timeline-content h3 {{
-    color: var(--header-color);
-    font-size: 20px;
-    margin-bottom: 10px;
-    font-weight: bold;
-}}
-
-.timeline-content p {{
-    color: var(--text-color);
-    font-size: 16px;
-    line-height: 1.6;
-    margin: 0;
-}}
-</style>"""
-
-    def _get_stats_highlight_template(self) -> str:
-        return """<div class="slide-container stats-highlight">
-    <h1 class="slide-title">{title}</h1>
-    <div class="stats-grid">
-        <div class="stat-item">
-            <div class="stat-number">{stat1_number}</div>
-            <div class="stat-label">{stat1_label}</div>
-            <div class="stat-description">{stat1_description}</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-number">{stat2_number}</div>
-            <div class="stat-label">{stat2_label}</div>
-            <div class="stat-description">{stat2_description}</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-number">{stat3_number}</div>
-            <div class="stat-label">{stat3_label}</div>
-            <div class="stat-description">{stat3_description}</div>
-        </div>
-    </div>
-</div>
-
-<style>
-.stats-highlight {{
-    padding: 40px;
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-    color: white;
-}}
-
-.slide-title {{
-    color: white !important;
-    text-align: center;
-    margin-bottom: 60px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-}}
-
-.stats-grid {{
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 50px;
-    height: calc(100% - 150px);
-    align-items: center;
-}}
-
-.stat-item {{
-    text-align: center;
-    background: rgba(255,255,255,0.15);
-    padding: 40px 20px;
-    border-radius: 20px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.2);
-    transition: all 0.3s ease;
-}}
-
-.stat-item:hover {{
-    transform: translateY(-10px);
-    background: rgba(255,255,255,0.2);
-}}
-
-.stat-number {{
-    font-size: 56px;
-    font-weight: bold;
-    margin-bottom: 15px;
-    color: white;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-}}
-
-.stat-label {{
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: rgba(255,255,255,0.95);
-}}
-
-.stat-description {{
-    font-size: 16px;
-    line-height: 1.5;
-    color: rgba(255,255,255,0.85);
-}}
-</style>"""
-
-    def execute(self, project_dir: str, slide_id: str, template_type: str, content_data: dict) -> ToolImplOutput:
+    def execute(self, project_dir: str, slide_id: str, slide_content: str) -> ToolImplOutput:
         project_path = Path(project_dir)
-        config_path = project_path / "config.json"
         slides_path = project_path / "slides"
         slide_file_path = slides_path / f"{slide_id}.html"
 
         # Check if project exists
-        if not config_path.exists():
-            return ToolImplOutput(
-                tool_output=f"Error: Configuration file not found at '{config_path}'. Please initialize project first.",
-                tool_result_message="Configuration file not found"
-            )
-
-        # Check if slide file exists
         if not slide_file_path.exists():
             return ToolImplOutput(
-                tool_output=f"Error: Slide file '{slide_id}.html' not found. Please check slide_id.",
+                tool_output=f"Error: Slide file not found at '{slide_file_path}'. Please ensure the project is initialized correctly before writing content.",
                 tool_result_message="Slide file not found"
             )
 
-        # Read configuration to get style information
-        with open(config_path, "r", encoding="utf-8") as f:
-            config = json.load(f)
-
-        # MANDATORY: Truncate content to fit slide dimensions
-        truncated_content_data = self._truncate_content_for_template(template_type, content_data)
-
-        # MANDATORY: Validate that essential content exists
-        if not truncated_content_data:
+        # Validate slide_content
+        if not slide_content.strip():
             return ToolImplOutput(
-                tool_output=f"Error: No content data provided for slide '{slide_id}'.",
-                tool_result_message="No content data provided"
+                tool_output=f"Error: slide_content cannot be empty for slide '{slide_id}'.",
+                tool_result_message="Empty slide content"
             )
 
-        # MANDATORY: Ensure content is not empty after truncation
-        required_fields = self._get_required_fields_for_template(template_type)
-        for field in required_fields:
-            if field not in truncated_content_data or not str(truncated_content_data[field]).strip():
-                return ToolImplOutput(
-                    tool_output=f"Error: Required field '{field}' is missing or empty for template '{template_type}'.",
-                    tool_result_message=f"Required field '{field}' is missing or empty"
-                )
-
-        # Create CSS variables from style instruction
-        style_vars = self._create_css_variables(config.get("style_instruction", {}))
-
-        # Get template content
-        if template_type == "front_page":
-            template_content = self._get_front_page_template()
-        elif template_type == "basic_content":
-            template_content = self._get_basic_content_template()
-        elif template_type == "comparison":
-            template_content = self._get_comparison_template()
-        elif template_type == "chart_data":
-            template_content = self._get_chart_data_template()
-        elif template_type == "thank_you":
-            template_content = self._get_thank_you_template()
-        elif template_type == "hero_banner":
-            template_content = self._get_hero_banner_template()
-        elif template_type == "feature_showcase":
-            template_content = self._get_feature_showcase_template()
-        elif template_type == "timeline":
-            template_content = self._get_timeline_template()
-        elif template_type == "stats_highlight":
-            template_content = self._get_stats_highlight_template()
-        elif template_type == "split_content":
-            template_content = self._get_split_content_template()
-        elif template_type == "quote_slide":
-            template_content = self._get_quote_slide_template()
-        elif template_type == "bullet_points":
-            template_content = self._get_bullet_points_template()
-        elif template_type == "full_image":
-            template_content = self._get_full_image_template()
-        elif template_type == "minimal_text":
-            template_content = self._get_minimal_text_template()
-        elif template_type == "custom":
-            template_content = content_data.get("custom_html", "<!-- Custom content -->")
-        else:
-            return ToolImplOutput(
-                tool_output=f"Error: Template type '{template_type}' is not supported.",
-                tool_result_message=f"Template type '{template_type}' is not supported"
-            )
-
-        # Fill data into template
         try:
-            filled_content = template_content.format(**truncated_content_data)
-        except KeyError as e:
+            with open(slide_file_path, "r", encoding="utf-8") as f:
+                existing_html = f.read()
+
+            soup = BeautifulSoup(existing_html, 'lxml')
+
+            container = soup.find('div', class_='slide-container')
+
+            if not container:
+                return ToolImplOutput(
+                    tool_output=f"Error: Could not find the '<div class=\"slide-container\">' in '{slide_file_path}'. The slide template might be corrupted.",
+                    tool_result_message="Slide container not found"
+                )
+
+            container.clear()
+            container.append(BeautifulSoup(slide_content, 'html.parser'))
+
+            with open(slide_file_path, "w", encoding="utf-8") as f:
+                f.write(soup.prettify(formatter="html5"))
+
             return ToolImplOutput(
-                tool_output=f"Error: Missing required data for template: {e}",
-                tool_result_message=f"Missing required data for template: {e}"
+                tool_output=f"✓ Successfully wrote content to slide '{slide_id}'. File updated at: {slide_file_path}",
+                tool_result_message=f"Content for slide {slide_id} written successfully."
             )
 
-        # Read current HTML file
-        with open(slide_file_path, "r", encoding="utf-8") as f:
-            current_html = f.read()
-
-        # Replace content in slide container
-        if "<!-- Slide content will be filled here by SlideContentTool -->" in current_html:
-            new_html = current_html.replace(
-                "<!-- Slide content will be filled here by SlideContentTool -->",
-                filled_content
+        except Exception as e:
+            return ToolImplOutput(
+                tool_output=f"An unexpected error occurred while writing to slide '{slide_id}': {e}",
+                tool_result_message="An unexpected error occurred"
             )
-        else:
-            # Find and replace content in slide-container
-            import re
-            pattern = r'<div class="slide-container"[^>]*>.*?</div>'
-            if re.search(pattern, current_html, re.DOTALL):
-                new_html = re.sub(pattern, filled_content, current_html, flags=re.DOTALL)
-            else:
-                # If not found, add to body
-                new_html = current_html.replace(
-                    '<div class="slide-container">',
-                    filled_content
-                )
-
-        # Add CSS variables to beginning of file
-        if style_vars and "<style>" not in new_html:
-            head_close_pos = new_html.find("</head>")
-            if head_close_pos != -1:
-                new_html = (
-                    new_html[:head_close_pos] +
-                    f"<style>\n:root {{\n{style_vars}\n}}\n</style>\n" +
-                    new_html[head_close_pos:]
-                )
-
-        # Write new file
-        with open(slide_file_path, "w", encoding="utf-8") as f:
-            f.write(new_html)
-
-        return ToolImplOutput(
-            tool_output=f"✓ CONTENT FILLED: Updated slide '{slide_id}' with template '{template_type}'. Content successfully truncated and fitted to slide dimensions (1280x720px).",
-            tool_result_message=f"Successfully updated slide {slide_id} with content"
-        )
-
-    def _create_css_variables(self, style_instruction: dict) -> str:
-        """Create CSS variables from style instruction"""
-        if not style_instruction:
-            return ""
-        
-        css_vars = []
-        
-        # Color palette
-        color_palette = style_instruction.get("color_palette", {})
-        if color_palette:
-            for key, value in color_palette.items():
-                css_var_name = key.replace("_", "-")
-                css_vars.append(f"  --{css_var_name}: {value};")
-        
-        # Typography
-        typography = style_instruction.get("typography", {})
-        if typography:
-            for key, value in typography.items():
-                css_var_name = key.replace("_", "-")
-                css_vars.append(f"  --{css_var_name}: '{value}', sans-serif;")
-        
-        return "\n".join(css_vars)
-
-    def _truncate_content_for_template(self, template_type: str, content_data: dict) -> dict:
-        """Intelligently truncate content to fit slide dimensions"""
-        truncated_data = content_data.copy()
-        
-        if template_type == "front_page":
-            # Front page content limits
-            if "main_title" in truncated_data:
-                truncated_data["main_title"] = self._truncate_text(truncated_data["main_title"], 60)
-            if "subtitle" in truncated_data:
-                truncated_data["subtitle"] = self._truncate_text(truncated_data["subtitle"], 100)
-                
-        elif template_type == "basic_content":
-            # Basic content limits
-            if "title" in truncated_data:
-                truncated_data["title"] = self._truncate_text(truncated_data["title"], 60)
-            if "content" in truncated_data:
-                truncated_data["content"] = self._truncate_text(truncated_data["content"], 500, preserve_paragraphs=True)
-                
-        elif template_type == "comparison":
-            # Comparison content limits
-            if "title" in truncated_data:
-                truncated_data["title"] = self._truncate_text(truncated_data["title"], 60)
-            if "left_content" in truncated_data:
-                truncated_data["left_content"] = self._truncate_text(truncated_data["left_content"], 250)
-            if "right_content" in truncated_data:
-                truncated_data["right_content"] = self._truncate_text(truncated_data["right_content"], 250)
-                
-        elif template_type == "chart_data":
-            # Chart data content limits
-            if "title" in truncated_data:
-                truncated_data["title"] = self._truncate_text(truncated_data["title"], 60)
-            if "description" in truncated_data:
-                truncated_data["description"] = self._truncate_text(truncated_data["description"], 300)
-                
-        elif template_type == "thank_you":
-            # Thank you content limits
-            if "title" in truncated_data:
-                truncated_data["title"] = self._truncate_text(truncated_data["title"], 40)
-            if "message" in truncated_data:
-                truncated_data["message"] = self._truncate_text(truncated_data["message"], 150)
-        
-        return truncated_data
-    
-    def _truncate_text(self, text: str, max_chars: int, preserve_paragraphs: bool = False) -> str:
-        """Truncate text while preserving readability"""
-        if len(text) <= max_chars:
-            return text
-            
-        if preserve_paragraphs and '\n\n' in text:
-            # For paragraph content, truncate by paragraphs
-            paragraphs = text.split('\n\n')
-            result = ""
-            for para in paragraphs:
-                if len(result + para) + 4 <= max_chars:  # +4 for \n\n
-                    result += para + '\n\n'
-                else:
-                    break
-            return result.rstrip('\n')
-        else:
-            # For regular text, truncate at word boundary
-            if text[max_chars].isspace():
-                return text[:max_chars].rstrip()
-            else:
-                # Find last space before max_chars
-                last_space = text.rfind(' ', 0, max_chars)
-                if last_space > max_chars * 0.8:  # If we can keep at least 80% of desired length
-                    return text[:last_space] + "..."
-                else:
-                    return text[:max_chars-3] + "..."
-
-    def _get_required_fields_for_template(self, template_type: str) -> list:
-        """Get required fields for each template type"""
-        template_fields = {
-            "front_page": ["main_title", "subtitle", "author", "date"],
-            "basic_content": ["title", "content", "media"],
-            "comparison": ["title", "left_title", "left_content", "right_title", "right_content"],
-            "chart_data": ["title", "chart_html", "description"],
-            "thank_you": ["title", "message", "contact_info"],
-            "custom": ["custom_html"]
-        }
-        return template_fields.get(template_type, [])
-
-
-class SlideDeckManager:
-    """Utility class to manage the entire slide deck creation process"""
-    
-    def __init__(self, workspace_manager: WorkspaceManager = None):
-        self.workspace_manager = workspace_manager
-        self.initialize_tool = SlideInitializeTool(workspace_manager)
-        self.content_tool = SlideContentTool(workspace_manager)
-        self.present_tool = SlidePresentTool(workspace_manager)
-    
-    def create_presentation(self, main_title: str, project_dir: str, outline: list, 
-                          style_instruction: dict, slides_content: list = None) -> dict:
-        """
-        Create a complete presentation from start to finish
-        
-        Args:
-            main_title: Main title of the presentation
-            project_dir: Project directory
-            outline: List of slides with id, title, summary
-            style_instruction: Style guidelines
-            slides_content: Detailed content for each slide (optional)
-        
-        Returns:
-            dict: Result with project information and presentation URL
-        """
-        # Step 1: Initialize project
-        init_result = self.initialize_tool.execute(
-            main_title=main_title,
-            project_dir=project_dir,
-            outline=outline,
-            style_instruction=style_instruction
-        )
-        
-        if init_result.error:
-            return {"error": init_result.error}
-        
-        results = {"initialization": init_result.tool_output}
-        
-        # Step 2: Fill content for slides (if provided)
-        if slides_content:
-            content_results = []
-            for slide_content in slides_content:
-                slide_id = slide_content.get("slide_id")
-                template_type = slide_content.get("template_type", "basic_content")
-                content_data = slide_content.get("content_data", {})
-                
-                content_result = self.content_tool.execute(
-                    project_dir=project_dir,
-                    slide_id=slide_id,
-                    template_type=template_type,
-                    content_data=content_data
-                )
-                
-                content_results.append({
-                    "slide_id": slide_id,
-                    "result": content_result.tool_output if not content_result.error else content_result.error
-                })
-            
-            results["content_update"] = content_results
-        
-        # Step 3: Create presentation
-        slide_ids = [s['id'] for s in outline]
-        present_result = self.present_tool.execute(
-            project_dir=project_dir,
-            slide_ids=slide_ids
-        )
-        
-        if present_result.error:
-            results["presentation_error"] = present_result.error
-        else:
-            results["presentation"] = {
-                "message": present_result.tool_output,
-                "url": getattr(present_result, 'auxiliary_data', {}).get('url', None)
-            }
-        
-        return results
-    
-    def get_available_templates(self) -> dict:
-        """Return enhanced list of available templates and their descriptions"""
-        return {
-            "front_page": {
-                "name": "Cover Page",
-                "description": "Enhanced opening slide with gradient backgrounds and modern typography",
-                "required_fields": ["main_title", "subtitle", "author", "date"],
-                "style_features": ["Gradient overlay", "Glass effect", "Modern typography", "Smooth animations"]
-            },
-            "basic_content": {
-                "name": "Enhanced Basic Content",
-                "description": "Improved two-column layout with better visual hierarchy and animations",
-                "required_fields": ["title", "content", "media"],
-                "style_features": ["Enhanced animations", "Better spacing", "Gradient backgrounds", "Interactive elements"]
-            },
-            "comparison": {
-                "name": "Modern Comparison",
-                "description": "Side-by-side comparison with enhanced visual design",
-                "required_fields": ["title", "left_title", "left_content", "right_title", "right_content"],
-                "style_features": ["Card-based design", "Border animations", "Color coding", "Hover effects"]
-            },
-            "chart_data": {
-                "name": "Data Visualization",
-                "description": "Enhanced charts with modern styling and descriptions",
-                "required_fields": ["title", "chart_html", "description"],
-                "style_features": ["Clean backgrounds", "Shadow effects", "Responsive design", "Typography hierarchy"]
-            },
-            "thank_you": {
-                "name": "Thank You Slide",
-                "description": "Beautiful closing slide with enhanced styling",
-                "required_fields": ["title", "message", "contact_info"],
-                "style_features": ["Gradient background", "Glass morphism", "Elegant typography", "Subtle animations"]
-            },
-            "hero_banner": {
-                "name": "Hero Banner",
-                "description": "Full-screen impact slide with background image support",
-                "required_fields": ["title", "subtitle", "description", "background_image", "call_to_action"],
-                "style_features": ["Full-screen background", "Dramatic typography", "Text shadows", "Overlay effects"]
-            },
-            "feature_showcase": {
-                "name": "Feature Showcase",
-                "description": "Three-column grid with icons and feature descriptions",
-                "required_fields": ["title", "icon1", "feature1_title", "feature1_description", "icon2", "feature2_title", "feature2_description", "icon3", "feature3_title", "feature3_description"],
-                "style_features": ["Card hover effects", "Icon styling", "Grid layout", "Transform animations"]
-            },
-            "timeline": {
-                "name": "Timeline",
-                "description": "Vertical timeline for processes or historical events",
-                "required_fields": ["title", "step1_title", "step1_description", "step2_title", "step2_description", "step3_title", "step3_description", "step4_title", "step4_description"],
-                "style_features": ["Alternating layout", "Connection lines", "Marker animations", "Progressive disclosure"]
-            },
-            "stats_highlight": {
-                "name": "Statistics Highlight",
-                "description": "Eye-catching numbers and metrics display",
-                "required_fields": ["title", "stat1_number", "stat1_label", "stat1_description", "stat2_number", "stat2_label", "stat2_description", "stat3_number", "stat3_label", "stat3_description"],
-                "style_features": ["Glass morphism", "Large typography", "Animated backgrounds", "Gradient effects"]
-            },
-            "quote_slide": {
-                "name": "Quote Slide",
-                "description": "Elegant quote presentation with author attribution",
-                "required_fields": ["quote_text", "author_name", "author_title"],
-                "style_features": ["Centered design", "Large quotation marks", "Elegant typography", "Gradient backgrounds"]
-            },
-            "split_content": {
-                "name": "Split Content",
-                "description": "Two-section layout with contrasting backgrounds",
-                "required_fields": ["left_title", "left_content", "right_title", "right_content"],
-                "style_features": ["50/50 split", "Contrasting colors", "Independent animations", "Visual separation"]
-            },
-            "bullet_points": {
-                "name": "Enhanced Bullet Points",
-                "description": "Structured bullet points with icons and visual content",
-                "required_fields": ["title", "icon1", "point1_title", "point1_description", "icon2", "point2_title", "point2_description", "icon3", "point3_title", "point3_description", "icon4", "point4_title", "point4_description", "visual_content"],
-                "style_features": ["Icon integration", "Card design", "Hover animations", "Side-by-side layout"]
-            },
-            "full_image": {
-                "name": "Full Image Slide",
-                "description": "Image-focused slide with minimal text overlay",
-                "required_fields": ["image_url", "title", "subtitle"],
-                "style_features": ["Full-screen image", "Text overlay", "Image filters", "Responsive scaling"]
-            },
-            "minimal_text": {
-                "name": "Minimal Text",
-                "description": "Clean, typography-focused design for important messages",
-                "required_fields": ["title", "content", "accent_text"],
-                "style_features": ["Clean design", "Typography focus", "Subtle gradients", "Whitespace usage"]
-            },
-            "custom": {
-                "name": "Custom HTML",
-                "description": "Fully customizable template with your own HTML/CSS",
-                "required_fields": ["custom_html"],
-                "style_features": ["Complete freedom", "Custom styling", "Advanced layouts", "Personal branding"]
-            }
-        }
-
 
 # Export main classes
-__all__ = ['SlideInitializeTool', 'SlideContentTool', 'SlidePresentTool', 'SlideDeckManager']
+__all__ = ['SlideInitializeTool', 'SlidePresentTool', 'SlideContentWriterTool']

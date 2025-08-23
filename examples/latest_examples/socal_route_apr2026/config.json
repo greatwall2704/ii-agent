@@ -1,0 +1,196 @@
+{
+  "main_title": "California SoCal Route Plan (Apr 21–27, 2026)",
+  "project_dir": "socal_route_apr2026",
+  "outline": [
+    {
+      "id": "cover",
+      "page_title": "California SoCal Incentive Trip Plan",
+      "summary": "7-day route plan for 8 travelers: Paris → Southern California loop → Paris",
+      "content_outline": [
+        "Dates: Tue, 21 Apr 2026 – Mon, 27 Apr 2026 (7 days)",
+        "Party: 8 travelers, 2 vehicles (8-passenger vans)",
+        "Route: LAX → Malibu → Laguna Beach → Temecula → San Diego → LAX",
+        "Goal: Mix of outdoor coastal/desert activities with indoor contingencies based on April climate"
+      ]
+    },
+    {
+      "id": "weather",
+      "page_title": "April Weather Insights (Southern California)",
+      "summary": "Climate normals for late April across coastal and inland zones to guide outdoor vs indoor planning",
+      "content_outline": [
+        "Los Angeles (LAX): avg high ~69–72°F (20–22°C), low ~54–56°F (12–13°C); Apr precip ~0.6 in; many sunny days",
+        "San Diego: avg high ~69–71°F (20–21°C), low ~57–60°F (14–16°C); Apr precip ~0.65 in; marine layer possible AM",
+        "Coastal (Malibu, Laguna): similar to LA/San Diego; breezy, cooler evenings; ocean temp ~62–64°F (17–18°C)",
+        "Inland (Temecula): warmer days, cooler nights; great for vineyards; low rain odds",
+        "Desert (Joshua Tree option): warm/dry days, cool nights; strong sun/UV; hydrating essential",
+        "Daylight: ~13+ hours; sunrise ~06:15, sunset ~19:30 PDT around late April",
+        "Sources: Wikipedia climate pages (LA, San Diego), NPS (Joshua Tree)"
+      ]
+    },
+    {
+      "id": "flights",
+      "page_title": "Flights & Arrival Day",
+      "summary": "Overnight Paris → LAX strategy and first-day light plan",
+      "content_outline": [
+        "Recommended: Depart CDG Mon Apr 20 evening; arrive LAX Tue Apr 21 midday (nonstop options ~11h)",
+        "Allow 2–3h for entry, luggage, van pickup",
+        "Hotel zone: Westside LA or Santa Monica for quick coastal access",
+        "Light activities based on energy and weather: Santa Monica Pier, Third Street Promenade, early dinner",
+        "Time zone: PDT (UTC−7)"
+      ]
+    },
+    {
+      "id": "day1",
+      "page_title": "Day 1 — Tue 21 Apr: Land in LA",
+      "summary": "Arrival, check-in, coastal unwind",
+      "content_outline": [
+        "LAX arrival → pick up 2 vans (8-seaters)",
+        "Drive to hotel (Westside/Santa Monica) ~30–45 min off-peak",
+        "If weather clear: sunset walk Santa Monica/Palos Verdes bluff",
+        "If windy/cool: indoor galleries on Abbot Kinney or Getty Center evening hours (selected days)"
+      ]
+    },
+    {
+      "id": "day2",
+      "page_title": "Day 2 — Wed 22 Apr: Malibu Coast",
+      "summary": "Scenic coast day with outdoor focus and indoor backups",
+      "content_outline": [
+        "AM: Pacific Coast Highway to Malibu, coffee at Malibu Country Mart",
+        "Outdoor: El Matador or Point Dume trails/photo stops; Malibu Pier lunch",
+        "Indoor backup: Getty Villa (timed tickets), Malibu Lagoon Museum",
+        "Dinner: Santa Monica/Brentwood; return to hotel"
+      ]
+    },
+    {
+      "id": "day3",
+      "page_title": "Day 3 — Thu 23 Apr: Laguna Beach & OC",
+      "summary": "Southbound to Orange County’s coves and parks",
+      "content_outline": [
+        "Check out; drive to Laguna Beach (~1h–1h30)",
+        "Outdoor: Heisler Park coastal path, Crystal Cove State Park hike/tidepools",
+        "Indoor backup: Orange County Museum of Art (OCMA), Lido Marina Village shopping",
+        "Stay: Laguna Beach oceanfront hotel"
+      ]
+    },
+    {
+      "id": "day4",
+      "page_title": "Day 4 — Fri 24 Apr: Temecula Wine Country",
+      "summary": "Inland warmth, vineyards, and optional ballooning",
+      "content_outline": [
+        "Drive to Temecula (~1h15)",
+        "Sunrise option: hot air balloon (weather permitting)",
+        "Winery tastings with driver rotation or arrange private shuttle",
+        "Indoor backup: barrel room tour, spa afternoon",
+        "Stay: Temecula resort"
+      ]
+    },
+    {
+      "id": "day5",
+      "page_title": "Day 5 — Sat 25 Apr: San Diego Coast",
+      "summary": "La Jolla, Torrey Pines, and harbor highlights",
+      "content_outline": [
+        "Drive to San Diego (~1h)",
+        "Outdoor: La Jolla sea caves/kayak (swell dependent), Torrey Pines hike",
+        "Indoor backup: USS Midway Museum, Birch Aquarium",
+        "Evening: Little Italy or Gaslamp dining; Bayfront hotel check-in"
+      ]
+    },
+    {
+      "id": "day6",
+      "page_title": "Day 6 — Sun 26 Apr: San Diego Culture & Beach",
+      "summary": "Balanced city day with museums and sand",
+      "content_outline": [
+        "AM: Balboa Park museum cluster (choose 2–3)",
+        "PM: Coronado beach or Mission Bay cycle path",
+        "Contingency: Harbor cruise if winds moderate; else New Children’s Museum/SDMA",
+        "Group dinner & recap"
+      ]
+    },
+    {
+      "id": "day7",
+      "page_title": "Day 7 — Mon 27 Apr: Return via LAX",
+      "summary": "Northbound return and departure",
+      "content_outline": [
+        "Drive San Diego → LAX (~2h30–3h; buffer for traffic)",
+        "Fuel/return vans, check-in for overnight LAX → CDG",
+        "If time: brief stop in Carlsbad State Beach or San Clemente Pier en route"
+      ]
+    },
+    {
+      "id": "logistics",
+      "page_title": "Logistics: Transport, Hotels, Timing",
+      "summary": "Vehicles, drive times, and hotel zones",
+      "content_outline": [
+        "Vehicles: 2× 8-passenger vans; consider one minibus with driver if preferred",
+        "Drive time snapshot (no traffic): LAX→Malibu 45–60m; LA→Laguna 1h15; Laguna→Temecula 1h15; Temecula→San Diego 1h; San Diego→LAX 2h30",
+        "Hotels: LA Westside/Santa Monica; Laguna oceanfront; Temecula resort; San Diego Bayfront",
+        "Packing: layers, light windbreakers, comfortable walking shoes; sun protection year-round"
+      ]
+    },
+    {
+      "id": "budget",
+      "page_title": "Budget Ranges (Estimates)",
+      "summary": "High-level cost ranges per person excluding flights",
+      "content_outline": [
+        "Vans: ~$120–150/day each + insurance; fuel total ~US$250–350",
+        "Parking/tolls: LA/SD hotels US$40–70/night per vehicle typical",
+        "Hotels 4★ avg: LA $280–380; Laguna $350–500; Temecula $220–320; San Diego $260–380 per room/night (double occupancy)",
+        "Activities: Kayak $45–75; Midway $32; Balloon $250–350; Winery tastings $25–45/flight",
+        "Dining: $70–110 pp/day (mid to upscale)",
+        "Note: Prices vary by availability; group quotes recommended"
+      ]
+    },
+    {
+      "id": "checklist",
+      "page_title": "Final Checklist & Weather Recheck",
+      "summary": "What to confirm one week out",
+      "content_outline": [
+        "Re-check 10-day forecast for each stop to finalize outdoor vs indoor picks",
+        "Lock timed tickets: Getty Villa, OCMA, Midway, ballooning",
+        "Confirm van bookings and hotel parking policies",
+        "Share daily meet times, dress code, and contingency choices with team"
+      ]
+    },
+    {
+      "id": "thankyou",
+      "page_title": "Thank You",
+      "summary": "Close and Q&A",
+      "content_outline": [
+        "Questions welcome",
+        "Contact: Trip coordinator",
+        "Safe travels!"
+      ]
+    }
+  ],
+  "style_instruction": {
+    "theme": "professional_corporate",
+    "color_palette": {
+      "primary": "2C3E50",
+      "secondary": "3498DB",
+      "background": "FFFFFF",
+      "text_color": "2C3E50",
+      "header_color": "2C3E50"
+    },
+    "typography": {
+      "header_font": "Montserrat",
+      "body_font": "Open Sans"
+    },
+    "layout_description": "Clean, organized business layout with two-column and grid options, strong headings, and readable body text; use high-contrast text on light backgrounds; images with captions where helpful."
+  },
+  "slides_order": [
+    "cover",
+    "weather",
+    "flights",
+    "day1",
+    "day2",
+    "day3",
+    "day4",
+    "day5",
+    "day6",
+    "day7",
+    "logistics",
+    "budget",
+    "checklist",
+    "thankyou"
+  ]
+}
