@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>
+   Recap: Diffusions and Probability Flow ODE
+  </title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1">
+  </script>
+  <link href="../css/main.css" rel="stylesheet">
+ </head>
+ <body>
+  <div class="slide-container">
+   <header class="slide-header text-center">
+    <h1 class="slide-title">
+     Recap: Diffusions and Probability Flow ODE
+    </h1>
+   </header>
+   <main class="slide-content two-column">
+    <div class="card">
+     <h2 class="section-title">
+      SDE/ODE Views
+     </h2>
+     <ul class="slide-list">
+      <li>
+       Forward SDE corrupts data to noise; reverse SDE denoises.
+      </li>
+      <li>
+       Probability flow ODE shares marginals with the SDE but is deterministic.
+      </li>
+      <li>
+       Sampling via standard ODE solvers (Euler, Heun, RK4).
+      </li>
+     </ul>
+    </div>
+    <div class="card">
+     <h2 class="section-title">
+      Link to CNFs
+     </h2>
+     <ul class="slide-list">
+      <li>
+       Continuous normalizing flows parameterize the vector field.
+      </li>
+      <li>
+       FM uses supervised targets for the vector field instead of log-likelihood gradients.
+      </li>
+      <li>
+       Bridges diffusion objectives and CNF training.
+      </li>
+     </ul>
+    </div>
+   </main>
+  </div>
+ </body>
+</html>

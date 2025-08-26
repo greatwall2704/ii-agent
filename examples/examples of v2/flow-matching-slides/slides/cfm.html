@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>
+   Conditional Flow Matching (CFM)
+  </title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1">
+  </script>
+  <link href="../css/main.css" rel="stylesheet">
+ </head>
+ <body>
+  <div class="slide-container">
+   <header class="slide-header">
+    <h1 class="slide-title">
+     Conditional Flow Matching (CFM)
+    </h1>
+   </header>
+   <main class="slide-content two-column">
+    <div class="card">
+     <h2 class="section-title">
+      Path Construction
+     </h2>
+     <ul class="slide-list">
+      <li>
+       Sample endpoints: x
+       <sub>
+        0
+       </sub>
+       &sim;p
+       <sub>
+        0
+       </sub>
+       , x
+       <sub>
+        1
+       </sub>
+       &sim;p
+       <sub>
+        data
+       </sub>
+       .
+      </li>
+      <li>
+       Define an interpolant path x
+       <sub>
+        t
+       </sub>
+       |x
+       <sub>
+        0
+       </sub>
+       ,x
+       <sub>
+        1
+       </sub>
+       (linear or stochastic).
+      </li>
+      <li>
+       Compute conditional velocity u
+       <sub>
+        t
+       </sub>
+       (x
+       <sub>
+        t
+       </sub>
+       |x
+       <sub>
+        0
+       </sub>
+       ,x
+       <sub>
+        1
+       </sub>
+       ).
+      </li>
+     </ul>
+    </div>
+    <div class="card">
+     <h2 class="section-title">
+      Training Loss
+     </h2>
+     <ul class="slide-list">
+      <li>
+       MSE: E[||v
+       <sub>
+        &theta;
+       </sub>
+       (x
+       <sub>
+        t
+       </sub>
+       ,t)&minus;u
+       <sub>
+        t
+       </sub>
+       (x
+       <sub>
+        t
+       </sub>
+       |x
+       <sub>
+        0
+       </sub>
+       ,x
+       <sub>
+        1
+       </sub>
+       )||&sup2;].
+      </li>
+      <li>
+       Unbiased for the marginal velocity field.
+      </li>
+      <li>
+       Works for unconditional and conditional generation (e.g., text).
+      </li>
+     </ul>
+    </div>
+   </main>
+  </div>
+ </body>
+</html>

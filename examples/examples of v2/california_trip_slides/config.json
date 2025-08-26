@@ -1,0 +1,225 @@
+{
+  "main_title": "California Route Plan: Paris to Southern California (7 Days, 8 Travelers)",
+  "project_dir": "california_trip_slides",
+  "outline": [
+    {
+      "id": "title",
+      "page_title": "California Route Plan",
+      "summary": "Cover slide with title, subtitle, and presenter info",
+      "content_outline": [
+        "Title: California Route Plan (7 Days)",
+        "Subtitle: Paris → Los Angeles → San Diego → Palm Springs/Joshua Tree → Los Angeles",
+        "Presenter: Trip Planner — II Agent",
+        "Background image: Los Angeles skyline at sunset"
+      ]
+    },
+    {
+      "id": "overview",
+      "page_title": "Trip Overview & Narrative Arc",
+      "summary": "High-level summary of the 7-day SoCal loop with key themes and pace",
+      "content_outline": [
+        "Group size: 8 travelers; Dates: 21–27 Apr 2025 (7 days)",
+        "Route: LA (city + beaches) → San Diego (coast + culture) → Palm Springs/Joshua Tree (desert + stargazing) → LA (departure)",
+        "Pace: Moderate; 3 hotel bases; ~2–3 hours driving on transfer days",
+        "Transport: 2 large SUVs or 1 passenger van",
+        "Goal: Balance outdoor highlights with indoor contingencies using late‑April climate normals"
+      ]
+    },
+    {
+      "id": "logistics",
+      "page_title": "Flights, Transport, Lodging Strategy",
+      "summary": "Arrival/departure, car rental plan, lodging footprint for group of 8",
+      "content_outline": [
+        "Flights: Paris (CDG) → Los Angeles (LAX). Return from LAX. Overnight flight options for return.",
+        "Ground: 2 full-size SUVs (7–8 seaters) or 1× 12–15 passenger van; factor luggage space.",
+        "Lodging bases: LA (2 nights), San Diego (2 nights), Palm Springs (2 nights) → 6 total nights.",
+        "Neighborhood targets: LA (Santa Monica or West Hollywood), San Diego (Little Italy or La Jolla), Palm Springs (Downtown).",
+        "Check-in/out timing buffers; valet/parking considerations (US$20–50/day)."
+      ]
+    },
+    {
+      "id": "weather",
+      "page_title": "Late-April Weather Expectations (Climate Normals)",
+      "summary": "What to expect weather-wise and how it maps to activities",
+      "content_outline": [
+        "Los Angeles: ~23°C high / 14°C low; low rain; morning marine layer likely; pleasant afternoons.",
+        "San Diego: ~20–21°C high / 14°C low; very low rain; coastal breeze; cool evenings.",
+        "Palm Springs: ~31–33°C high / 16–18°C low; dry heat; strong sun; pool/stay hydrated.",
+        "Joshua Tree (higher elevation): ~24–26°C high / 8–10°C low; potential wind; cooler nights.",
+        "Implication: Favor desert hikes early AM; coastal/outdoor afternoons; have indoor museums/tours as backups."
+      ]
+    },
+    {
+      "id": "day1",
+      "page_title": "Day 1 — Mon 21 Apr: Paris → Los Angeles",
+      "summary": "Arrival, shakeout day by the ocean",
+      "content_outline": [
+        "CDG → LAX flight; arrive midday/afternoon local time (UTC−7).",
+        "Check in: Santa Monica or West Hollywood.",
+        "Light activities: Santa Monica Pier & beach walk; Third Street Promenade.",
+        "Dinner: Group-friendly reservations on Ocean Ave or in Venice.",
+        "Contingency: If tired or cloudy, opt for early dinner and hotel rest."
+      ]
+    },
+    {
+      "id": "day2",
+      "page_title": "Day 2 — Tue: Los Angeles City & Hills",
+      "summary": "Iconic views and flexible indoor/outdoor mix",
+      "content_outline": [
+        "Morning: Griffith Observatory & Hollywood Sign views (outdoor vistas).",
+        "Midday: Warner Bros. Studio Tour or Academy Museum of Motion Pictures (indoor).",
+        "Afternoon: LACMA Urban Light + The Grove/Farmers Market or Beverly Hills stroll.",
+        "Evening: West Hollywood dining; optional rooftop bar.",
+        "Backups: The Broad (reservations), Petersen Automotive Museum, Getty Center (indoor/outdoor)."
+      ]
+    },
+    {
+      "id": "day3",
+      "page_title": "Day 3 — Wed: LA → San Diego (2–3h)",
+      "summary": "Scenic transfer day with coastal stops",
+      "content_outline": [
+        "Drive I‑5 South; optional stop at San Clemente Pier or Oceanside Harbor.",
+        "Check in: Little Italy or La Jolla.",
+        "Afternoon: La Jolla Cove sea lions; kayaking (if calm seas) or coastal walk (outdoor).",
+        "Indoor contingency: Birch Aquarium or USS Midway Museum.",
+        "Dinner: Little Italy (group-friendly trattorias) or La Jolla village."
+      ]
+    },
+    {
+      "id": "day4",
+      "page_title": "Day 4 — Thu: San Diego Parks, Zoo, and Beaches",
+      "summary": "Mix museums with nature depending on weather",
+      "content_outline": [
+        "Option A (clear day): Torrey Pines State Natural Reserve hike + Sunset at Sunset Cliffs.",
+        "Option B (marine layer/windy): Balboa Park museums (Fleet Science, SDMA) + San Diego Zoo.",
+        "Evening: Gaslamp Quarter or Little Italy; gelato and stroll.",
+        "Notes: Layer up for coastal breeze; parking fills early at Torrey Pines."
+      ]
+    },
+    {
+      "id": "day5",
+      "page_title": "Day 5 — Fri: San Diego → Palm Springs (2.5–3h)",
+      "summary": "Desert arrival, mid-day heat management",
+      "content_outline": [
+        "Morning transfer via I‑15/CA‑74 (check road advisories); brunch en route.",
+        "Palm Springs check-in; midday pool/siesta to avoid heat.",
+        "Late afternoon: Palm Springs Aerial Tramway (cooler temps up top) or Architecture tour.",
+        "Evening: Downtown Palm Springs dinner; reservations for 8 recommended."
+      ]
+    },
+    {
+      "id": "day6",
+      "page_title": "Day 6 — Sat: Joshua Tree National Park",
+      "summary": "Early start hikes and night sky",
+      "content_outline": [
+        "Early AM entry; hikes: Hidden Valley, Barker Dam, Skull Rock; bring 3L water/person.",
+        "Lunch: Picnic in park or return to town midday heat.",
+        "Afternoon: Rest/pool or spa; evening stargazing spot inside park.",
+        "Backups: Palm Springs Art Museum; spa day if winds excessive; slot indoor activities."
+      ]
+    },
+    {
+      "id": "day7",
+      "page_title": "Day 7 — Sun: Palm Springs → Los Angeles → Paris",
+      "summary": "Return to LA and depart",
+      "content_outline": [
+        "Drive back to LAX (~2–3h).",
+        "LA brunch: Venice/Abbot Kinney or Downtown Arts District if time allows.",
+        "Last walk: Venice Canals or Santa Monica waterfront.",
+        "Evening/night flight LAX → CDG; arrive following day in Paris."
+      ]
+    },
+    {
+      "id": "lodging",
+      "page_title": "Lodging Suggestions (Group of 8)",
+      "summary": "Neighborhood-first hotel/apartments in each base",
+      "content_outline": [
+        "Los Angeles (2 nights): Santa Monica beachfront hotels; or West Hollywood boutique; 4 rooms or a large serviced apartment.",
+        "San Diego (2 nights): Little Italy modern hotels near dining; or La Jolla coastal stays; 4 rooms or 4–5BR vacation rental.",
+        "Palm Springs (2 nights): Downtown hotels or 4–5BR mid‑century villa with pool (check noise/party rules).",
+        "Ask for connected rooms; confirm parking for 2 vehicles or a van."
+      ]
+    },
+    {
+      "id": "dining",
+      "page_title": "Dining & Group Reservations",
+      "summary": "Easy group logistics and cuisine variety",
+      "content_outline": [
+        "Plan dinners with reservations for 8, 5:30–7:30pm for best availability.",
+        "LA: Santa Monica seafood; West Hollywood Californian; casual tacos for lunches.",
+        "San Diego: Little Italy Italian; harbor seafood; casual fish tacos.",
+        "Palm Springs: Californian/American bistros; brunch cafes.",
+        "Dietary: capture preferences/allergies; split checks commonly accepted."
+      ]
+    },
+    {
+      "id": "budget",
+      "page_title": "Budget Range (Per Person, Est.)",
+      "summary": "Approximate costs excluding/including flights",
+      "content_outline": [
+        "Lodging (6 nights, 4 rooms total): US$750–1,050 pp.",
+        "Transport (2 SUVs + fuel/parking): US$175–250 pp.",
+        "Activities (museums/tours/park fees): US$200–350 pp.",
+        "Food & drinks (~US$60–100/day): US$420–700 pp.",
+        "Subtotal (excl. flights): ~US$1,545–2,350 pp.",
+        "Add round-trip flight CDG–LAX: ~US$600–1,100 economy (variable)."
+      ]
+    },
+    {
+      "id": "tips",
+      "page_title": "Practical Tips & Bookings",
+      "summary": "Reservations, timing, and safety tips",
+      "content_outline": [
+        "Book studio/museum timed entries where available (The Broad, WB Tour).",
+        "Joshua Tree: US National Park Pass; start early; carry water/sun protection.",
+        "Driving: Observe HOV lane rules; watch for tolls; plan EV charging if applicable.",
+        "Tipping: 18–20% at restaurants; US$2–5 per valet; housekeeping discretionary.",
+        "Packing: Layers for coast, sun gear for desert; universal adapters; eSIM/roaming."
+      ]
+    },
+    {
+      "id": "closing",
+      "page_title": "Thank You & Next Steps",
+      "summary": "Wrap-up and contact info",
+      "content_outline": [
+        "Review and confirm preferences (pace, interests).",
+        "Lock flights and refundable lodging.",
+        "Reserve timed entries and dining.",
+        "Contact: II Agent — Trip Planner."
+      ]
+    }
+  ],
+  "style_instruction": {
+    "theme": "professional_corporate",
+    "color_palette": {
+      "primary": "#0EA5E9",
+      "secondary": "#F59E0B",
+      "background": "#FFFFFF",
+      "text_color": "#111827",
+      "header_color": "#0B1220"
+    },
+    "typography": {
+      "header_font": "Poppins, Arial, sans-serif",
+      "body_font": "Inter, Helvetica, sans-serif"
+    },
+    "layout_description": "Use a mixture of title, two-column, and vertical layouts. Favor two-column for day plans with an image and text. Keep high contrast on light background. Prominent, readable titles; ample whitespace; consistent icon usage."
+  },
+  "slides_order": [
+    "title",
+    "overview",
+    "logistics",
+    "weather",
+    "day1",
+    "day2",
+    "day3",
+    "day4",
+    "day5",
+    "day6",
+    "day7",
+    "lodging",
+    "dining",
+    "budget",
+    "tips",
+    "closing"
+  ]
+}

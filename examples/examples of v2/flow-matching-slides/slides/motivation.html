@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>
+   Why Flow Matching?
+  </title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1">
+  </script>
+  <link href="../css/main.css" rel="stylesheet">
+ </head>
+ <body>
+  <div class="slide-container">
+   <header class="slide-header text-center">
+    <h1 class="slide-title">
+     Why Flow Matching?
+    </h1>
+    <p class="section-content">
+     Efficient training and sampling by learning a velocity field that transports noise to data.
+    </p>
+   </header>
+   <main class="slide-content two-column">
+    <div class="card">
+     <h2 class="section-title">
+      Limitations of Diffusion
+     </h2>
+     <ul class="slide-list">
+      <li>
+       Great image quality but often 20&ndash;100+ sampling steps.
+      </li>
+      <li>
+       Score estimation requires denoising objectives and SNR weighting.
+      </li>
+      <li>
+       Stiff ODE/SDE dynamics near t&asymp;0 or t&asymp;1.
+      </li>
+     </ul>
+    </div>
+    <div class="card">
+     <h2 class="section-title">
+      Advantages of Flow Matching
+     </h2>
+     <ul class="slide-list">
+      <li>
+       Directly learns a time-dependent vector field v(x,t).
+      </li>
+      <li>
+       Simpler MSE objective against closed-form target velocities.
+      </li>
+      <li>
+       Fewer ODE steps possible with straightened trajectories.
+      </li>
+      <li>
+       Flexible conditioning (text/class) and guidance.
+      </li>
+     </ul>
+    </div>
+   </main>
+  </div>
+ </body>
+</html>

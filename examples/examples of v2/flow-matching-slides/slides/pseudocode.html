@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>
+   PyTorch-Style Pseudocode
+  </title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1">
+  </script>
+  <link href="../css/main.css" rel="stylesheet">
+ </head>
+ <body>
+  <div class="slide-container">
+   <header class="slide-header">
+    <h1 class="slide-title">
+     PyTorch-Style Pseudocode
+    </h1>
+   </header>
+   <main class="slide-content vertical">
+    <div class="code-scaler">
+     <pre class="code-block">
+# Training (Flow Matching / Rectified Flow)
+for batch in loader:
+    x1, y = batch  # images and optional conditioning
+    x0 = torch.randn_like(x1)  # base noise
+    t = sample_time(B)  # e.g., Uniform(0,1)
+    # linear/rectified interpolant + optional noise
+    xt = (1 - t) * x0 + t * x1  # broadcast t
+    ut = (x1 - x0)               # target velocity (scale by schedule if used)
+
+    v = net(xt, t, y)            # predict velocity
+    loss = weight(t) * mse(v, ut)
+    loss.backward()
+    clip_grad_norm_(net.parameters(), 1.0)
+    opt.step(); opt.zero_grad(); ema.update()
+
+# Sampling (ODE integration)
+x = torch.randn(B, C, H, W)
+for s, t in solver_steps():  # e.g., Heun
+    v = net(x, t, y_cfg)     # guidance: v = v_c + w*(v_c - v_u)
+    x = x + (s) * v          # Euler; add correction for Heun/RK
+    </pre>
+    </div>
+   </main>
+  </div>
+ </body>
+</html>

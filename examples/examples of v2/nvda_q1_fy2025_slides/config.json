@@ -1,0 +1,232 @@
+{
+  "main_title": "NVIDIA Q1 FY2025: In-Depth Financial Analysis",
+  "project_dir": "nvda_q1_fy2025_slides",
+  "outline": [
+    {
+      "id": "cover",
+      "page_title": "NVIDIA Q1 FY2025 Results",
+      "summary": "Opening slide with title and background image",
+      "content_outline": [
+        "Record revenue $26.0B (+262% YoY, +18% QoQ)",
+        "Data Center $22.6B (+427% YoY)",
+        "GAAP EPS $5.98; Non-GAAP EPS $6.12",
+        "Gross margin ~78-79%",
+        "10-for-1 split; dividend raised"
+      ]
+    },
+    {
+      "id": "q1-glance",
+      "page_title": "Quarter at a Glance",
+      "summary": "Headline P&L figures and key metrics",
+      "content_outline": [
+        "Revenue: $26.0B; GAAP GM: 78.4%; Non-GAAP GM: 78.9%",
+        "GAAP Opex: $3.50B; Non-GAAP Opex: $2.50B",
+        "GAAP Op Inc: $16.9B; GAAP NI: $14.9B",
+        "GAAP EPS: $5.98; Non-GAAP EPS: $6.12"
+      ]
+    },
+    {
+      "id": "growth-overview",
+      "page_title": "Growth Overview",
+      "summary": "YoY and QoQ growth dynamics",
+      "content_outline": [
+        "Revenue +262% YoY; +18% QoQ",
+        "Op income +690% YoY; Net income +628% YoY",
+        "Drivers: Hopper demand; broader customer base"
+      ]
+    },
+    {
+      "id": "mix",
+      "page_title": "Revenue Mix & Concentration",
+      "summary": "Segment mix of revenue",
+      "content_outline": [
+        "Data Center: $22.6B (~86.8%)",
+        "Gaming: $2.6B (~10.0%)",
+        "ProViz: $0.43B (~1.6%); Auto: $0.33B (~1.3%)",
+        "OEM & Other: ~$0.09B (~0.3%)"
+      ]
+    },
+    {
+      "id": "data-center",
+      "page_title": "Data Center Deep Dive",
+      "summary": "Performance and context",
+      "content_outline": [
+        "Revenue: $22.6B (+23% QoQ; +427% YoY)",
+        "Hopper strength across training/inference",
+        "Enterprise and sovereign AI demand"
+      ]
+    },
+    {
+      "id": "data-center-demand",
+      "page_title": "Demand Broadening & AI Factories",
+      "summary": "Customer segments and demand narrative",
+      "content_outline": [
+        "Clouds, consumer internet, enterprise, sovereign AI",
+        "AI Enterprise 5.0; NIM microservices accelerate adoption"
+      ]
+    },
+    {
+      "id": "networking-platform",
+      "page_title": "Networking & Platform Stack",
+      "summary": "Fabric and system stack",
+      "content_outline": [
+        "InfiniBand Quantum; Spectrum-X Ethernet",
+        "Blackwell; DGX SuperPOD; cuLitho/Grace Hopper"
+      ]
+    },
+    {
+      "id": "gaming",
+      "page_title": "Gaming Segment",
+      "summary": "Gaming trends and RTX AI PCs",
+      "content_outline": [
+        "Revenue: $2.6B (-8% QoQ; +18% YoY)",
+        "RTX AI PCs; DLSS; ChatRTX"
+      ]
+    },
+    {
+      "id": "proviz",
+      "page_title": "Professional Visualization",
+      "summary": "ProViz updates and partnerships",
+      "content_outline": [
+        "Revenue: $427M (-8% QoQ; +45% YoY)",
+        "RTX laptop/desktop; Omniverse; Siemens; Apple Vision Pro"
+      ]
+    },
+    {
+      "id": "automotive",
+      "page_title": "Automotive & Robotics",
+      "summary": "Auto and robotics progress",
+      "content_outline": [
+        "Revenue: $329M (+17% QoQ; +11% YoY)",
+        "DRIVE Thor wins; Orin deployments; Isaac; GR00T"
+      ]
+    },
+    {
+      "id": "profitability",
+      "page_title": "Profitability Expansion",
+      "summary": "Margins and operating leverage",
+      "content_outline": [
+        "GAAP GM 78.4% (non-GAAP 78.9%)",
+        "Op leverage with opex discipline"
+      ]
+    },
+    {
+      "id": "opex",
+      "page_title": "Operating Expenses",
+      "summary": "Opex growth vs investment areas",
+      "content_outline": [
+        "GAAP opex $3.50B; Non-GAAP $2.50B",
+        "R&D scaling to support roadmap"
+      ]
+    },
+    {
+      "id": "op-income-eps",
+      "page_title": "Operating Income & EPS",
+      "summary": "Earnings power and other items",
+      "content_outline": [
+        "Op income $16.9B; EPS $5.98 / $6.12",
+        "OI&E ~$370M; tax ~17%"
+      ]
+    },
+    {
+      "id": "cash-flow",
+      "page_title": "Cash Flow & Capital Returns",
+      "summary": "Cash generation and shareholder returns",
+      "content_outline": [
+        "Strong operating and free cash flow",
+        "Share repurchases about $8.0B in Q1",
+        "Dividend raised; 10-for-1 split"
+      ]
+    },
+    {
+      "id": "balance-sheet",
+      "page_title": "Balance Sheet Snapshot",
+      "summary": "Liquidity and capital position",
+      "content_outline": [
+        "Robust cash and marketable securities",
+        "Fabless model supports FCF conversion"
+      ]
+    },
+    {
+      "id": "guidance",
+      "page_title": "Q2 FY2025 Outlook",
+      "summary": "Guidance and near-term drivers",
+      "content_outline": [
+        "Revenue $28.0B ±2%; GM 74.8%/75.5%",
+        "Opex ~$4.0B/$2.8B; OI&E +$300M; tax ~17%"
+      ]
+    },
+    {
+      "id": "roadmap",
+      "page_title": "Roadmap & Product Cycle",
+      "summary": "Hopper→Blackwell→GB200 and software",
+      "content_outline": [
+        "Blackwell in production; GB200 NVL/Grace Blackwell",
+        "CUDA; NIM; AI Enterprise; DGX; networking"
+      ]
+    },
+    {
+      "id": "competition",
+      "page_title": "Competition & Ecosystem",
+      "summary": "Competitive landscape and moats",
+      "content_outline": [
+        "AMD MI series; TPUs/custom ASICs",
+        "Full-stack differentiation and partner network"
+      ]
+    },
+    {
+      "id": "risks",
+      "page_title": "Key Risks & Watch Items",
+      "summary": "Operational and regulatory risks",
+      "content_outline": [
+        "Supply/HBM; power/cooling; demand concentration",
+        "Export controls; pricing pressure; software dependencies"
+      ]
+    },
+    {
+      "id": "closing",
+      "page_title": "Closing & Q&A",
+      "summary": "Final slide with thank you",
+      "content_outline": [
+        "Thank you message; contact info; sources"
+      ]
+    }
+  ],
+  "style_instruction": {
+    "theme": "professional_corporate_dark",
+    "color_palette": {
+      "primary": "#76B900",
+      "secondary": "#00B3FF",
+      "background": "#0B1020",
+      "text_color": "#E5E7EB",
+      "header_color": "#FFFFFF"
+    },
+    "typography": {
+      "header_font": "Inter, Arial, Helvetica, sans-serif",
+      "body_font": "Inter, Arial, Helvetica, sans-serif"
+    },
+    "layout_description": "Use a bold cover with a full-bleed background image. Prefer two-column layouts pairing concise bullets with a relevant visual. Maintain high-contrast dark theme with accessible text sizes. Use grid for comparisons. Closing slide uses a centered thank-you layout."
+  },
+  "slides_order": [
+    "cover",
+    "q1-glance",
+    "growth-overview",
+    "mix",
+    "data-center",
+    "data-center-demand",
+    "networking-platform",
+    "gaming",
+    "proviz",
+    "automotive",
+    "profitability",
+    "opex",
+    "op-income-eps",
+    "cash-flow",
+    "balance-sheet",
+    "guidance",
+    "roadmap",
+    "competition",
+    "risks",
+    "closing"
+  ]
+}

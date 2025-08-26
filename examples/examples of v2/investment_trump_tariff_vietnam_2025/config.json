@@ -1,0 +1,154 @@
+{
+  "main_title": "Investing 10B VND from Vietnam under Trump Tariff Impacts: A Scenario‑Based Playbook (2025)",
+  "project_dir": "projects/investment_trump_tariff_vietnam_2025",
+  "outline": [
+    {
+      "id": "cover",
+      "page_title": "Cover",
+      "summary": "Opening slide with background image, title, subtitle, and presenter info",
+      "content_outline": [
+        "Title, subtitle, presenter name",
+        "Background image: abstract finance theme"
+      ]
+    },
+    {
+      "id": "thesis",
+      "page_title": "Thesis & What Matters for You",
+      "summary": "Core thesis and investor profile",
+      "content_outline": [
+        "Tariff shock channels: trade flows, supply chains, inflation, rates, FX risk, sector rotation",
+        "Your profile: balanced risk, 5-year horizon, moderate liquidity",
+        "Goal: preserve real value, capture Vietnam/ASEAN re‑shoring upside, control USD/VND risk"
+      ]
+    },
+    {
+      "id": "channels",
+      "page_title": "How Tariffs Transmit to Markets",
+      "summary": "Transmission logic from tariffs to portfolio construction",
+      "content_outline": [
+        "Global growth mix shifts; ASEAN re‑shoring",
+        "Inflation impulse; rates/liquidity; FX pressure",
+        "Sector effects and hedges"
+      ]
+    },
+    {
+      "id": "vn_macro",
+      "page_title": "Vietnam Macro Snapshot (2025)",
+      "summary": "Qualitative macro and policy overview to ground assumptions",
+      "content_outline": [
+        "FDI/manufacturing-led growth",
+        "Inflation manageable; SBV policy balance",
+        "Credit/real estate normalization"
+      ]
+    },
+    {
+      "id": "fx_view",
+      "page_title": "USD/VND & FX Strategy",
+      "summary": "Base case, risks, and actions for FX management",
+      "content_outline": [
+        "Mild USD strength base case; risk of sharper rally",
+        "Hold partial USD; stagger conversions; natural hedges"
+      ]
+    },
+    {
+      "id": "asset_review",
+      "page_title": "Asset Class Review from Vietnam",
+      "summary": "Investable options and their roles",
+      "content_outline": [
+        "VND cash/deposits; VND bonds",
+        "Vietnam equities; global/USD assets",
+        "Gold; optional crypto; real estate"
+      ]
+    },
+    {
+      "id": "alloc_base",
+      "page_title": "Recommended Strategic Allocation (Base Case)",
+      "summary": "Target weights and roles",
+      "content_outline": [
+        "Cash/near-cash 20%",
+        "VND bonds 25%",
+        "Vietnam equities 30%",
+        "USD assets 15%",
+        "Gold 8%",
+        "Optional crypto 2%"
+      ]
+    },
+    {
+      "id": "alloc_protect",
+      "page_title": "Protection-First Variant (Downside)",
+      "summary": "Defensive tilts and triggers",
+      "content_outline": [
+        "More cash and short-duration bonds",
+        "Lower Vietnam equity beta",
+        "Maintain gold and USD ballast"
+      ]
+    },
+    {
+      "id": "alloc_opportunistic",
+      "page_title": "Opportunistic Variant (Upside)",
+      "summary": "Pro-cyclical tilts and discipline",
+      "content_outline": [
+        "Raise VN equities on strength/dips",
+        "Trim cash/bonds modestly",
+        "Keep diversifiers in place"
+      ]
+    },
+    {
+      "id": "implementation",
+      "page_title": "Implementation, Timing, and Rules",
+      "summary": "Phased entry, rebalancing, risk controls",
+      "content_outline": [
+        "4–6 tranches over 6–9 months",
+        "Rebalance bands ±20% of target",
+        "Quality and governance filters"
+      ]
+    },
+    {
+      "id": "watchlist",
+      "page_title": "Dashboard: What to Watch",
+      "summary": "Key indicators and action thresholds",
+      "content_outline": [
+        "Policy/tariff headlines",
+        "FX/rates; real economy; markets",
+        "Commodities; predefined triggers"
+      ]
+    },
+    {
+      "id": "closing",
+      "page_title": "Thank You",
+      "summary": "Closing slide",
+      "content_outline": [
+        "Thanks; contact line"
+      ]
+    }
+  ],
+  "style_instruction": {
+    "theme": "professional_corporate",
+    "color_palette": {
+      "primary": "#0E7490",
+      "secondary": "#22C55E",
+      "background": "#0B1020",
+      "text_color": "#E5E7EB",
+      "header_color": "#F8FAFC"
+    },
+    "typography": {
+      "header_font": "Inter, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
+      "body_font": "Inter, Segoe UI, Roboto, Helvetica, Arial, sans-serif"
+    },
+    "layout_description": "Clean, modern, dark theme with high-contrast text; frequent two-column and grid layouts; generous whitespace; accent highlights in primary/secondary colors."
+  },
+  "slides_order": [
+    "cover",
+    "thesis",
+    "channels",
+    "vn_macro",
+    "fx_view",
+    "asset_review",
+    "alloc_base",
+    "alloc_protect",
+    "alloc_opportunistic",
+    "implementation",
+    "watchlist",
+    "closing"
+  ]
+}

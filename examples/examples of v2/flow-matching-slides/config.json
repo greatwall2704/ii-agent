@@ -1,0 +1,216 @@
+{
+  "main_title": "Flow Matching for Image Generation",
+  "project_dir": ".WORKING_DIR/flow-matching-slides",
+  "outline": [
+    {
+      "id": "cover",
+      "page_title": "Flow Matching for Image Generation",
+      "summary": "Title slide introducing flow matching and rectified flows for image generation.",
+      "content_outline": [
+        "Course: Generative Modeling",
+        "Audience: Graduate level, moderate math",
+        "Include: pseudocode + exercise",
+        "Instructor: Your Name, University"
+      ]
+    },
+    {
+      "id": "motivation",
+      "page_title": "Why Flow Matching?",
+      "summary": "Motivation from diffusion models to flow-based ODE training; fewer steps and simpler objectives.",
+      "content_outline": [
+        "Diffusion models achieve SOTA but need many steps",
+        "Probability flow ODE suggests a deterministic sampler",
+        "Flow Matching directly learns a velocity field",
+        "Practical benefits: fewer steps, stable training, flexible conditioning"
+      ]
+    },
+    {
+      "id": "recap",
+      "page_title": "Recap: Diffusions and Probability Flow ODE",
+      "summary": "Brief recap of SDE/ODE view and the probability flow ODE that motivates FM.",
+      "content_outline": [
+        "Forward SDE and reverse SDE",
+        "Probability flow ODE shares marginals with SDE",
+        "Sampling via ODE solvers (Euler/Heun/RK)",
+        "Links to continuous normalizing flows (CNFs)"
+      ]
+    },
+    {
+      "id": "fm_core",
+      "page_title": "Flow Matching: Core Idea",
+      "summary": "Learn a time-dependent vector field whose flow transports a base to the data distribution.",
+      "content_outline": [
+        "Learn v_θ(x,t) s.t. ∂_t x = v_θ(x,t)",
+        "Train by matching v_θ to a target conditional velocity",
+        "Use stochastic interpolants between base x0 and data x1",
+        "Loss: E[||v_θ(x_t,t) − u_t(x_t)||^2]"
+      ]
+    },
+    {
+      "id": "cfm",
+      "page_title": "Conditional Flow Matching (CFM)",
+      "summary": "Condition on endpoint pairs to avoid score estimation; unbiased estimator for velocity.",
+      "content_outline": [
+        "Sample x0~p0 and x1~p_data",
+        "Define path x_t | x0,x1 (e.g., linear + Gaussian)",
+        "Compute conditional velocity u_t(x_t|x0,x1) in closed form",
+        "Train with MSE; unbiased for unconditional target"
+      ]
+    },
+    {
+      "id": "rectified_flow",
+      "page_title": "Rectified Flow (RF)",
+      "summary": "Straighten trajectories for efficient sampling and robust training.",
+      "content_outline": [
+        "Use straight paths: x_t = (1−t)x0 + t x1",
+        "Target velocity ~ x1 − x0 (with schedule factors)",
+        "Non-crossing flows reduce stiffness",
+        "Empirically strong with few ODE steps"
+      ]
+    },
+    {
+      "id": "interpolants",
+      "page_title": "Stochastic Interpolants Framework",
+      "summary": "A unifying view connecting diffusions and flows via random interpolants.",
+      "content_outline": [
+        "Specify x_t = α(t)x0 + β(t)x1 + noise",
+        "Derive u_t from the interpolant SDE",
+        "Recover DDPM/score matching and FM as special cases",
+        "Design freedom: schedules, noise, and path geometry"
+      ]
+    },
+    {
+      "id": "fm_ot",
+      "page_title": "FM and Optimal Transport",
+      "summary": "Connections between flow matching and optimal transport (OT).",
+      "content_outline": [
+        "Velocity fields approximate displacement interpolation",
+        "FM-OT variants encourage mass-preserving straight paths",
+        "Trade-off between OT accuracy and data geometry",
+        "Implications for mode coverage and sharpness"
+      ]
+    },
+    {
+      "id": "architectures",
+      "page_title": "Architectures for FM/RF",
+      "summary": "Networks and conditioning for image generation with flows.",
+      "content_outline": [
+        "U-Net vs DiT (Diffusion Transformer) backbones",
+        "Time embeddings and positional encodings",
+        "Conditioning: text (T5/CLIP), class, layout",
+        "v-prediction vs direct velocity prediction"
+      ]
+    },
+    {
+      "id": "training",
+      "page_title": "Training Details",
+      "summary": "Objective, weighting, schedules, and practical considerations.",
+      "content_outline": [
+        "Time sampling distribution ρ(t) and loss weights",
+        "Noise scales and base distribution p0",
+        "Batching endpoint pairs efficiently",
+        "Compute/memory tips; mixed precision",
+        "EMA and gradient clipping"
+      ]
+    },
+    {
+      "id": "sampling",
+      "page_title": "Sampling and Guidance",
+      "summary": "Numerical solvers and guidance mechanisms in FM/RF.",
+      "content_outline": [
+        "ODE solvers: Euler, Heun, RK4; step counts",
+        "Adaptive vs fixed step schedules",
+        "Classifier-free guidance analogue for flows",
+        "Guidance modifies vector field, not scores"
+      ]
+    },
+    {
+      "id": "results",
+      "page_title": "Empirical Results",
+      "summary": "What to expect in terms of speed and quality.",
+      "content_outline": [
+        "CIFAR-10/ImageNet FID trends",
+        "Step-efficiency vs diffusion models",
+        "Trade-offs: steps vs sharpness vs stability",
+        "Ablations: schedules and architectures"
+      ]
+    },
+    {
+      "id": "tips",
+      "page_title": "Tips and Pitfalls",
+      "summary": "Practical advice for training/debugging FM/RF models.",
+      "content_outline": [
+        "Check boundary conditions at t=0,1",
+        "Stability at early/late times",
+        "Diagnose exploding/vanishing velocities",
+        "Sanity checks: linear Gaussian problems"
+      ]
+    },
+    {
+      "id": "pseudocode",
+      "page_title": "PyTorch-Style Pseudocode",
+      "summary": "Concise training and sampling pseudocode for FM/RF.",
+      "content_outline": [
+        "Training loop computing u_t and MSE",
+        "Time sampling and weighting",
+        "ODE sampler with Heun/Euler",
+        "Guidance combination"
+      ]
+    },
+    {
+      "id": "exercise",
+      "page_title": "In-Class Exercise",
+      "summary": "Hands-on mini task to reinforce concepts.",
+      "content_outline": [
+        "Implement 2D toy FM on Gaussian mixture",
+        "Visualize learned vector field and trajectories",
+        "Compare linear vs rectified interpolants",
+        "Discuss step-efficiency"
+      ]
+    },
+    {
+      "id": "summary_refs",
+      "page_title": "Summary and References",
+      "summary": "Key takeaways and citations for further reading.",
+      "content_outline": [
+        "Summary bullets",
+        "Core references: FM, Rectified Flow, Stochastic Interpolants, SGM SDE, DiT",
+        "Links to code repositories and reports",
+        "Acknowledgements"
+      ]
+    }
+  ],
+  "style_instruction": {
+    "theme": "dark_academic",
+    "color_palette": {
+      "primary": "#8B5CF6",
+      "secondary": "#10B981",
+      "background": "#0B1020",
+      "text_color": "#E5E7EB",
+      "header_color": "#E5E7EB"
+    },
+    "typography": {
+      "header_font": "Inter, ui-sans-serif, system-ui",
+      "body_font": "IBM Plex Sans, system-ui, -apple-system"
+    },
+    "layout_description": "Use a title slide with a full-bleed background image and overlay text; content slides primarily two-column with cards and image components; include occasional grid-3 for multi-card summaries; closing slide uses thank-you layout."
+  },
+  "slides_order": [
+    "cover",
+    "motivation",
+    "recap",
+    "fm_core",
+    "cfm",
+    "rectified_flow",
+    "interpolants",
+    "fm_ot",
+    "architectures",
+    "training",
+    "sampling",
+    "results",
+    "tips",
+    "pseudocode",
+    "exercise",
+    "summary_refs"
+  ]
+}

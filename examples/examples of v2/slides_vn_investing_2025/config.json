@@ -1,0 +1,163 @@
+{
+  "main_title": "Investing 10B VND in Vietnam under US Tariff Shifts (2025)",
+  "project_dir": ".WORKING_DIR/slides_vn_investing_2025",
+  "outline": [
+    {
+      "id": "cover",
+      "page_title": "Investing 10B VND in Vietnam under US Tariff Shifts (2025)",
+      "summary": "Cover slide with title and presenter info",
+      "content_outline": [
+        "Title, subtitle, presenter/location",
+        "Background image: container port"
+      ]
+    },
+    {
+      "id": "exec_summary",
+      "page_title": "Executive Summary: What to Do with 10B VND Now",
+      "summary": "Top-line guidance and quick answer",
+      "content_outline": [
+        "Immediate answer for conservative, balanced, growth profiles",
+        "Core allocation ranges and rationale",
+        "Cash runway and risk management in one glance"
+      ]
+    },
+    {
+      "id": "tariffs_context",
+      "page_title": "Tariffs 2025: What Changed and Why It Matters to Vietnam",
+      "summary": "Overview of the new US tariff regime and scenario paths",
+      "content_outline": [
+        "Universal and tiered tariffs context; Vietnam’s listed rate",
+        "3 scenarios: escalate, status-quo, de-escalate",
+        "Transmission to Vietnam: exports, FDI re-shoring, inflation, FX"
+      ]
+    },
+    {
+      "id": "vn_macro_fx",
+      "page_title": "Vietnam Macro & FX: Growth, Inflation, Policy, USD/VND",
+      "summary": "Latest macro snapshot and currency outlook",
+      "content_outline": [
+        "Growth outlook and inflation band",
+        "SBV stance and deposit rate range",
+        "USD/VND: recent moves, plausible bands, risks"
+      ]
+    },
+    {
+      "id": "cash_deposits",
+      "page_title": "Cash & Term Deposits (VND)",
+      "summary": "Where cash sits while optionality is preserved",
+      "content_outline": [
+        "12-month deposit range and bank selection",
+        "Liquidity ladder: 1–3–6–12 month mix",
+        "Pros/cons and who it fits"
+      ]
+    },
+    {
+      "id": "bonds",
+      "page_title": "Government & Corporate Bonds",
+      "summary": "Income and stability with selective credit risk",
+      "content_outline": [
+        "VGB yields and duration choice",
+        "Corporate bonds: filters and red flags",
+        "How to buy, custody, and fees"
+      ]
+    },
+    {
+      "id": "equities",
+      "page_title": "Vietnam Equities: Sectors and Tilts",
+      "summary": "Positioning the equity sleeve tactically",
+      "content_outline": [
+        "Valuation context for VNIndex/VN30",
+        "Beneficiaries: import substitution, domestic demand, logistics, energy",
+        "At-risk: US-exposed exporters without pricing power"
+      ]
+    },
+    {
+      "id": "real_estate",
+      "page_title": "Real Estate: Cycle, Yields, and Caution",
+      "summary": "When and how to engage property exposure",
+      "content_outline": [
+        "Residential cycle and financing conditions",
+        "REITs/industrial parks vs. developers",
+        "Recommended approach and sizing"
+      ]
+    },
+    {
+      "id": "gold_fx",
+      "page_title": "Gold and USD Exposure: Hedging Playbook",
+      "summary": "Hedge inflation/FX with measured gold and USD",
+      "content_outline": [
+        "Gold use-case and sizing",
+        "When to hold USD vs. VND",
+        "Execution options and costs"
+      ]
+    },
+    {
+      "id": "model_portfolios",
+      "page_title": "Model Portfolios for 10B VND",
+      "summary": "Three risk profiles and tariff scenario tilts",
+      "content_outline": [
+        "Conservative/Balanced/Growth allocations",
+        "Scenario stress: escalate vs. de-escalate",
+        "Rebalancing rules and cash runway"
+      ]
+    },
+    {
+      "id": "implementation",
+      "page_title": "Implementation Roadmap (12–18 Months)",
+      "summary": "How to execute and in what sequence",
+      "content_outline": [
+        "Account setup and product list",
+        "Order of operations and DCA plan",
+        "Cost control and risk controls checklist"
+      ]
+    },
+    {
+      "id": "risks_monitoring",
+      "page_title": "Key Risks & Monitoring Dashboard",
+      "summary": "What to watch and when to act",
+      "content_outline": [
+        "Policy/legal risk on tariffs",
+        "Vietnam credit/property risk",
+        "FX, inflation, liquidity, global growth signals"
+      ]
+    },
+    {
+      "id": "thank_you",
+      "page_title": "Thank You",
+      "summary": "Closing slide with contact",
+      "content_outline": [
+        "Thanks, QR/contact placeholder"
+      ]
+    }
+  ],
+  "style_instruction": {
+    "theme": "professional_corporate_dark",
+    "color_palette": {
+      "primary": "#00D1B2",
+      "secondary": "#7C3AED",
+      "background": "#0B1020",
+      "text_color": "#E5E7EB",
+      "header_color": "#F9FAFB"
+    },
+    "typography": {
+      "header_font": "Inter, Arial, sans-serif",
+      "body_font": "Inter, Arial, sans-serif"
+    },
+    "layout_description": "Use a bold title slide with image background. Content slides favor two-column and grid layouts with cards for key points and one relevant image per slide. Close with a centered thank-you layout."
+  },
+  "slides_order": [
+    "cover",
+    "exec_summary",
+    "tariffs_context",
+    "vn_macro_fx",
+    "cash_deposits",
+    "bonds",
+    "equities",
+    "real_estate",
+    "gold_fx",
+    "model_portfolios",
+    "implementation",
+    "risks_monitoring",
+    "thank_you"
+  ]
+}

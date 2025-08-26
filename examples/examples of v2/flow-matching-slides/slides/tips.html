@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>
+   Tips and Pitfalls
+  </title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1">
+  </script>
+  <link href="../css/main.css" rel="stylesheet">
+ </head>
+ <body>
+  <div class="slide-container">
+   <header class="slide-header">
+    <h1 class="slide-title">
+     Tips and Pitfalls
+    </h1>
+   </header>
+   <main class="slide-content two-column">
+    <div class="card">
+     <h2 class="section-title">
+      Common Issues
+     </h2>
+     <ul class="slide-list">
+      <li>
+       Boundary mismatches at t&asymp;0 or t&asymp;1.
+      </li>
+      <li>
+       Exploding velocities when schedules are too aggressive.
+      </li>
+      <li>
+       Crossing trajectories in non-rectified paths.
+      </li>
+     </ul>
+    </div>
+    <div class="card">
+     <h2 class="section-title">
+      Practical Tips
+     </h2>
+     <ul class="slide-list">
+      <li>
+       Visualize 2D toy vector fields early.
+      </li>
+      <li>
+       Clip gradients; use EMA and loss smoothing.
+      </li>
+      <li>
+       Start with linear/rectified interpolants; then add noise.
+      </li>
+     </ul>
+    </div>
+   </main>
+  </div>
+ </body>
+</html>

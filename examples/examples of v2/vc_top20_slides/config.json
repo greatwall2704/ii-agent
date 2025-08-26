@@ -1,0 +1,83 @@
+{
+  "main_title": "Top 20 U.S. VC Funds by Assets Under Management (AUM)",
+  "project_dir": "vc_top20_slides",
+  "outline": [
+    {
+      "id": "cover",
+      "page_title": "Top 20 U.S. VC Funds by AUM",
+      "summary": "Cover slide introducing the topic and scope",
+      "content_outline": [
+        "Title, subtitle, and presenter info",
+        "Background image of finance/venture theme"
+      ]
+    },
+    {
+      "id": "method",
+      "page_title": "Methodology & Scope",
+      "summary": "Explain scope, sources, definitions, and caveats",
+      "content_outline": [
+        "U.S.-based VC firms only; excludes multi-strategy buyout platforms unless dedicated VC/growth franchises",
+        "AUM expressed as ranges with source/date notes; to be refreshed with SEC ADV when available",
+        "Sources: firm disclosures, reputable media, investor materials; cross-verified where possible",
+        "Contact: best available email or contact form"
+      ]
+    },
+    {
+      "id": "rank_1_10",
+      "page_title": "Top 20 by AUM — Ranks 1–10",
+      "summary": "List of ranks 1–10 with websites and emails",
+      "content_outline": [
+        "Ranks 1–10, each with firm name, AUM range, website, contact email or form"
+      ]
+    },
+    {
+      "id": "rank_11_20",
+      "page_title": "Top 20 by AUM — Ranks 11–20",
+      "summary": "List of ranks 11–20 with websites and emails",
+      "content_outline": [
+        "Ranks 11–20, each with firm name, AUM range, website, contact email or form"
+      ]
+    },
+    {
+      "id": "notes",
+      "page_title": "Notes & Data Caveats",
+      "summary": "Clarifications on AUM comparability and next steps",
+      "content_outline": [
+        "AUM differences: regulatory assets vs committed capital; includes growth/late stage vehicles where disclosed",
+        "Email availability varies; some firms use forms; email validation pending",
+        "Planned refresh with IAPD/SEC filings when access stabilizes"
+      ]
+    },
+    {
+      "id": "thanks",
+      "page_title": "Thank You",
+      "summary": "Closing slide with contact info",
+      "content_outline": [
+        "Thanks message and my contact info"
+      ]
+    }
+  ],
+  "style_instruction": {
+    "theme": "professional_corporate",
+    "color_palette": {
+      "primary": "#0EA5E9",
+      "secondary": "#10B981",
+      "background": "#0B1020",
+      "text_color": "#E5E7EB",
+      "header_color": "#F59E0B"
+    },
+    "typography": {
+      "header_font": "Inter, sans-serif",
+      "body_font": "Inter, sans-serif"
+    },
+    "layout_description": "Use a title slide with a bold background image. Content slides use two-column layouts and grid lists for ranked items; closing slide centers content."
+  },
+  "slides_order": [
+    "cover",
+    "method",
+    "rank_1_10",
+    "rank_11_20",
+    "notes",
+    "thanks"
+  ]
+}

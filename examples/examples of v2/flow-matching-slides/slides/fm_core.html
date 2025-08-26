@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>
+   Flow Matching: Core Idea
+  </title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1">
+  </script>
+  <link href="../css/main.css" rel="stylesheet">
+ </head>
+ <body>
+  <div class="slide-container">
+   <header class="slide-header">
+    <h1 class="slide-title">
+     Flow Matching: Core Idea
+    </h1>
+   </header>
+   <main class="slide-content two-column">
+    <div class="card">
+     <h2 class="section-title">
+      Objective
+     </h2>
+     <p class="section-content">
+      Learn a time-dependent vector field v_&theta;(x,t) whose flow transports a simple base p0 to the data distribution p1.
+     </p>
+     <ul class="slide-list">
+      <li>
+       Dynamics: &part;
+       <sub>
+        t
+       </sub>
+       x = v
+       <sub>
+        &theta;
+       </sub>
+       (x,t)
+      </li>
+      <li>
+       Target conditional velocity: u
+       <sub>
+        t
+       </sub>
+       (x
+       <sub>
+        t
+       </sub>
+       )
+      </li>
+      <li>
+       Loss: E
+       <sub>
+        t,x
+        <sub>
+         t
+        </sub>
+       </sub>
+       [||v
+       <sub>
+        &theta;
+       </sub>
+       (x
+       <sub>
+        t
+       </sub>
+       ,t) &minus; u
+       <sub>
+        t
+       </sub>
+       (x
+       <sub>
+        t
+       </sub>
+       )||&sup2;]
+      </li>
+     </ul>
+    </div>
+    <div class="card">
+     <h2 class="section-title">
+      Intuition
+     </h2>
+     <ul class="slide-list">
+      <li>
+       Instead of predicting noise or score, predict velocity.
+      </li>
+      <li>
+       Train with supervised MSE against analytically derived u
+       <sub>
+        t
+       </sub>
+       .
+      </li>
+      <li>
+       Sampling is integrating the learned ODE from noise to data.
+      </li>
+     </ul>
+    </div>
+   </main>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investing 10B VND in Vietnam under US Tariff Shifts (2025)</title>
+    <style>
+        body { margin: 0; overflow: hidden; font-family: sans-serif; }
+        iframe { border: none; width: 100vw; height: 100vh; }
+        .navigation-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 10px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+        .navigation-controls button {
+            background: var(--primary-color, #4B72B0);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .navigation-controls button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+        .navigation-controls span {
+            color: white;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <iframe id="slideFrame" src="" allowfullscreen></iframe>
+
+    <div class="navigation-controls">
+        <button id="prevBtn">Previous</button>
+        <span id="slideIndicator">1 / 13</span>
+        <button id="nextBtn">Next</button>
+    </div>
+
+    <script>
+        const slideIds = ["cover", "exec_summary", "tariffs_context", "vn_macro_fx", "cash_deposits", "bonds", "equities", "real_estate", "gold_fx", "model_portfolios", "implementation", "risks_monitoring", "thank_you"];
+        let currentSlideIndex = 0;
+        const slideFrame = document.getElementById('slideFrame');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const slideIndicator = document.getElementById('slideIndicator');
+
+        function updateSlide() {
+            const slideId = slideIds[currentSlideIndex];
+            slideFrame.src = `slides/${slideId}.html`;
+            slideIndicator.textContent = `${currentSlideIndex + 1} / ${slideIds.length}`;
+            prevBtn.disabled = currentSlideIndex === 0;
+            nextBtn.disabled = currentSlideIndex === slideIds.length - 1;
+        }
+
+        function nextSlide() {
+            if (currentSlideIndex < slideIds.length - 1) {
+                currentSlideIndex++;
+                updateSlide();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlideIndex > 0) {
+                currentSlideIndex--;
+                updateSlide();
+            }
+        }
+
+        prevBtn.addEventListener('click', prevSlide);
+        nextBtn.addEventListener('click', nextSlide);
+
+        // Navigation with arrow keys
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        updateSlide(); // Load first slide when page loads
+    </script>
+</body>
+</html>

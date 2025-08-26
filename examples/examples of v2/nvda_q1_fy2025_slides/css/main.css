@@ -1,0 +1,462 @@
+/*
+* =========================================
+* main.css v2.0 - Final Component-Based CSS
+* =========================================
+*/
+
+/* -----------------------------------------
+ * 1. CSS Variables & Base Setup
+ * ----------------------------------------- */
+:root {
+  /* Color Palette */
+  --primary-color: #76B900;
+  --primary-dark: #0D47A1;
+  --primary-light: #64B5F6;
+  --secondary-color: #00B3FF;
+  --accent-color: #FFC107;
+  
+  /* Background & Text Colors */
+  --background-color: #0B1020;
+  --text-color: #E5E7EB;
+  --header-color: #FFFFFF;
+  --light-gray: #F5F9FF;
+  
+  /* Functional Colors */
+  --success-color: #4CAF50;
+  --warning-color: #FF9800;
+  --danger-color: #F44336;
+  --info-color: #2196F3;
+  
+  /* Typography */
+  --header-font: 'Inter, Arial, Helvetica, sans-serif', 'Roboto', sans-serif;
+  --body-font: 'Inter, Arial, Helvetica, sans-serif', 'Open Sans', sans-serif;
+  
+  /* Font Sizes */
+  --header-size: 36px;
+  --subheader-size: 24px;
+  --body-size: 18px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  font-family: var(--body-font);
+  background-color: #f0f2f5;
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+/* -----------------------------------------
+ * 2. Core Slide & Layout Structure
+ * ----------------------------------------- */
+.slide-container {
+  width: 100%;
+  max-width: 1280px;
+  min-height: 720px;
+  background: var(--background-color);
+  margin: 20px auto;
+  padding: 40px 5vw;
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.slide-header {
+  margin-bottom: 24px;
+  flex-shrink: 0;
+}
+
+.slide-title {
+  font-family: var(--header-font);
+  font-size: clamp(28px, 4vw, 44px);
+  color: var(--header-color);
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.slide-content {
+  display: flex;
+  flex: 1;
+  gap: 24px;
+}
+
+/* -----------------------------------------
+ * 3. Reusable Components
+ * ----------------------------------------- */
+.card {
+  background-color: color-mix(in srgb, var(--background-color) 90%, white 10%);
+  border: 1px solid color-mix(in srgb, var(--background-color) 80%, white 10%);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 18px rgba(0,0,0,.04);
+  width: 100%;
+}
+.card, .card .section-title, .card p, .card li {
+  color: var(--text-color);
+}
+
+.highlighted-section {
+  background-color: color-mix(in srgb, var(--background-color) 85%, white 15%);
+  color: color-mix(in srgb, var(--text-color) 70%, var(--background-color) 30%);
+  border-left: 4px solid var(--primary-color);
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+  font-size: calc(var(--body-size) * 0.95);
+}
+
+.tag {
+  background-color: color-mix(in srgb, var(--primary-color) 20%, var(--background-color) 80%);
+  color: color-mix(in srgb, var(--primary-color) 80%, var(--text-color) 20%);
+  display: inline-block;
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  margin: 4px;
+  font-weight: 600;
+}
+
+.section-title {
+  font-size: var(--subheader-size); 
+  color: var(--header-color);
+  margin-bottom: 15px;
+  font-weight: 600;
+  font-family: var(--header-font);
+}
+
+.slide-list {
+  list-style-type: none;
+  padding: 0;
+}
+.slide-list li {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+.slide-list li:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: var(--primary-light);
+  border-radius: 50%;
+}
+
+/* -----------------------------------------
+ * 4. Layout Systems
+ * ----------------------------------------- */
+.slide-content.grid-2 { 
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  }
+.slide-content.grid-3 { 
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+ }
+.slide-content.two-column { 
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 32px;
+  align-items: start;
+ }
+ .two-column .slide-text {
+  padding-right: 20px;
+}
+.slide-content.vertical { 
+  flex-direction: column; 
+  }
+.slide-content.image-only,
+.slide-content.chart-only {
+  justify-content: center;
+  align-items: center;
+}
+.slide-content.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 20px 0;
+}
+.gallery .slide-image {
+  height: 150px;
+}
+.slide-content.text-wrap {
+  display: block;
+}
+.text-wrap .slide-image {
+  float: right;
+  margin: 0 0 20px 20px;
+  max-width: 40%;
+  max-height: 300px;
+}
+.text-wrap .slide-text {
+  text-align: justify;
+}
+/* -----------------------------------------
+ * 5. Special Slide Types
+ * ----------------------------------------- */
+
+/* --- A. Opening / Title Slide --- */
+.slide-container.title-slide {
+  padding: 0;
+  display: grid;
+  place-items: center;
+  color: white;
+}
+.title-slide .slide-background-image,
+.title-slide .content-overlay {
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
+}
+.title-slide .slide-background-image {
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover;
+  filter: brightness(0.6);
+  z-index: 1;
+}
+.title-slide .content-overlay {
+  display: flex; 
+  flex-direction: column; 
+  justify-content: center;
+  align-items: center; 
+  text-align: center; 
+  padding: 40px;
+  z-index: 2;
+}
+.title-slide .main-title {
+  font-size: clamp(36px, 6vw, 72px);
+  text-shadow: 0 4px 24px rgba(0,0,0,.35);
+}
+.title-slide .subtitle {
+  color: #e0e0e0;
+  font-size: clamp(18px, 2.2vw, 24px);
+  max-width: 80%;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+  margin-top: 1rem;
+}
+.title-slide .presenter-info {
+  margin-top: 40px;
+  color: #d0d0d0;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  padding-top: 20px;
+}
+
+/* --- B. Thank You & Quote Slides --- */
+.thank-you-slide-content, .quote-slide-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+}
+.thank-you-title {
+  font-size: calc(var(--header-size) * 1.5);
+  color: var(--primary-color);
+  margin-bottom: 20px;
+}
+.thank-you-subtitle {
+  font-size: var(--header-size);
+  color: var(--secondary-color);
+  margin-bottom: 40px;
+}
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 40px;
+}
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.contact-item i {
+  color: var(--primary-color);
+}
+.quote-slide-content {
+  padding: 0 80px; 
+}
+.quote-icon {
+  font-size: 48px;
+  color: var(--primary-light);
+  margin-bottom: 20px;
+}
+.quote-text {
+  font-size: calc(var(--body-size) * 1.5);
+  font-style: italic;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+.quote-author {
+  font-size: calc(var(--body-size) * 1.2);
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+/* -----------------------------------------
+ * 6. Specific Components (Image, Chart, Code)
+ * ----------------------------------------- */
+
+/* --- Image Blocks --- */
+.slide-image {
+  width: 100%;
+}
+.image-wrapper {
+  display: flex; 
+  flex-direction: column; 
+  align-items: center;
+  width: 100%; height: 100%;
+}
+.slide-image img {
+  width: 100%;
+  height: auto;
+  max-height: 450px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.image-caption {
+  margin-top: 10px; 
+  padding: 0 10px; 
+  font-size: 14px;
+  color: #666; 
+  text-align: center; 
+  font-style: italic;
+}
+
+/* --- Code Blocks --- */
+.code-scaler {
+  width: 100%;
+  overflow: hidden;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+.code-block {
+  background-color: #2d3748;
+  color: #e2e8f0;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  font-family: 'Fira Code', 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 16px;
+  white-space: pre;
+  display: inline-block;
+  min-width: 100%;
+  transform-origin: left top;
+  transition: transform 0.2s ease-in-out;
+}
+.code-title {
+  font-size: 18px;
+  font-family: var(--header-font);
+  color: var(--primary-dark);
+  margin-top: 15px;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+/* --- Charts & Tables --- */
+.chart-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  background: rgba(255, 255, 255, 0.8);
+  min-height: 300px;
+  margin-bottom: 20px;
+}
+.canvas-wrapper {
+    width: 100%;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+}
+.chart-container canvas {
+  max-width: 100%;
+  max-height: 100%;
+}
+.chart-title {
+  margin-top: 15px;
+  font-size: 18px;
+  font-weight: 600;
+  font-family: var(--header-font);
+  color: var(--primary-dark);
+  text-align: center;
+  width: 100%;
+  flex-shrink: 0;
+}
+.comparison-table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin: 20px 0;
+  border-radius: 10px;
+  border: 1px solid var(--light-gray, #E0E0E0);
+  overflow: hidden;
+}
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.comparison-table th, .comparison-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid var(--light-gray, #E0E0E0);
+}
+.comparison-table th {
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: bold;
+}
+.comparison-table tr:nth-child(even) {
+  background-color: var(--light-gray);
+}
+.comparison-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* -----------------------------------------
+ * 7. Utility Classes
+ * ----------------------------------------- */
+.text-center { 
+  text-align: center; 
+  }
+.text-left { 
+  text-align: left; 
+  }
+.text-right { 
+  text-align: right; 
+  }
+.flex-center { 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  width: 100%; 
+  height: 100%; 
+}
+
+/* -----------------------------------------
+ * 8. Responsive Design
+ * ----------------------------------------- */
+@media (max-width: 980px) {
+  .two-column, .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .slide-container { padding: 32px 5vw; margin: 0; border-radius: 0; min-height: 100vh; }
+}
