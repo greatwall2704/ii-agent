@@ -179,7 +179,7 @@ class SlideInitializeTool(LLMTool):
         # --- 2. Generate CSS String ---
         return f"""/*
 * =========================================
-* main.css - Custom Slide Deck Stylesheet
+* main.css v2.0 - Final Component-Based CSS
 * =========================================
 */
 
@@ -217,114 +217,213 @@ class SlideInitializeTool(LLMTool):
 }}
 
 * {{
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
 }}
 
 html, body {{
   width: 100%;
   height: 100%;
-  overflow: hidden;
-}}
-
-body {{
+  margin: 0;
   font-family: var(--body-font);
-  background-color: #e0e0e0; /* Light gray background outside the slide */
+  background-color: #f0f2f5;
   color: var(--text-color);
   line-height: 1.6;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }}
 
 /* -----------------------------------------
- * 2. Core Slide Structure
+ * 2. Core Slide & Layout Structure
  * ----------------------------------------- */
 .slide-container {{
-  width: 1280px;
+  width: 100%;
+  max-width: 1280px;
   min-height: 720px;
   background: var(--background-color);
-  margin: 0 auto;
-  padding: 40px;
+  margin: 20px auto;
+  padding: 40px 5vw;
   display: flex;
   flex-direction: column;
-  position: relative;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  overflow: hidden; /* Crucial for border-radius and absolute children */
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }}
 
 .slide-header {{
-  margin-bottom: 30px;
-  flex-shrink: 0; /* Prevent header from shrinking */
+  margin-bottom: 24px;
+  flex-shrink: 0;
 }}
 
 .slide-title {{
-  font-size: var(--header-size);
-  color: var(--header-color);
-  font-weight: bold;
-  text-align: center;
   font-family: var(--header-font);
+  font-size: clamp(28px, 4vw, 44px);
+  color: var(--header-color);
+  font-weight: 700;
+  margin: 0 0 8px;
 }}
 
 .slide-content {{
   display: flex;
-  flex: 1; /* Allow content to fill remaining space */
-  gap: 40px;
-  min-height: 0; /* Fix for flexbox overflow issues */
+  flex: 1;
+  gap: 24px;
 }}
 
 /* -----------------------------------------
- * 3. Special Slide Types
+ * 3. Reusable Components
+ * ----------------------------------------- */
+.card {{
+  background-color: color-mix(in srgb, var(--background-color) 90%, white 10%);
+  border: 1px solid color-mix(in srgb, var(--background-color) 80%, white 10%);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 18px rgba(0,0,0,.04);
+  width: 100%;
+}}
+.card, .card .section-title, .card p, .card li {{
+  color: var(--text-color);
+}}
+
+.highlighted-section {{
+  background-color: color-mix(in srgb, var(--background-color) 85%, white 15%);
+  color: color-mix(in srgb, var(--text-color) 70%, var(--background-color) 30%);
+  border-left: 4px solid var(--primary-color);
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+  font-size: calc(var(--body-size) * 0.95);
+}}
+
+.tag {{
+  background-color: color-mix(in srgb, var(--primary-color) 20%, var(--background-color) 80%);
+  color: color-mix(in srgb, var(--primary-color) 80%, var(--text-color) 20%);
+  display: inline-block;
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  margin: 4px;
+  font-weight: 600;
+}}
+
+.section-title {{
+  font-size: var(--subheader-size); 
+  color: var(--header-color);
+  margin-bottom: 15px;
+  font-weight: 600;
+  font-family: var(--header-font);
+}}
+
+.slide-list {{
+  list-style-type: none;
+  padding: 0;
+}}
+.slide-list li {{
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  position: relative;
+}}
+.slide-list li:before {{
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: var(--primary-light);
+  border-radius: 50%;
+}}
+
+/* -----------------------------------------
+ * 4. Layout Systems
+ * ----------------------------------------- */
+.slide-content.grid-2 {{ 
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  }}
+.slide-content.grid-3 {{ 
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+ }}
+.slide-content.two-column {{ 
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 32px;
+  align-items: start;
+ }}
+ .two-column .slide-text {{
+  padding-right: 20px;
+}}
+.slide-content.vertical {{ 
+  flex-direction: column; 
+  }}
+.slide-content.image-only,
+.slide-content.chart-only {{
+  justify-content: center;
+  align-items: center;
+}}
+.slide-content.gallery {{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 20px 0;
+}}
+.gallery .slide-image {{
+  height: 150px;
+}}
+.slide-content.text-wrap {{
+  display: block;
+}}
+.text-wrap .slide-image {{
+  float: right;
+  margin: 0 0 20px 20px;
+  max-width: 40%;
+  max-height: 300px;
+}}
+.text-wrap .slide-text {{
+  text-align: justify;
+}}
+/* -----------------------------------------
+ * 5. Special Slide Types
  * ----------------------------------------- */
 
 /* --- A. Opening / Title Slide --- */
 .slide-container.title-slide {{
   padding: 0;
-  justify-content: center;
-  align-items: center;
-  color: white; /* Default text color for this slide */
-}}  
-
+  display: grid;
+  place-items: center;
+  color: white;
+}}
+.title-slide .slide-background-image,
+.title-slide .content-overlay {{
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
+}}
 .title-slide .slide-background-image {{
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100%; 
+  height: 100%; 
   object-fit: cover;
-  filter: brightness(0.6) saturate(1.1);
+  filter: brightness(0.6);
   z-index: 1;
 }}
-
 .title-slide .content-overlay {{
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
+  display: flex; 
+  flex-direction: column; 
   justify-content: center;
-  align-items: center;
+  align-items: center; 
+  text-align: center; 
   padding: 40px;
-  text-align: center;
-  width: 100%;
-  height: 100%;
+  z-index: 2;
 }}
-
 .title-slide .main-title {{
-  color: white;
-  font-size: 52px;
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+  font-size: clamp(36px, 6vw, 72px);
+  text-shadow: 0 4px 24px rgba(0,0,0,.35);
 }}
-
 .title-slide .subtitle {{
   color: #e0e0e0;
-  font-size: 30px;
+  font-size: clamp(18px, 2.2vw, 24px);
   max-width: 80%;
   text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
   margin-top: 1rem;
 }}
-
 .title-slide .presenter-info {{
   margin-top: 40px;
   color: #d0d0d0;
@@ -333,8 +432,9 @@ body {{
   padding-top: 20px;
 }}
 
-/* --- B. Thank You Slide --- */
-.thank-you-slide-content {{
+/* --- B. Thank You & Quote Slides --- */
+.thank-you-slide-content, .quote-slide-content {{
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -366,16 +466,8 @@ body {{
 .contact-item i {{
   color: var(--primary-color);
 }}
-
-/* --- C. Quote Slide --- */
 .quote-slide-content {{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  height: 100%;
-  padding: 0 80px;
+  padding: 0 80px; 
 }}
 .quote-icon {{
   font-size: 48px;
@@ -388,78 +480,44 @@ body {{
   line-height: 1.6;
   margin-bottom: 30px;
 }}
-.quote-attribution {{
-  margin-top: 20px;
-}}
 .quote-author {{
   font-size: calc(var(--body-size) * 1.2);
   font-weight: bold;
   color: var(--primary-color);
 }}
-.quote-source {{
-  font-size: var(--body-size);
-}}
 
 /* -----------------------------------------
- * 4. Content Components
+ * 6. Specific Components (Image, Chart, Code)
  * ----------------------------------------- */
 
-/* --- A. Text & Lists --- */
-.slide-text {{
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}}
-.section-title {{
-  font-size: var(--subheader-size);
-  color: var(--primary-dark);
-  margin-bottom: 15px;
-  font-weight: 600;
-  font-family: var(--header-font);
-}}
-.section-content {{
-  font-size: var(--body-size);
-  line-height: 1.5;
-}}
-.highlighted-section {{
-  background-color: var(--light-gray);
-  border-left: 4px solid var(--primary-color);
-  padding: 20px;
-  border-radius: 0 10px 10px 0;
-  margin: 20px 0;
-}}
-.slide-list {{ list-style-type: none; padding: 0; }}
-.slide-list li {{ margin-bottom: 1rem; padding-left: 1.5rem; position: relative; }}
-.slide-list li:before {{
-  content: ""; position: absolute; left: 0; top: 0.5rem;
-  width: 0.5rem; height: 0.5rem; background-color: var(--primary-light); border-radius: 50%;
-}}
-
-/* --- B. Image Blocks --- */
+/* --- Image Blocks --- */
 .slide-image {{
-  flex: 0 0 45%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-height: 500px;
-  overflow: hidden;
+  width: 100%;
 }}
 .image-wrapper {{
-  display: flex; flex-direction: column; align-items: center;
+  display: flex; 
+  flex-direction: column; 
+  align-items: center;
   width: 100%; height: 100%;
 }}
 .slide-image img {{
-  max-width: 100%; max-height: calc(100% - 30px);
-  width: auto; height: auto; object-fit: contain;
-  border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  height: auto;
+  max-height: 450px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }}
 .image-caption {{
-  margin-top: 10px; padding: 0 10px; font-size: 14px;
-  color: #666; text-align: center; font-style: italic;
-  width: 100%; flex-shrink: 0;
+  margin-top: 10px; 
+  padding: 0 10px; 
+  font-size: 14px;
+  color: #666; 
+  text-align: center; 
+  font-style: italic;
 }}
 
-/* --- C. Code Blocks (Scalable) --- */
+/* --- Code Blocks --- */
 .code-scaler {{
   width: 100%;
   overflow: hidden;
@@ -469,9 +527,7 @@ body {{
 .code-block {{
   background-color: #2d3748;
   color: #e2e8f0;
-  padding-top: 15px;
-  padding-left: 15px;
-  padding-right: 15px;
+  padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   font-family: 'Fira Code', 'JetBrains Mono', 'Courier New', monospace;
@@ -482,82 +538,51 @@ body {{
   transform-origin: left top;
   transition: transform 0.2s ease-in-out;
 }}
+.code-title {{
+  font-size: 18px;
+  font-family: var(--header-font);
+  color: var(--primary-dark);
+  margin-top: 15px;
+  margin-bottom: 5px;
+  font-weight: 600;
+}}
 
-/* --- D. Charts & Tables --- */
+/* --- Charts & Tables --- */
 .chart-container {{
-  flex: 1; /* Cho phép co giãn trong layout flex */
+  flex: 1;
   display: flex;
-  flex-direction: column; /* Xếp canvas và tiêu đề theo chiều dọc */
-  justify-content: center; /* Căn giữa theo chiều dọc */
-  align-items: center;   /* Căn giữa theo chiều ngang */
-  
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  background: rgba(255, 255, 255, 0.8); /* Nền bán trong suốt để nổi bật */
-  min-height: 300px; /* Đảm bảo biểu đồ không quá nhỏ */
-  margin-bottom: 20px; /* Khoảng cách nếu có nhiều biểu đồ xếp chồng */
+  background: rgba(255, 255, 255, 0.8);
+  min-height: 300px;
+  margin-bottom: 20px;
 }}
-
-/* Lớp bọc cho canvas để kiểm soát kích thước và co giãn */
 .canvas-wrapper {{
     width: 100%;
-    flex-grow: 1; /* Cho phép canvas chiếm không gian dọc còn lại */
+    flex-grow: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 0; /* Sửa lỗi co giãn của flexbox */
+    min-height: 0;
 }}
-
-/* Canvas của Chart.js */
 .chart-container canvas {{
   max-width: 100%;
   max-height: 100%;
 }}
-
-/* Tiêu đề của biểu đồ, nằm dưới canvas */
 .chart-title {{
-  /* Đây là một khối văn bản bình thường, không dùng position: absolute */
-  margin-top: 15px; /* Khoảng cách với biểu đồ ở trên */
+  margin-top: 15px;
   font-size: 18px;
   font-weight: 600;
   font-family: var(--header-font);
   color: var(--primary-dark);
   text-align: center;
   width: 100%;
-  flex-shrink: 0; /* Ngăn tiêu đề bị co lại */
+  flex-shrink: 0;
 }}
-
-/* Modifiers cho các kích thước biểu đồ khác nhau */
-.chart-container.full-width {{
-  flex-basis: 100%;
-  height: 500px;
-}}
-.chart-container.small {{
-  flex-basis: 300px;
-  height: 250px;
-}}
-
-/* Chú thích (legend) tùy chỉnh nếu cần */
-.chart-legend {{
-  margin-top: 15px;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 15px;
-}}
-.chart-legend-item {{
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 12px;
-}}
-.chart-legend-color {{
-  width: 12px;
-  height: 12px;
-  border-radius: 2px;
-}}
-/* Container cho bảng so sánh */
 .comparison-table-container {{
   width: 100%;
   overflow-x: auto;
@@ -566,8 +591,6 @@ body {{
   border: 1px solid var(--light-gray, #E0E0E0);
   overflow: hidden;
 }}
-
-/* Bảng so sánh */
 .comparison-table {{
   width: 100%;
   border-collapse: collapse;
@@ -588,99 +611,35 @@ body {{
 .comparison-table tr:last-child td {{
   border-bottom: none;
 }}
+
 /* -----------------------------------------
- * 5. Layout Systems
+ * 7. Utility Classes
  * ----------------------------------------- */
-
-/* --- A. Code Layout --- */
-.slide-content.code-layout {{
-  display: flex;
-  gap: 40px;
-  align-items: flex-start; /* Align columns to the top */
-}}
-.code-layout .slide-text {{
-  flex: 0 0 40%;
-  padding-right: 20px;
-}}
-.code-layout .slide-code {{
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  max-height: 600px; /* Set a max height for the code column */
-  overflow-y: auto;  /* Add vertical scroll if code column is too long */
-}}
-.code-title {{
-  font-size: 18px;
-  font-family: var(--header-font);
-  color: var(--primary-dark);
-  margin-top: 15px;
-  margin-bottom: 5px;
-  font-weight: 600;
-}}
-.code-layout .slide-code .code-title:first-child {{
-    margin-top: 0;
+.text-center {{ 
+  text-align: center; 
+  }}
+.text-left {{ 
+  text-align: left; 
+  }}
+.text-right {{ 
+  text-align: right; 
+  }}
+.flex-center {{ 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  width: 100%; 
+  height: 100%; 
 }}
 
-/* --- B. Standard Layouts --- */
-.slide-content.two-column {{ align-items: stretch; }}
-.two-column .slide-text {{ padding-right: 20px; }}
-.two-column .slide-image, .two-column .chart-container {{ flex: 0 0 45%; }}
-
-.slide-content.three-column {{ display: flex; gap: 30px; align-items: stretch; }}
-.three-column .slide-text {{ flex: 0 0 35%; }}
-.three-column .slide-image, .three-column .chart-container {{ flex: 0 0 30%; }}
-
-.slide-content.vertical {{ flex-direction: column; }}
-
-.slide-content.grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }}
-
-.slide-content.image-only, .slide-content.chart-only {{ justify-content: center; align-items: center; }}
-.image-only .slide-image, .chart-only .chart-container {{ flex: none; width: 90%; height: 80%; }}
-.slide-content.gallery {{
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px; padding: 20px 0;
-}}
-
-.gallery .slide-image {{ height: 150px; }}
-.slide-content.text-wrap {{ display: block; }}
-.text-wrap .slide-image {{
-  float: right; margin: 0 0 20px 20px;
-  max-width: 40%; max-height: 300px;
-}}
-.text-wrap .slide-text {{ text-align: justify; }}
 /* -----------------------------------------
- * 6. Responsive Design
+ * 8. Responsive Design
  * ----------------------------------------- */
-@media (max-width: 1280px) {{
-  .slide-container {{
-    width: 100%;
-    height: auto;
-    min-height: 0;
-    padding: 20px;
-  }}
-  .slide-content, .slide-content.two-column, .slide-content.three-column, .slide-content.code-layout {{
-    flex-direction: column;
-    gap: 20px;
-  }}
-  .slide-image, .chart-container {{
-    flex: none !important;
-    max-height: 300px;
-  }}
-}}
-@media (max-width: 768px) {{
-  :root {{
-    --header-size: calc({header_size} * 0.8);
-    --subheader-size: calc({subheader_size} * 0.8);
-    --body-size: calc({body_size} * 0.9);
-  }}
-  .slide-container {{ padding: 15px; }}
-  .chart-container {{ height: 250px; padding: 10px; }}
-  .slide-image {{ max-height: 200px; }}
-  .title-slide .main-title {{ font-size: 36px; }}
-  .title-slide .subtitle {{ font-size: 22px; }}
+@media (max-width: 980px) {{
+  .two-column, .grid-2, .grid-3 {{ grid-template-columns: 1fr; }}
+  .slide-container {{ padding: 32px 5vw; margin: 0; border-radius: 0; min-height: 100vh; }}
 }}
 """
-
 
     def execute(self, main_title: str, project_dir: str, outline: list, style_instruction: dict) -> ToolImplOutput:
         project_path = Path(project_dir)
@@ -926,6 +885,7 @@ class SlideContentWriterTool(LLMTool):
 
     def execute(self, project_dir: str, slide_id: str, slide_content: str) -> ToolImplOutput:
         project_path = Path(project_dir)
+        config_path = project_path / "config.json"
         slides_path = project_path / "slides"
         slide_file_path = slides_path / f"{slide_id}.html"
 
@@ -947,6 +907,9 @@ class SlideContentWriterTool(LLMTool):
             with open(slide_file_path, "r", encoding="utf-8") as f:
                 existing_html = f.read()
 
+            with open(config_path, "r", encoding="utf-8") as f:
+                config = json.load(f)
+
             soup = BeautifulSoup(existing_html, 'lxml')
 
             container = soup.find('div', class_='slide-container')
@@ -956,6 +919,14 @@ class SlideContentWriterTool(LLMTool):
                     tool_output=f"Error: Could not find the '<div class=\"slide-container\">' in '{slide_file_path}'. The slide template might be corrupted.",
                     tool_result_message="Slide container not found"
                 )
+
+            slides_order = config.get("slides_order", [])
+
+            is_first_slide = slides_order and slides_order[0] == slide_id
+
+            if is_first_slide:
+                if 'title-slide' not in container.get('class', []):
+                    container['class'].append('title-slide')
 
             container.clear()
             container.append(BeautifulSoup(slide_content, 'html.parser'))
