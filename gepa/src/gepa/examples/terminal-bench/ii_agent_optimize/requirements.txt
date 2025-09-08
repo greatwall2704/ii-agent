@@ -1,0 +1,11 @@
+# Core GEPA dependencies
+gepa[full]
+
+# Additional dependencies for II Agent optimization
+litellm>=1.64.0
+datasets>=2.14.6
+tqdm>=4.66.1
+
+# Optional for tracking (uncomment if needed)
+# wandb
+# mlflow>=3.0.0
